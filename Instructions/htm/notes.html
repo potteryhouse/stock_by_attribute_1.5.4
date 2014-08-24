@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf8">
+	<TITLE>Readme for Stock by Attribute Mod</TITLE>
+	<STYLE TYPE="text/css">
+	<!--
+		body {font:100% Verdana, Arial, Helvetica, sans-serif; text-align:center; color:#333; margin:0; padding:0}
+		#wrapper {width: 780px; margin: 0 auto; text-align: left}
+		h1 {font:200% Georgia, "Times New Roman", Times, serif; color:#000}
+		h2 {font:italic 140% Georgia, "Times New Roman", Times, serif; color:#000}
+		.filename {font:90% "Courier New", Courier, monospace; color:#660000}
+		code {background:#eee; margin:.5em 2em; padding: .5em; font-family:"Courier New", Courier, monospace; display:block}
+		.style4 {font-weight: bold; color: #FF0000;}
+		.style6 {font-size: 9pt}
+		.style7 {font-size: 10pt}
+
+		PRE { font-variant: normal; color: #333333; text-align: center }
+		PRE.western { font-style: normal; font-weight: normal }
+		PRE.cjk { font-family: "NSimSun", monospace; font-style: normal; font-weight: normal }
+		PRE.ctl { font-style: normal; font-weight: normal }
+		H3 { font-variant: normal; color: #333333; text-align: left }
+		H3.western { font-style: normal }
+		H3.cjk { font-family: "SimSun"; font-style: normal }
+		H3.ctl { font-family: "Mangal"; font-style: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#333333" BGCOLOR="#f1f1f1" DIR="LTR">
+<DIV ID="header" DIR="LTR">
+	<H1>Stock By Attributes</H1>
+</DIV>
+<DIV ID="wrapper" DIR="LTR">
+	<HR>
+	<P ALIGN=LEFT><FONT SIZE=2><A HREF="installation.html">Installation</A>
+	| <A HREF="configuration.html">Configuration</A> | <A HREF="attribute_stock_setup.html">Attribute
+	Stock Setup</A> | <A HREF="optional_sql.html">Optional Update</A> |
+	<A HREF="export-import.html">Optional Export / Import</A> | Notes |
+	<A HREF="../readme.html">HOME</A> </FONT>
+	</P>
+	<H2 ALIGN=LEFT>Notes</H2>
+	<P ALIGN=LEFT>This version of the SBA plug-in supports "Multiple-Attribute-Combinations" <br />i.e., allows multiple attributes of a product in the SAME Stock ROW on the SBA stock page, thus you can create custom combinations with specific quantities.<br /><br /><img src="../images/multiAttrib.gif" alt="" width="770" height="440" /></P>
+	<PRE CLASS="western" STYLE="margin-bottom: 0.2in; text-align: left">This update should function as follows:</PRE>
+	<UL>
+		<LI><PRE CLASS="western" STYLE="margin-bottom: 0.1in; text-align: left">Product with no associated attributes, uses the quantity assigned to the product in the catalog.</PRE>
+		<LI><PRE CLASS="western" STYLE="margin-bottom: 0.1in; text-align: left">Product with Attribute(s), If no attribute is created in the SBA Stock page, will use the quantity from the product catalog.</PRE>
+		<LI><PRE CLASS="western" STYLE="margin-bottom: 0.1in; text-align: left">Product with Attribute(s), and attributes are created in the SBA stock page, uses the quantity from the SBA Stock page.</PRE>
+	</UL>
+	<PRE CLASS="western" STYLE="margin-bottom: 0.2in; text-align: left">General: </PRE>
+	<UL>
+		<LI><PRE CLASS="western" STYLE="margin-bottom: 0.1in; text-align: left">If the quantity is zero, than the flag is set to indicate out of stock.</PRE>
+		<LI><PRE CLASS="western" STYLE="margin-bottom: 0.1in; text-align: left">If the quantity is less than the order requested in the cart, than the flag will indicate low stock.</PRE>
+		<LI><PRE CLASS="western" STYLE="margin-bottom: 0.1in; text-align: left">Flag display is based on the settings in the &quot;Configuration -&gt; Stock&quot; (Check Stock Level = XXXX)</PRE>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>If
+		an order is deleted and restocked the mod does not add the quantity
+		back to the actual attribute, it adds the quantity back to Quantity
+		for all variants. </FONT></FONT>
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>When
+		the quantity for an &quot;attribute combination&quot; is zero (0)
+		the Quantity for all variants is used in the calculations. </FONT></FONT>
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>&quot;Attribute
+		combinations&quot; that are out of stock can still be ordered even
+		when &quot;Allow Checkout&quot; is set to false as long the
+		Quantity for all variants indicates enough stock. </FONT></FONT>
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>
+		The Product Stock Quantity must be greater than 0 or the product will show as out of stock.<br />
+		This is not controlled by SBA, it is part of the Zen Cart default functionality</FONT></FONT>
+		</P>
+	</UL>
+	<P ALIGN=LEFT><B>New</B></P>
+	<UL>
+		<LI><P ALIGN=LEFT>New selection added to the "Option Name Manager", this supports a yes/no type of <B>selection list</B> that
+		is not tied to an SBA stock level (&ldquo;Product Option Type&rdquo; <SPAN STYLE="font-variant: normal"><FONT COLOR="#0000ff"><FONT FACE="Verdana, sans-serif"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">SBA
+		Select List (Dropdown) Basic</SPAN></SPAN></FONT></FONT></FONT></SPAN>
+		added to support this option). <br /><br />
+		<img src="../images/newListBoxOption.jpg" alt="" width="682" height="280" /></P>
+	</UL>
+	<H3 CLASS="western" ALIGN=LEFT>Language Files</H3>
+	<P ALIGN=LEFT>Sample Language files are included for both <B>French</B>
+	and <B>Dutch</B>.<BR>There are files for both the &quot;Front end&quot;
+	(Store) and the Admin, they are located in &quot;includes\languages&quot;,
+	the text in these files will need to be updated for the applicable
+	language. These files are provided to show that the mod can be
+	customized to local languages.</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>Text
+		displayed on the product info page and the shopping cart can be
+		changed in the file:
+		<I>includes\languages\</I><I><B>english</B></I><I>\extra_definitions\products_with_attributes.php</I></FONT></FONT></P>
+	</UL>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>Text
+		displayed on the Invoice, Orders, and Packing Slip can be changed
+		in the
+		file:<BR><I>admin\includes\languages\</I><I><B>english</B></I><I>\products_with_attributes_stock.php</I>
+		</FONT></FONT>
+		</P>
+	</UL>
+	<H3 CLASS="western" ALIGN=LEFT>General Information</H3>
+	<UL>
+			<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in">Helpful Attribute Resource: 
+			<A HREF="http://www.we-r-here.com/zen-cart-tutorials/attributes.htm" TARGET="_blank">http://www.we-r-here.com/zen-cart-tutorials</A></P>
+			<LI><P ALIGN=LEFT STYLE="margin-bottom: 0.1in">Helpful Additional Images Resource: 
+			<A HREF="http://www.zen-cart.com/content.php?100-how-do-i-add-multiple-images-to-a-product" TARGET="_blank">http://www.zen-cart.com/content.php?100-how-do-i-add-multiple-images-to-a-product</A></P>
+		<LI><P ALIGN=LEFT>Suggested reading if using PHP 5.4: <A HREF="http://www.zen-cart.com/showthread.php?200601-UNDER-REVIEW-PHP-5-4-PHP-Warning-Creating-default-object-from-empty-value&amp;p=1169215">PHP
+		5.4 PHP Warning: Creating default object from empty value</A> 
+		</P>
+	</ul>
+		<P ALIGN=LEFT>A file (Instructions\InstallSQLcommands.txt) is
+		provided that contains the &quot;raw&quot; sql commands for
+		reference only.<BR><BR>Refer to the <A HREF="../readme.html">change
+		log</A> for details of the update.</P>
+	<HR>
+	<H2 ALIGN=LEFT>License &amp; Copyright</H2>
+	<P ALIGN=LEFT>Zen Cart Open Source E-commerce - Stock by Attributes</P>
+	<P ALIGN=LEFT>This contribution is subject to version 2.0 of the GPL
+	license, that is bundled with this package in the file LICENSE, and
+	is available through the world-wide-web at the following url:
+	<A HREF="http://www.zen-cart.com/license/2_0.txt">http://www.zen-cart.com/license/2_0.txt</A>.
+	If you did not receive a copy of the Zen Cart license and are unable
+	to obtain it through the world-wide-web, please send a note to
+	license@zen-cart.com.</P>
+</DIV>
+</BODY>
+</HTML>

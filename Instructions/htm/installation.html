@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Readme for Stock by Attribute Mod</title>
+<style type="text/css">
+<!--
+body {font:100% Verdana, Arial, Helvetica, sans-serif; text-align:center; color:#333; margin:0; padding:0}
+#wrapper {width: 780px; margin: 0 auto; text-align: left}
+h1 {font:200% Georgia, "Times New Roman", Times, serif; color:#000}
+h2 {font:italic 140% Georgia, "Times New Roman", Times, serif; color:#000}
+.filename {font:90% "Courier New", Courier, monospace; color:#660000}
+code {background:#eee; margin:.5em 2em; padding: .5em; font-family:"Courier New", Courier, monospace; display:block}
+.style1 {color: #FF0000}
+.style3 {font-size: 50%}
+.style5 {color: #FF0000; font-weight: bold; }
+.style6 {font-size: 9pt}
+.style7 {font-size: 10pt}
+-->
+</style>
+</head>
+<body style="background-color: #F1F1F1">
+<div id="header">
+  <h1>Stock By Attributes</h1>
+</div>
+
+<div id="wrapper">
+  
+  <hr />
+  <p class="style7">Installation | <a href="configuration.html">Configuration</a> | <a href="attribute_stock_setup.html">Attribute Stock Setup</a> | <a href="optional_sql.html">Optional Update</a> | <a href="export-import.html">Optional Export / Import</a> | <a href="notes.html">Notes</a> | <a href="../readme.html">HOME</a> </p>
+
+  <h2>Installation Process </h2>
+  <p class="style1"><strong>BACK UP YOUR DATABASE! </strong></p>
+  <p>Prepare the SBA package for upload to your server by unzipping the mod and renaming the following extracted folders to match your site's folder names:<br />
+    <br /> 
+  <img src="../images/folder_structure_001.GIF" alt="" width="191" /></p>
+  <ul>
+    <li>Rename <strong>admin</strong> folder name to match YOUR_ADMIN_FOLDER_NAME</li>
+	<li>Rename <b>includes/modules/YOUR_TEMPLATE</b> and <b>includes/templates/YOUR_TEMPLATE</b> to match your YOUR_TEMPLATE_NAME.</li>
+  </ul>
+  <p>If this is a new install of Zen Cart 1.5.1, then with most good FTP programs (such as FileZilla), you can simply drag and drop the <b>admin</b> (renamed to match your admin folder name) and <b>includes</b> directories into the root directory of your site. The files are already arranged in the correct directory structure. </p>
+  <p>Upload the <strong>admin</strong> and <strong>includes</strong> folders.<br />
+  The "Instructions" folder is for your reference, <b>DO NOT</b> upload it on your website.</p>
+  
+  	<p><h1>Installation File:</h1>
+The installation file provides options for installing and removing this contribution, it will modify the "Database".
+The script does NOT alter or install files, the process strictly makes database changes and some limited verification of proper file placement.<br />
+<br />
+<h1>NEW Files:</h1>
+
+	  <ul>
+        <li>admin/ajax/jquery.form.js </li>
+        <li>admin/ajax/jquery-1.10.2.min.js</li>
+        <li>admin/ajax/products_with_attributes_stock_ajax.js </li>
+  </ul>
+	  <ul>
+        <li>admin/products_with_attributes_stock.php </li>
+        <li>admin/products_with_attributes_stock_ajax.php </li>
+        <li>admin/includes/products_with_attributes_stock_ajax.css </li>
+        <li>admin/includes/classes/products_with_attributes_stock.php </li>
+        <li>admin/includes/extra_datafiles/products_with_attributes_stock.php </li>
+        <li>admin/includes/languages/english/products_with_attributes_stock.php </li>
+        <li>admin/includes/languages/english/extra_definitions/products_with_attributes.php</li>
+		<li> admin/stock_by_attr_install.php  <br />
+        </li>
+  </ul>
+	  <ul>
+        <li>includes/extra_datafiles/products_with_attributes_stock_database_tables.php </li>
+        <li>includes/functions/extra_functions/products_with_attributes.php </li>
+        <li>includes/languages/english/extra_definitions/products_with_attributes.php</li>
+  </ul>
+	  <p><h1>CORE Files: (Modified)</h1>
+  These core Zen Cart files need to be modified for this add-on. If other add-ons or customizations of the cart have been done since the Zen Cart installation or upgrade, Check whether they have changed any of the following files:
+                  <ul>
+                    <li>admin/invoice.php</li>
+                    <li>admin/orders.php</li>
+					<li>admin/packingslip.php</li>
+                    <li>admin/includes/functions/general.php</li>
+                    <li>admin/includes/classes/order.php</li>
+                  </ul>
+                  <ul>
+                    <li>includes/classes/order.php</li>
+                    <li>includes/functions/functions_lookups.php</li>
+                    <li>includes/functions/extra_functions/products_with_attributes.php</li>
+                    <li>includes/modules/pages/checkout_shipping/header_php.php</li>
+                    <li>includes/modules/pages/shopping_cart/header_php.php</li>
+                  </ul>    
+	</p>
+			
+	<p><h1>OVERRIDE Files: (Modified)</h1>
+  In addition, files are over-ridden, these files should be placed into the sites template folder:
+	  <ul>
+	  	<li>includes/modules/YOUR_TEMPLATE/attributes.php</li>
+        <li>includes/templates/YOUR_TEMPLATE/templates/tpl_shopping_cart_default.php </li>
+        <li>includes/templates/YOUR_TEMPLATE/templates/tpl_account_history_info_default.php </li>
+        <li>includes/templates/YOUR_TEMPLATE/templates/tpl_checkout_confirmation_default.php </li>
+      </ul>
+	</p>
+
+	<p>
+	<h1>Optional Language Files:</h1>
+	The following files are provided as examples for customizing to local languages.
+	  <ul>
+        <li>admin/includes/languages/french/products_with_attributes_stock.php</li>
+        <li>admin/includes/languages/french/extra_definitions/</li>
+        <li>includes/languages/french/extra_definitions/products_with_attributes.php</li>
+        <li>admin/includes/languages/dutch/products_with_attributes_stock.php</li>
+        <li>admin/includes/languages/dutch/extra_definitions/</li>
+        <li>includes/languages/dutch/extra_definitions/products_with_attributes.php</li>
+	  </ul>
+	  
+	<h2>If any of the installed mods have changed any of the core files (or over-ridden files), then merge the changes into the relevant core files.</h2>
+  </p>
+  <p>Once you have <span class="style5">backed up your database and website files</span> and this mod has been uploaded, go to a browser and enter: http://YOUR_DOMAIN/YOUR_ADMIN/<strong>stock_by_attr_install.php</strong> to install SBA and updates to the database. This should work equally well for upgrades as it does for new installs as it makes sure all prior upgrades have been applied.</p>
+  <p><strong><a name="top" id="top"></a>stock_by_attr_install.php</strong> installation offers 6 options:</p>
+<ul>
+				<li>Instructions</li>
+					<ul>
+					<li>Displays this main page, explaining each Script function from the following drop down menu.</li>
+					<li>No changes are made unless one of the other options are selected.</li>
+					<li>Includes, a brief description of "How To Use".</li>
+				    </ul>
+				<li>Installation and Removal</li>
+					<ul>
+					<li>Full/Upgrade DB Install</li>
+						<ul>
+						<li>Full, makes all script changes to the database (DB) (i.e., adds new SBA table, adds entries into the Admin page, and new entries into the Configuration file).</li>
+						<li>Upgrade, updates Configuration file and the SBA table as needed. If run again, it will "Clean" table entries and reapply the settings, it will not affect current data in the "products_with_attributes_stock" table.</li>
+						</ul>
+				    <li>Remove All from DB - Removes above changes from the database (DB).</li>
+				    </ul>
+				
+				<li>Special Options</li>
+					<ul>
+					<li>Run Optional SQL - Makes entries into the new SBA Table (see instructions for more information).</li>
+	 				<li>File Check - Check that NEW Files are in proper places.</li>
+					</ul>
+				
+				<li>Export Table Data</li>
+					<ul>
+					<li>Exports the products_with_attributes_stock table as a CSV file.</li>
+					<li>Use with the "Import Table Data" option.</li>
+					</ul>
+ 				<li>Import Table Data</li>
+					<ul>
+					<li>Imports the "Quantity" and "Custom ID" fields from a CSV file.</li>
+					<li>Update quantity (quantity field) in products_with_attributes_stock table.</li>
+					<li>Update customid (custom id field) in products_with_attributes_stock table.</li>
+					<li>customid must be unique, may be alphanumeric. NO duplicates permitted.</li>
+					</ul>
+  </ul>
+  <p>&nbsp; </p>
+  <p><img src="../images/InstallInstruction_001.GIF" alt="" width="750" /></p>
+  <h2><a name="FullInstall" id="FullInstall"></a>Installation</h2>
+  <p>selecting <strong>Full/Upgrade DB Install</strong> and clicking on <strong>Run Script</strong>, will install / upgrades all necessary SBA Configuration,  setup options and the database table required.<br />
+      <br />
+      <img src="../images/InstallInstruction_004.GIF" alt="" width="322" height="41" /></p>
+  <a href="#top" class="style6">Go To Index</a> <br />
+    <br />
+    <h2><a name="FullRemoval" id="FullRemoval"></a>Removal</h2>
+    <p>selecting <strong>Remove All from DB</strong> and clicking on <strong>Run Script</strong>, will  remove all SBA Configuration and tables associated with SBA. </p>
+    <p><img src="../images/InstallInstruction_005.GIF" alt="" width="320" height="44" /></p>
+    <p><a href="#top" class="style6">Go To Index</a><br />
+      <br />
+    </p>
+  <p>After running http://YOUR_DOMAIN/YOUR_ADMIN/stock_by_attr_install.php, you should get the message, <strong>  You have successfully installed the Stock By Attributes DATABASE components</strong>. <br />
+    <br />
+  The file "stock_by_attr_install.php" may be <span class="style1">deleted</span>. But, a link to this file was added on the "configuration" menu, as the file offers other functionalities described in this guide.</p>
+
+  <hr />
+
+  <h2>License &amp; Copyright</h2>
+  <p>Zen Cart Open Source E-commerce - Stock by Attributes</p>
+   <p>This contribution is subject to version 2.0 of the GPL license,
+    that is bundled with this package in the file LICENSE, and is
+    available through the world-wide-web at the following url:
+    <a href="http://www.zen-cart.com/license/2_0.txt">http://www.zen-cart.com/license/2_0.txt</a>.
+    If you did not receive a copy of the Zen Cart license and are unable
+    to obtain it through the world-wide-web, please send a note to
+  license@zen-cart.com.</p>
+</div>
+</body>
+</html>

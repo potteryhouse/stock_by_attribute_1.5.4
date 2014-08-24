@@ -1,0 +1,129 @@
+This file is provided for reference and for those that would prefer to not use the installation script and do it themselves.
+Use at your own risk, backup your database and site files prior to making any changes.
+Always test the install on a development or test site prior to using on an active site.
+
+NOTE: The sort_order in these SQL scripts has been set to 0, please change this to what you need for your site.
+
+ADDING
+----------------------------------------------------------------------------------------------------------------------------
+
+-- Add Install script to the configuration menu
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) 
+			VALUES 
+			('productsWithAttributesStockSetup', 'BOX_CONFIGURATION_PRODUCTS_WITH_ATTRIBUTES_STOCK_SETUP', 'FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK_SETUP', '', 'configuration', 'Y', 0)";
+			
+-- Add Stock page to the catalog menu
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+			VALUES
+			('productsWithAttributesStock', 'BOX_CATALOG_PRODUCTS_WITH_ATTRIBUTES_STOCK', 'FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK', '', 'catalog', 'Y', 0)";
+
+-- Adding Option switches to configuration
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, 
+	       configuration_description, configuration_group_id, sort_order, 
+	       last_modified, date_added, use_function, set_function) 
+	       VALUES 
+		    ('SBA Show Available Stock Level in Cart (when less than order)', 'STOCK_SHOW_LOW_IN_CART', 'false', 
+	        'When customer places more items in cart than are available, show the available stock on the shopping cart page:',
+	        9,0,now(),now(),NULL,'zen_cfg_select_option(array(\'true\', \'false\'),'),
+	
+	        ('SBA Display Images in Admin', 'STOCK_SHOW_IMAGE', 'false', 
+	        'Display image thumbnails on Products With Attributes Stock page? (warning, setting this to true can severely slow the loading of this page):',
+	        9,0,now(),now(),NULL,'zen_cfg_select_option(array(\'true\', \'false\'),'),
+	
+		    ('SBA Show Stock Level on Product Info Page', 'STOCK_SHOW_ATTRIB_LEVEL_STOCK', 'false', 
+	        'Show the available stock with each attribute on product info page:',
+	        9,0,now(),now(),NULL,'zen_cfg_select_option(array(\'true\', \'false\'),'),
+	
+		    ('SBA Original Price Struck Through', 'STOCK_SHOW_ORIGINAL_PRICE_STRUCK', 'false', 
+	        'Show the original price (struck through) on product info page with attribute:',
+	        9,0,now(),now(),NULL,'zen_cfg_select_option(array(\'true\', \'false\'),'),
+	
+			('SBA Display Search Box Only', 'STOCK_SET_SBA_SEARCHBOX', 'false', 
+			'Show Search box only (no records):',
+			9,0,now(),now(),null,'zen_cfg_select_option(array(\'true\', \'false\'),'),
+	
+			('SBA Display Search List Box', 'STOCK_SBA_SEARCHLIST', 'false', 
+			'Show the Search List box At the top of the page:',
+			9,0,now(),now(),null,'zen_cfg_select_option(array(\'true\', \'false\'),'),
+					
+			('SBA Display Custom ID', 'STOCK_SBA_DISPLAY_CUSTOMID', 'false', 
+			'Display the Custom ID value in history, checkout, and order forms:',
+			9,0,now(),now(),null,'zen_cfg_select_option(array(\'true\', \'false\'),');
+
+-- Add the Stock Table
+		CREATE TABLE IF NOT EXISTS `products_with_attributes_stock` (
+		`stock_id` INT(11) NOT NULL AUTO_INCREMENT,
+		`products_id` INT(11) NOT NULL,
+		`stock_attributes` VARCHAR(255) NOT NULL,
+		`quantity` FLOAT NOT NULL,
+		`sort` INT(11) NOT NULL DEFAULT '0',
+		`customid` VARCHAR(255) NULL DEFAULT NULL,
+		PRIMARY KEY (`stock_id`),
+		UNIQUE INDEX `product_attribute1` (`products_id`, `stock_attributes`),
+		UNIQUE INDEX `customid1` (`customid`)
+		);
+
+-- The Alter statements are only needed for upgrades
+-- Alter table to ADD COLUMN `customid`
+ALTER TABLE products_with_attributes_stock ADD COLUMN `customid` VARCHAR(255) NULL DEFAULT NULL AFTER `sort`;
+
+-- Alter table to add UNIQUE INDEX product_attribute1
+ALTER TABLE products_with_attributes_stock ADD UNIQUE INDEX product_attribute1 (`products_id`, `stock_attributes`);									
+
+-- Alter table to ADD sort
+ALTER TABLE products_with_attributes_stock ADD sort INT NOT NULL DEFAULT 0
+
+-- Alter table to change sort column structure 
+ALTER TABLE products_with_attributes_stock CHANGE COLUMN `sort` `sort` INT(11) NOT NULL DEFAULT '0' AFTER `quantity`;
+
+-- Optional SQL to add attributes to the stock table
+INSERT INTO products_with_attributes_stock (products_id, stock_attributes, quantity) 
+		
+	SELECT p.products_id, pa.products_attributes_id, p.products_quantity
+				FROM products p
+					LEFT JOIN products_attributes pa ON (p.products_id = pa.products_id)
+					LEFT JOIN products_options_values pv ON (pa.options_values_id = pv.products_options_values_id)
+				WHERE pa.products_attributes_id is not null
+					AND pa.options_values_id > 0
+					AND pa.attributes_display_only = 0
+				ORDER BY p.products_id, pa.products_attributes_id
+				
+				ON DUPLICATE KEY UPDATE
+					`products_id` = products_with_attributes_stock.products_id;
+
+-- Inserted products_options_types SBA option switch				
+INSERT INTO products_options_types (`products_options_types_id`, `products_options_types_name`) 
+			VALUES (6, 'SBA Select List (Dropdown) Basic');
+			
+-- Inserted PRODUCTS_OPTIONS_TYPE_SELECT_SBA into configuration SBA option switches			
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value,
+		configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function)
+			
+		VALUES
+		('Selection list product option type (SBA)', 'PRODUCTS_OPTIONS_TYPE_SELECT_SBA', 6, 
+		 'Numeric value of the radio button product option type',
+		 '6', 0, now(), now(), NULL, NULL);
+
+
+----------------------------------------------------------------------------------------------------------------------------
+DELETING
+----------------------------------------------------------------------------------------------------------------------------
+
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SHOW_IMAGE';
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SHOW_LOW_IN_CART';
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SHOW_ATTRIB_LEVEL_STOCK';
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SHOW_ORIGINAL_PRICE_STRUCK';
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SET_SBA_SEARCHBOX';
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SBA_SEARCHLIST';
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SBA_DISPLAY_CUSTOMID';
+
+	DELETE FROM configuration  WHERE  configuration_key = 'PRODUCTS_OPTIONS_TYPE_SELECT_SBA';
+	DELETE FROM products_options_types WHERE products_options_types_name = 'SBA Select List (Dropdown) Basic';
+	
+	DELETE FROM admin_pages  WHERE  page_key = 'productsWithAttributesStock';
+	DELETE FROM admin_pages  WHERE  page_key = 'productsWithAttributesStockSetup';
+	
+	DROP TABLE IF EXISTS 'products_with_attributes_stock';
+	
+	
+	

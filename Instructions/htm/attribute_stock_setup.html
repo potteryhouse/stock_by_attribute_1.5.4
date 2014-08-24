@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Readme for Stock by Attribute Mod</title>
+<style type="text/css">
+<!--
+body {font:100% Verdana, Arial, Helvetica, sans-serif; text-align:center; color:#333; margin:0; padding:0}
+#wrapper {width: 780px; margin: 0 auto; text-align: left}
+h1 {font:200% Georgia, "Times New Roman", Times, serif; color:#000}
+h2 {font:italic 140% Georgia, "Times New Roman", Times, serif; color:#000}
+.filename {font:90% "Courier New", Courier, monospace; color:#660000}
+code {background:#eee; margin:.5em 2em; padding: .5em; font-family:"Courier New", Courier, monospace; display:block}
+.style7 {font-size: 10pt}
+-->
+</style>
+</head>
+<body style="background-color: #F1F1F1">
+<div id="header">
+  <h1>Stock By Attributes</h1>
+</div>
+<div id="wrapper">
+  
+  <hr />
+  <p><span class="style7"><a href="installation.html">Installation</a> | <a href="configuration.html">Configuration</a> | Attribute Stock Setup | <a href="optional_sql.html">Optional Update</a> | <a href="export-import.html">Optional Export / Import</a> | <a href="notes.html">Notes</a> | <a href="../readme.html">HOME</a> </span></p>
+
+  <h2>Attribute Stock Setup</h2>
+  <p>Before adding any attribute stock variant to SBA, products and their corresponding attributes must be defined and setup  in Zen Cart. <br />
+ 
+    <h2>Setting up products </h2>
+  <p> As an example we will setup  for a Picture Frame.</p>
+  <p>1) Setup Category and Product:</p>
+  <ul>
+    <li> Create a Product category called (Picture Frames)</li>
+  <li>Create a Product called (Picture Frame Style 1)<br />
+    Note: while defining your product, be sure to 
+
+
+ set <strong>Product Priced by Attributes:</strong> to <strong>Yes</strong>. And NOT to place any quantity for <strong>Products Quantity:</strong> in this area. As SBA is handling that part. </li>
+  </ul>
+  <p>2) Setup your attributes for (Picture Frame Style 1).<br />
+  </p>
+  <p>  For this example,  attributes <strong>Option Name</strong>, and <strong>Option Type</strong> are setup as follow:</p>
+  <p>- Option Name: Size - 
+    Option Type: 
+  Radio<br />
+  - Option Name: Color - 
+  Option Type: 
+  Read Only<br />
+  - Option Name: Material - Option Type: Read Only</p>
+  <p>&nbsp;</p>
+  <ul>
+    <li> Setup the above and create Sizes 4x6, 5x7, 6x9 and 8x10. </li>
+  <li>Set the Default Attribute (In this case Size 4x6, shown in Orange)</li>
+    <li> Set to <strong>Display Only,</strong> all Attributes that have <strong>Attribute Option Type</strong> of <strong>Read Only. </strong>Shown in Yellow! <strong><br />
+    VERY IMPORTANT:</strong> If you miss this step, the <strong>Out of Stock</strong> message will get displayed on your product info page; for Color and Material attributes.<br />
+      <br />
+    <img src="../images/AttributeSetup.GIF" alt="" width="750" /></li>
+ </ul> 
+      <br /> 
+      <br />
+      <br />
+      3) Go to <strong>admin&gt;Catalog&gt;Products With Attributes Stock</strong>. Depending on  product(s) user  have  setup in the cart, user would see a list similar to the following:
+  
+      <p><img src="../images/ProductAttributesNoStock.GIF" alt="" width="750" /> </p>
+  <p>At first, since there are no inventory is set for product attributes variants, it shows 
+
+
+  <strong>Quantity for all variants</strong> as <strong>0</strong>. Except for products that do NOT  carry stock by attribute. </p>
+  <p>Once user start adding stock for your product attribute variants, it will add up all quantities and will display the total in <strong>Quantity for all variants</strong> column. <br />
+  <br />
+  <br />
+  4) To add product  attribute variant stock  </p>
+  <ul>
+    <li>Click on <strong>Add Quantity For Product Variant</strong> link<br />
+      <br />
+    <img src="../images/ProductAttributesNoStock_001.GIF" alt="" width="750" /><br />
+    </li>
+  <li>User will see a window similar to the following (depending on the number of product attribute varients available) . At this point user  should only add the variant controlling the quantity. If an attribute is not  controlling the stock, leave it as <strong>N/A</strong>. Place any <strong>custom ID</strong> for that product and it's stick <strong>quantity</strong> and click submit. <br />
+    <br />
+    <img src="../images/ProductAttributesNoStock_002.GIF" alt="" width="485" /><br />
+    <br />
+    As an example, if user sets the following quantities for the <strong>Size</strong> variant to <br />
+    Size 4x6 - 1<br />
+    Size 5x7 - 0 <br />
+    Size 4x6 - 2<br />
+    Total for all variants of <strong>Picture Frame Style 1</strong> would be <strong>3</strong>, as follow<strong>.</strong> <br />
+      <br />
+      <br />
+    <img src="../images/ProductAttributesNoStock_003.GIF" alt="" width="750" /><br />
+	Note:<br />
+Jquery option may be used for updating the:<br />"Quantity In Stock", "Sort Order", or "Custom ID"<br />
+Example: On the SBA entry page, Click on the "Quantity In Stock", the field should become editable.<br />
+Make changes, than click the "Save" button on the page.
+    <br /><br />
+    The product info page will look like:<br />
+    <br />
+    <img src="../images/QTY_Display_ProductInfo.GIF" alt="" width="421" height="387" /><br />
+    <br />
+    If  noticed, we did not add the stock for <strong>variant 6x9</strong>, and it shows it as <strong>Out of Stock</strong>!<br />
+  </ul>
+  <p><br />
+  5) Sync Quantities </p>
+  <p>Sync Quantities adds up all variant quantities for a product and places the result in <strong>Quantity for all variants</strong>. This information gets displayed in the product information page and  admin&gt;Catalog&gt;Products With Attributes Stock.</p>
+  <p>This function could be triggered for individual products or for all product(s) quantities. </p>
+  
+  <hr />
+  
+  <h2>License &amp; Copyright</h2>
+  <p>Zen Cart Open Source E-commerce - Stock by Attributes</p>
+  <p>This contribution is subject to version 2.0 of the GPL license, that is bundled with this package in the file LICENSE, and is available through the world-wide-web at the following url: <a href="http://www.zen-cart.com/license/2_0.txt">http://www.zen-cart.com/license/2_0.txt</a>. If you did not receive a copy of the Zen Cart license and are unable to obtain it through the world-wide-web, please send a note to license@zen-cart.com.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,684 @@
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=uft8">
+	<TITLE>Readme for Stock by Attribute Mod</TITLE>
+	<STYLE TYPE="text/css">
+	<!--
+		body {font:100% Verdana, Arial, Helvetica, sans-serif; text-align:center; color:#333; margin:0; padding:0}
+		#wrapper {width: 780px; margin: 0 auto; text-align: left}
+		h1 {font:200% Georgia, "Times New Roman", Times, serif; color:#000}
+		h2 {font:italic 140% Georgia, "Times New Roman", Times, serif; color:#000}
+		.filename {font:90% "Courier New", Courier, monospace; color:#660000}
+		code {background:#eee; margin:.5em 2em; padding: .5em; font-family:"Courier New", Courier, monospace; display:block}
+		.style4 {font-weight: bold; color: #FF0000;}
+		.style6 {font-size: 9pt}
+		.style7 {font-size: 10pt}
+
+		H3 { font-variant: normal; color: #333333; text-align: center }
+		H3.western { font-style: normal }
+		H3.cjk { font-family: "SimSun"; font-style: normal }
+		H3.ctl { font-family: "Mangal"; font-style: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#333333" BGCOLOR="#f1f1f1" DIR="LTR">
+<DIV ID="header" DIR="LTR">
+	<H1>Stock By Attributes (SBA) Version 1.5.3</H1>
+</DIV>
+<DIV ID="wrapper" DIR="LTR">
+	<H3 CLASS="western" ALIGN=CENTER>See <A HREF="htm/installation.html">Instructions</A>
+	for detailed installation and configuration guidance</H3>
+	<H1 ALIGN=CENTER>Installation, Usage, and Change Log</H1>
+	<P ALIGN=LEFT>This add-on is based on a Zen Cart contribution by
+	dafonz (products_with_attributes_stock), which was adapted by
+	danielcor for Zen Cart 1.3 and further adapted by <A HREF="http://www.kuroi.co.uk/" TARGET="_blank">kuroi
+	for 1.3.5+</A>. Above Media updated the code for 1.5.0+.
+	POTTERYHOUSE updated the code for 1.5.1 (see Change Log below for a
+	list of contributors and changes).</P>
+	<P ALIGN=LEFT>This version is designed specifically to work with Zen
+	Cart Version 1.5.1. This version <B>will not</B> work
+	correctly with earlier versions of Zen Cart.</P>
+	<H2 ALIGN=LEFT>What to use for earlier versions of Zen Cart</H2>
+	<P ALIGN=LEFT>If you are running Zen Cart 1.2.5-1.2.7d, please use
+	the &quot;products_with_attributes_stock&quot; add-on by dafonz. If
+	you are using versions 1.3.0 - 1.3.0.2 please use &quot;Stock
+	Attributes by danielcor&quot;. If you are using version 1.3.5,
+	please use version 4.2 of this mod, for 1.3.6 use version 4.3 of
+	this mod. Versions 4.4, 4.5 and 4.6 should be compatible with
+	versions 1.3.7 and 1.3.7.1 of Zen Cart (though obviously the latter
+	versions of Zen Cart and this add-on are recommended <A HREF="http://www.zen-cart.com/downloads.php?do=file&amp;id=202" TARGET="_blank">Link
+	to SBA Mod Page</A>).</P>
+	<H2 ALIGN=LEFT>What This Module Does</H2>
+	<P ALIGN=LEFT>This add-on allows a store owner to set a stock value
+	for each variant of a product. For example, if you have three sizes,
+	large, medium and small, this module will allow you to keep track of
+	all the different quantities. It will work for a virtually unlimited
+	number of amount of attribute combinations. For example, if you
+	offered cotton or polyester shirts in green, red or blue and small
+	medium or large sizes, this add-on would allow you to enter and
+	maintain a separate stock level for each of the 18 possible
+	combinations.</P>
+	<H2 ALIGN=LEFT>What This Version of the Module Does</H2>
+	<P ALIGN=LEFT>Runs with all existing functionality on Zen 1.5.1.
+	This mod simply extends and augments the provided functionality of
+	Zen Cart. See the provided <A HREF="htm/installation.html">Instructions</A>
+	for details.</P>
+	<H2 ALIGN=LEFT>What This Module Does <B>NOT</B> Do</H2>
+	<P ALIGN=LEFT>The mod does <B>not</B> replace the existing Zen Cart
+	Attributes (built-in) functionality. 
+	</P>
+	<H2 ALIGN=LEFT>Clean Install</H2>
+	<P ALIGN=LEFT><B>BACK UP YOUR DATABASE and WEB SITE Files!</B><BR>Prepare
+	the package for upload to your server by renaming the following
+	folders to match your template name: <B>includes/modules/YOUR_TEMPLATE</B>
+	and <B>includes/templates/YOUR_TEMPLATE</B>. 
+	</P>
+	<P ALIGN=LEFT>If this is a new install of Zen Cart 1.5.1, then with
+	most good FTP programs (such as <A HREF="https://filezilla-project.org/">FileZilla</A>)
+	you can simply drag and drop the <B>admin</B> (renamed to match your
+	admin folder name) and <B>includes</B> directories into the root
+	directory of your site. The files are already arranged in the
+	correct directory structure. Upload the admin, and includes folder,
+	to your store's directory. The &quot;Instructions\InstallSQLcommands.txt&quot;
+	file is for those who wish to upgrade the database manually, DO NOT
+	put the &quot;Instructions&quot; folder on your site, this is only
+	for your reference.</P>
+	<P ALIGN=LEFT>There are core Zen Cart files, over-ridden files and
+	language specific files/folders modified by this add-on. If you have
+	installed other add-ons or customised your cart since your Zen Cart
+	installation, you will need to check whether they have changed any
+	of the files: See <A HREF="htm/installation.html">Instructions</A>.</P>
+	<P ALIGN=LEFT>If you, or any mods that you have installed, have
+	changed any of these files (or the over-ridden files), then you will
+	need to merge changes into the relevant file.</P>
+	<P ALIGN=LEFT>Once you have backed up your database and all files
+	are uploaded, go to
+	http://your_store_url/YOUR_ADMIN/stock_by_attr_install.php to update
+	the database. This should work equally well for upgrades as it does
+	for new installs as it makes sure all prior upgrades have been
+	applied.</P>
+	<H2 ALIGN=LEFT>Upgrade from earlier versions</H2>
+	<P ALIGN=LEFT>Most files have changed. Merge the changes. Run
+	http://your_store_url/YOUR_ADMIN/stock_by_attr_install.php to update
+	the database. 
+	</P>
+	<P ALIGN=LEFT>If you prefer to upgrade the database manually,
+	guidance can be found on the &quot;stock_by_attr_install.php&quot;
+	page and in the &quot;Instructions\InstallSQLcommands.txt&quot;
+	file.</P>
+	<H2 ALIGN=LEFT>To uninstall</H2>
+	<P ALIGN=LEFT>Upload stock_by_attr_install.php to the admin
+	directory of your store, then point your browser to the url
+	(http://your_store_url/YOUR_ADMIN/stock_by_attr_install.php) The
+	process removes the database changes and provides a list of files
+	that should be removed and reverted to the previous (backup)
+	versions.</P>
+	<H2 ALIGN=LEFT>How to Use Stock by Attributes</H2>
+	<P ALIGN=LEFT>To use, log into the admin area, click on
+	Catalog-&gt;Products with Attributes Stock to modify inventory
+	levels of your products by attributes. You will also want to
+	consider the settings in Configuration-&gt;Stock. The settings here
+	will determine things such as whether or not a customer will be
+	allowed to checkout when insufficient stock is on hand. As well as
+	controlling the new feature that allows you display the amount of
+	stock available on the shopping cart page if a customer tries to buy
+	more than the recorded stock. 
+	</P>
+	<P ALIGN=LEFT><A HREF="htm/installation.html">Please click here for
+	a more detailed description of Installation, Configuration, setup
+	and additional features available in this version of the mod.</A> 
+	</P>
+	<H1 ALIGN=LEFT>Change Log</H1>
+	<P ALIGN=LEFT><FONT COLOR="#cc6633">The most recent updates and
+	changes are listed at the end of this log. <br /><FONT COLOR="#000000">This
+	log provides a chronological history of changes over time.</FONT></FONT></P>
+	<H2 ALIGN=LEFT>Adapting Stock by Attributes for languages other than
+	English</H2>
+	<P ALIGN=LEFT>Many of the changes made to this add-on from its
+	previous incarnation were to support proper language support in the
+	Admin functions and an additional &quot;stock available + quantity&quot;
+	message in the shopping cart. To take advantage of these facilities
+	three files need to be created. As a guide, I have included my
+	translations of these files into French in the release pack. If you
+	are using a language other than French, edit the directory paths
+	from &quot;french&quot; to your language and similarly edit the
+	three files.</P>
+	<H2 ALIGN=LEFT>Amendments from v3 (Stock Attributes by danielcor) 
+	</H2>
+	<P ALIGN=LEFT>1. Removed zen_ prefix from table creation SQL
+	allowing it to be run by Admin &gt; Tools &gt; Install SQL Patches
+	(bug fix)</P>
+	<P ALIGN=LEFT>2. Changed quantity field to float in products with
+	attributes table allowing fractional stock quantities (bug fix)</P>
+	<P ALIGN=LEFT>3. admin/orders.php updated for compatibility with Zen
+	Cart 1.3.5</P>
+	<P ALIGN=LEFT>4. admin/products_with_attributes_stock.php updated to
+	pass a languages_id to functions get_products_attributes and
+	get_attributes_name each time they are called (bug fix) 
+	</P>
+	<P ALIGN=LEFT>5. includes/functions/functions_lookups.php updated
+	for compatibility with Zen Cart 1.3.5</P>
+	<P ALIGN=LEFT>6. products_with_attributes_catalog_dhtml.php file
+	created so that catalog_dhtml.php no longer needs to be over-written
+	(new feature)</P>
+	<P ALIGN=LEFT>7. Language file for Admin is now used, which together
+	with earlier bug fix should allow full integration with carts whose
+	Admin is not in English (new feature)</P>
+	<P ALIGN=LEFT>8. Multiple changes to allow all data and add-on
+	generated text to correctly reflect Admin language.</P>
+	<P ALIGN=LEFT>9. Re-enabled check stock and disable checkout feature
+	for all products (bug fix)</P>
+	<P ALIGN=LEFT>10. Fixed &quot;Out of Stock&quot; indicators in
+	Shopping Cart for products with attributes (bug fix)</P>
+	<P ALIGN=LEFT>11. Added &quot;Stock Available&quot; to shopping cart
+	page for display when stock is low. This can be turned on and off
+	via the Admin &gt; Stock menu (new feature)</P>
+	<P ALIGN=LEFT>12. Low stock email now triggered by low stock on an
+	attribute, even if overall stock for product remains above stock
+	reorder level (new feature)</P>
+	<P ALIGN=LEFT>13. Removed all uses of the &lt;? shortform php tag
+	(best practice)</P>
+	<P ALIGN=LEFT>14. Moved the inline styling on the Products with
+	Attributes Stock page to a stylesheet (best practice)</P>
+	<P ALIGN=LEFT>15. Added model to Products with Attributes Stock page
+	(new feature)</P>
+	<P ALIGN=LEFT>16. Fixed occasional corruption of product variants on
+	stock page (bug fix)</P>
+	<H2 ALIGN=LEFT>Amendments from 4.0 to 4.1</H2>
+	<P ALIGN=LEFT>Incorporated two Zen Cart bug fixes in the files used
+	by this mod.</P>
+	<P ALIGN=LEFT>Corrected a missing double quote in the SQL patch file</P>
+	<P ALIGN=LEFT>Removed a stray diagnostic line</P>
+	<H2 ALIGN=LEFT>Amendments from 4.1 to 4.2</H2>
+	<P ALIGN=LEFT>Corrected the &quot;invalid argument supplied for
+	foreach()&quot; in order.php</P>
+	<P ALIGN=LEFT>Corrected the problem with product variants sometimes
+	not showing on the stock screen (actually a database corruption)</P>
+	<P ALIGN=LEFT>Improved the layout of the stock page by adding some
+	extra CSS.</P>
+	<P ALIGN=LEFT>To upgrade from 4.1, just replace all the files. 
+	</P>
+	<H2 ALIGN=LEFT>Amendments from 4.2 to 4.3</H2>
+	<P ALIGN=LEFT>Multiple small changes in accordance with the security
+	patches incorporated in Zen Cart 1.3.6</P>
+	<P ALIGN=LEFT>Minor change to define statements to eliminate a
+	hard-coded English-language &quot;Quantity&quot; missed in previous
+	releases.</P>
+	<P ALIGN=LEFT>To upgrade from 4.1 or 4.2, just replace all the
+	files.</P>
+	<H2 ALIGN=LEFT>Amendments from 4.3 to 4.4</H2>
+	<P ALIGN=LEFT>Minor changes to the following files to keep them in
+	line with the new functionality in Zen Cart 1.3.7 and avoid a
+	duplicate include of the http_client class: 
+	</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/orders.php 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/classes/order.php
+				</P>
+		<LI><P ALIGN=LEFT>includes/modules/pages/checkout_shipping/header_php.php
+				</P>
+	</UL>
+	<P ALIGN=LEFT>To upgrade from 4.1 or 4.2, just replace all the files
+	To upgrade from 4.3, replace the three files above.</P>
+	<H2 ALIGN=LEFT>Amendments from 4.4 to 4.5</H2>
+	<P ALIGN=LEFT>Two Zen Cart security patches from 1.3.7.1:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/orders.php 
+		</P>
+		<LI><P ALIGN=LEFT>includes/modules/pages/checkout_shipping/header_php.php
+				</P>
+	</UL>
+	<P ALIGN=LEFT>A minor change to make the HTML generated for orders
+	easier to read. This is a Zen Cart 1.3.7.1 change that will make
+	debugging and maintenance easier, but not affect functionality:</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes/classes/order.php 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>Allowance for recent Zen Cart changes for paypal in
+	the shopping cart:</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes/templates/YOUR_TEMPLATE/templates/tpl_shopping_cart_default.php
+				</P>
+	</UL>
+	<P ALIGN=LEFT>Removes the attributes.php file from the includes
+	folder. The only thing that this file was doing was blocking a small
+	Zen Cart enhancement introduced in version 1.3.5.</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes/modules/attributes.php 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>Additional styling for the input labels in the Admin -
+	just makes the world a slightly nicer place:</P>
+	<UL>
+		<LI><P ALIGN=LEFT>admin/includes/stylesheet.css 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>Slight change to the low stock message switch wording
+	to make clear that this for showing stock levels in cart when there
+	is insufficent to meet the customer's order</P>
+	<UL>
+		<LI><P ALIGN=LEFT>stock_attribute.sql 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.5 to 4.6</H2>
+	<P ALIGN=LEFT>Re-working (and commenting) of the function that
+	obtains stock values</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes/functions/functions_lookups.php 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.6 to 4.7</H2>
+	<P ALIGN=LEFT>Integration of changes in Zen Cart 1.3.8 into the
+	following files:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/orders.php 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/classes/order.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/functions/functions_lookups.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/modules/pages/checkout_shipping/header_php.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/modules/pages/shopping_cart/header_php.php
+				</P>
+		<LI><P ALIGN=LEFT>includes/templates/YOUR_TEMPLATE/templates/tpl_shopping_cart.php
+				</P>
+	</UL>
+	<P ALIGN=LEFT>There are no functional enhancements.</P>
+	<H2 ALIGN=LEFT>Amendments from 4.7 to 4.7ajax</H2>
+	<P ALIGN=LEFT>added ajax functionality</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">search filter: &quot;%ma&quot;
+		filters all produchts with &quot;ma&quot; in products-name or in
+		products-model; the search value will be stored in a cookie 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">a click at the
+		&quot;quantity in stock&quot; value adds an input-field &amp; you
+		can enter the new value; the store button saves all changed values 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">added files in /ajax
+		folder 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">changed
+		products_with_attributes_stock.php 
+		</P>
+		<LI><P ALIGN=LEFT>added products_with_attributes_stock_ajax.php 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.7ajax to 4.8</H2>
+	<P ALIGN=LEFT>Added missing file from 4.7 AJAX</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes/classes/order.php 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>Added admin feature to resync all quantities.</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT>admin/includes/classes/products_with_attributes_stock.php
+				</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.8 to 4.9</H2>
+	<P ALIGN=LEFT>Re-Styled and re-organized the main admin display page
+	and added a small thumbnail. <BR>Updated the following files:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/includes/classes/products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/includes/products_with_attributes_stock_ajax.css
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/includes/languages/english/products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/includes/languages/french/products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT>admin/includes/languages/german/products_with_attributes_stock.php
+				</P>
+	</UL>
+	<P ALIGN=LEFT>Updated search function with a 'View All' button</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT>admin/includes/classes/products_with_attributes_stock.php
+				</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.9 to 4.10</H2>
+	<P ALIGN=LEFT>Completed missing function to update all
+	products.<BR>Made product thumbnails optional.<BR>Improved AJAX
+	search.<BR>Added stock attribute sort function using primary
+	attribute's sort order.<BR>Modified the following files:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">update_1_4_10.sql 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">stock_attribute.sql 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">module_version/stock_by_attributes.txt
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/products_with_attributes_stock_ajax.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/includes/classes/products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/functions/general.php
+				</P>
+		<LI><P ALIGN=LEFT>ajax/products_with_attributes_stock_ajax.js 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.10 to 4.11</H2>
+	<P ALIGN=LEFT>Fixed the search function in the admin and updated for
+	ZC 1.3.9d.<BR>Modified the following files:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/orders.php 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/products_with_attributes_stock_ajax.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/functions/general.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/classes/order.php
+				</P>
+		<LI><P ALIGN=LEFT>includes/functions/functions_lookups.php 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.11 to 4.12</H2>
+	<P ALIGN=LEFT>Updated for ZC 1.3.9h.<BR>Fixed errors in
+	readme.html<BR>Modified the following files:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/templates/YOUR_TEMPLATE/templates/tpl_shopping_cart.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/includes/functions/general.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/modules/pages/checkout_shipping/header_php.php
+				</P>
+		<LI><P ALIGN=LEFT>includes/modules/pages/shopping_cart/header_php.php
+				</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.12 to 4.13</H2>
+	<P ALIGN=LEFT>Updated for ZC 1.3.9h.<BR>Fixed errors in one file</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes/modules/pages/shopping_cart/header_php.php
+				</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.13 to 4.14</H2>
+	<P ALIGN=LEFT>Fixed errors in one file</P>
+	<UL>
+		<LI><P ALIGN=LEFT>admin/products_with_attributes_stock.php 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 4.14 to 5.0</H2>
+	<P ALIGN=LEFT>Added Install and Uninstall files</P>
+	<P ALIGN=LEFT>Updated files to Zen 1.50</P>
+	<P ALIGN=LEFT>Fixed error that caused all products appearing after
+	an out-of-stock product to also show as out of stock</P>
+	<P ALIGN=LEFT>Moved all sql files to &quot;legacy&quot; folder
+	(including sql upgrade for Zen 1.5)</P>
+	<P ALIGN=LEFT>Removed &quot;boxes&quot; folder and files, they are
+	no longer used</P>
+	<P ALIGN=LEFT>Removed French and German language folders as they are
+	empty</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">stock_by_attr_install.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">stock_by_attr_uninstall.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/orders.php 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin/includes/functions/general.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/classes/order.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/functions/functions_lookups.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/modules/pages/checkout_shipping/header_php.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes/modules/pages/shopping_cart/header_php.php
+				</P>
+		<LI><P ALIGN=LEFT>includes/templates/YOUR_TEMPLATE/templates/tpl_shopping_cart_default.php
+		(override file) 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 1.5.0 to 1.5.1 <FONT SIZE=3>(Updated
+	by POTTERYHOUSE)</FONT></H2>
+	<P ALIGN=LEFT>Updated the following files to resolve bugs and to add
+	an ability for showing option values as out of stock, attribute qty,
+	and stock of products without attributes in cart.</P>
+	<P ALIGN=LEFT>File updated to support Zen Cart version 1.5.1</P>
+	<UL>
+		<LI><P ALIGN=LEFT>admin\includes\functions\general.php 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>File (Zen Cart version 1.5.1) added to support new
+	functionality</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes\modules\attributes.php 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>File updated to fix bugs and support new
+	functionality. Details in 'Updates.txt'</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin\includes\classes\products_with_attributes_stock.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin\includes\functions\general.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\extra_datafiles\products_with_attributes_stock_database_tables.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\languages\english\extra_definitions\products_with_attributes.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\modules\attributes.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\modules\pages\shopping_cart\header_php.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\templates\YOUR_TEMPLATE\templates\tpl_shopping_cart_default.php
+				</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">stock_by_attr_install.php
+				</P>
+		<LI><P ALIGN=LEFT>stock_by_attr_uninstall.php 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>New file <B>Optional.sql</B>, this will add entries
+	into the new products_with_attributes_stock table based on current
+	products that have attributes. By default it will set each of the
+	new entries to the quantity found in the product entry.</P>
+	<UL>
+		<LI><P ALIGN=LEFT><U>Optional.sql </U>
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 1.5.1 to 1.5.1.1 <FONT SIZE=3>(Updated
+	by POTTERYHOUSE)</FONT></H2>
+	<P ALIGN=LEFT>Updated attributes.php to resolve a display bug and
+	added an option switch to turn off the original price 'strike
+	through' display.</P>
+	<P ALIGN=LEFT>File updated</P>
+	<UL>
+		<LI><P ALIGN=LEFT>includes\modules\attributes.php 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>File updated to add new option switch</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">stock_by_attr_install.php
+				</P>
+		<LI><P ALIGN=LEFT>stock_by_attr_uninstall.php 
+		</P>
+	</UL>
+	<H2 ALIGN=LEFT>Amendments from 1.5.1.1 to 1.5.1.2 <FONT SIZE=3>(Updated
+	by POTTERYHOUSE)</FONT></H2>
+	<P ALIGN=LEFT>Most files have been Updated, installation script
+	completely rewritten and now located in the admin folder, ajax
+	folder moved, and two files merged (replaced by one file).<BR>These
+	changes supported bug fixes, enhancing existing features and adding
+	new features. <BR>Please see the file <A HREF="Updates.txt">Updates.txt</A>
+	for a list of changes and <A HREF="htm/installation.html">Instructions</A>
+	for usage details and the new functionality. 
+	</P>
+	<H2 ALIGN=LEFT>Amendments from 1.5.1.2 to 1.5.2 <FONT SIZE=3>(Updated
+	by POTTERYHOUSE)</FONT></H2>
+	<P ALIGN=LEFT>This update ports functionality
+	from:<BR><A HREF="http://www.zen-cart.com/downloads.php?do=file&amp;id=1355">stock_by_attributes_1.4.13_with_my_stock_id_MOD
+	version 1.0.2 by rhuseby.</A></P>
+	<P ALIGN=LEFT>Update sponsored by:<BR><BR>Host 99 Web Hosting<BR>Web
+	Hosting &amp; PCI Hosting, SecurityMetrics Platinum Partner<BR><A HREF="http://host-99.com/pci-hosting.html">PCI
+	Certified Web Hosting</A> - ControlScan, McAfee,
+	TrustKeeper<BR>http://www.host-99.com</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">The update allows for
+		a unique &quot;Item ID&quot; (customid) for each attribute of a
+		product. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">The new customid field
+		is optional. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">A switch was added to
+		the &quot;configuration/stock&quot; page to enable/disable the
+		display of this field. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Custom ID field is
+		displayed on the sites checkout, confirmation, and history pages. 
+		</P>
+		<LI><P ALIGN=LEFT>Custom ID field is displayed on the admin orders,
+		invoice, and packing slip pages. 
+		</P>
+	</UL>
+	<P ALIGN=LEFT>Additional functionality was added or updated: 
+	</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Removed 'legacy'
+		folder. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Updated to better
+		support drop-down selection lists with the new options added by
+		these recent changes. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Stock Page updated to
+		help prevent read-only attributes from being added (as these have
+		no bearing on stocked items). 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Optional SQL updated
+		so it will not add read-only attributes to the sock page. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Jquery enhancements on
+		form to make it easier to add and edit quantity, sort order, and
+		customid. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">jquery updated to
+		1.10.2. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">On stock edit page
+		added a link to product edit page for each product. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Updated to properly
+		display quantities when the product has attributes but no attribute
+		or attribute combination are available in the stock page (In this
+		situation, the quantity is derived from the parent product quantity
+		field.). 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Updated to change save
+		behaviour in stock edit page, Will no longer automatically update
+		base product quantities when saved (If the base quantity needs to
+		be synced with the attributes use the &quot;Sync Quantities&quot;
+		button.). 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Updated
+		stock_by_attr_install.php installation file, added more guidance
+		and a cleaner look. 
+		</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Installation script
+		CSV file updated to support customid. 
+		</P>
+		<LI><P ALIGN=LEFT>Added the Installation script to the
+		&quot;configuration&quot; menu (allows easier access to the CSV
+		script). 
+		</P>
+	</UL>
+	<P ALIGN=LEFT><BR>Instructions updated and a new SQL file
+	(Instructions\InstallSQLcommands.txt) is provided that contains the
+	&quot;raw&quot; sql commands for reference.<BR>Refer to <A HREF="Updates.txt">Updates.txt</A>
+	for a list of changed files. 
+	</P>
+	<H2 ALIGN=LEFT>Amendments from 1.5.2 to 1.5.3 <FONT SIZE=3>(Updated
+	by POTTERYHOUSE)</FONT></H2>
+	<P ALIGN=LEFT>This update adds new functionality, corrects some
+	display issues, and returns language files previously removed.</P>
+	<P ALIGN=LEFT>There is a new &ldquo;Product Option Type&rdquo; <SPAN STYLE="font-variant: normal"><FONT COLOR="#0000ff"><FONT FACE="Verdana, sans-serif"><FONT SIZE=3 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">SBA
+	Select List (Dropdown) Basic</SPAN></SPAN></FONT></FONT></FONT></SPAN>
+	added to &ldquo;Options Name Manager&rdquo;. The attributes.php file
+	has been updated and moved to a TEMPLATE overrides folder.</P>
+	<P ALIGN=LEFT>This version supports
+	&quot;Multiple-Attribute-Combinations&quot; i.e., allows for
+	multiple attributes for a product in the SAME Stock ROW on the SBA
+	stock page, thus you can create custom combinations with specific
+	quantities.</P>
+	<P ALIGN=LEFT>The following files have been updated:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin\includes\classes\products_with_attributes_stock.php</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin\products_with_attributes_stock.php</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin\stock_by_attr_install.php</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\functions\functions_lookups.php</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\functions\extra_functions\products_with_attributes.php</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\modules\pages\shopping_cart\header_php.php</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\modules\YOUR_TEMPLATE\attributes.php</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\templates\YOUR_TEMPLATE\templates\tpl_shopping_cart_default.php</P>
+	</UL>
+	<P ALIGN=LEFT STYLE="margin-bottom: 0in">This update should
+		resolve most display problems that have been posted in the forum.</P>
+
+	<P ALIGN=LEFT>Some of the items resolved:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">Dynamic Filter not
+		working correctly with SBA.</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">&lt;span&gt; tag in
+		the drop-down selection list.</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">QTY: showing up on
+		read-only attributes.</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">&lt;b&gt; tag showing
+		up in drop-down selection list.</P>
+		<P ALIGN=LEFT STYLE="margin-bottom: 0in"></P>
+	</UL>
+	<P ALIGN=LEFT>New Option Supported:</P>
+	<UL>
+		<LI><P ALIGN=LEFT>Ability to add a yes/no type of selection list that is not be tied to an SBA stock level (&ldquo;Product Option Type&rdquo; <SPAN STYLE="font-variant: normal"><FONT COLOR="#0000ff"><FONT FACE="Verdana, sans-serif"><FONT SIZE=3 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">SBA
+		Select List (Dropdown) Basic</SPAN></SPAN></FONT></FONT></FONT></SPAN>
+		added to support this option)</P>
+	</UL>
+	<P ALIGN=LEFT>Language files:</P>
+	<UL>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin\includes\languages\dutch</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">admin\includes\languages\french</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\languages\dutch\extra_definitions</P>
+		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0in">includes\languages\french\extra_definitions</P>
+	</UL>
+	<P ALIGN=LEFT>This update returns language files (French)
+	that were removed in a previous version and adds a structure for "dutch". Additional languages may
+	be added using these files as examples.<BR>The language files need
+	to be updated for proper language, grammar, etc.</P>
+	<H2 ALIGN=LEFT>License &amp; Copyright</H2>
+	<P ALIGN=LEFT>Zen Cart Open Source E-commerce - Stock by Attributes</P>
+	<P ALIGN=LEFT>Updated 2013-2014 <A HREF="http://www.zen-cart.com/member.php?119580-potteryhouse">POTTERYHOUSE</A><BR>Portions
+	Copyright (c) 2013 Above Media (<A HREF="http://www.abovemedia.com/">www.abovemedia.com</A>)<BR>Portions
+	Copyright (c) 2009-2010 Numinix Technology
+	(<A HREF="http://www.numinix.com/">www.numinix.com</A>)<BR>Portions
+	Copyright (c) 2008 edv-l&ouml;sungen langheiter
+	(<A HREF="http://www.kuroiwebdesign.com/">edv.langheiter.com</A>)<BR>Portions
+	Copyright (c) 2006-2007 kuroi Ltd (<A HREF="http://www.kuroiwebdesign.com/">www.kuroiwebdesign.com</A>)<BR>Portions
+	Copyright (c) 2005 dafonz, 2006 danielcor <BR>Portions Copyright (c)
+	2003 osCommerce, 2003-2007 Zen Cart</P>
+	<P ALIGN=LEFT>This contribution is subject to version 2.0 of the GPL
+	license, that is bundled with this package in the file LICENSE, and
+	is available through the world-wide-web at the following url:
+	<A HREF="http://www.zen-cart.com/license/2_0.txt">http://www.zen-cart.com/license/2_0.txt</A>.
+	If you did not receive a copy of the Zen Cart license and are unable
+	to obtain it through the world-wide-web, please send a note to
+	license@zen-cart.com.</P>
+	<P ALIGN=LEFT>Important Information: This is a Free addon
+	modification, it is provided &quot;As is&quot;.</P>
+	<P ALIGN=LEFT>ASSUMPTION OF RISK: THE RISK OF ANY AND ALL LOSS,
+	DAMAGE, OR UNSATISFACTORY PERFORMANCE OF THIS SOFTWARE OR PROGRAM
+	RESTS WITH YOU AS THE USER.</P>
+	<P ALIGN=LEFT>No representation is made with respect to use or
+	suitability for your website. Installing any addons to your site has
+	a direct effect on your site's PCI compliance. You must self-certify
+	all addons you install, in addition to all other customizations you
+	make to your site. Use at your own risk!</P>
+</DIV>
+</BODY>
+</HTML>
