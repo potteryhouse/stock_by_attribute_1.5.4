@@ -24,7 +24,7 @@
 </HEAD>
 <BODY LANG="en-US" TEXT="#333333" BGCOLOR="#f1f1f1" DIR="LTR">
 <DIV ID="header" DIR="LTR">
-	<H1>Stock By Attributes (SBA) Version 1.5.3</H1>
+	<H1>Stock By Attributes (SBA) Version 1.5.4</H1>
 </DIV>
 <DIV ID="wrapper" DIR="LTR">
 	<H3 CLASS="western" ALIGN=CENTER>See <A HREF="htm/installation.html">Instructions</A>
@@ -37,7 +37,7 @@
 	POTTERYHOUSE updated the code for 1.5.1 (see Change Log below for a
 	list of contributors and changes).</P>
 	<P ALIGN=LEFT>This version is designed specifically to work with Zen
-	Cart Version 1.5.1. This version <B>will not</B> work
+	Cart Version 1.5.3. This version <B>will not</B> work
 	correctly with earlier versions of Zen Cart.</P>
 	<H2 ALIGN=LEFT>What to use for earlier versions of Zen Cart</H2>
 	<P ALIGN=LEFT>If you are running Zen Cart 1.2.5-1.2.7d, please use
@@ -60,7 +60,7 @@
 	maintain a separate stock level for each of the 18 possible
 	combinations.</P>
 	<H2 ALIGN=LEFT>What This Version of the Module Does</H2>
-	<P ALIGN=LEFT>Runs with all existing functionality on Zen 1.5.1.
+	<P ALIGN=LEFT>Runs with all existing functionality on Zen 1.5.3.
 	This mod simply extends and augments the provided functionality of
 	Zen Cart. See the provided <A HREF="htm/installation.html">Instructions</A>
 	for details.</P>
@@ -74,7 +74,7 @@
 	folders to match your template name: <B>includes/modules/YOUR_TEMPLATE</B>
 	and <B>includes/templates/YOUR_TEMPLATE</B>. 
 	</P>
-	<P ALIGN=LEFT>If this is a new install of Zen Cart 1.5.1, then with
+	<P ALIGN=LEFT>If this is a new install of Zen Cart 1.5.3, then with
 	most good FTP programs (such as <A HREF="https://filezilla-project.org/">FileZilla</A>)
 	you can simply drag and drop the <B>admin</B> (renamed to match your
 	admin folder name) and <B>includes</B> directories into the root
@@ -99,7 +99,7 @@
 	for new installs as it makes sure all prior upgrades have been
 	applied.</P>
 	<H2 ALIGN=LEFT>Upgrade from earlier versions</H2>
-	<P ALIGN=LEFT>Most files have changed. Merge the changes. Run
+	<P ALIGN=LEFT>[what's new from 1.5.3?]. Run
 	http://your_store_url/YOUR_ADMIN/stock_by_attr_install.php to update
 	the database. 
 	</P>
@@ -651,6 +651,54 @@
 	that were removed in a previous version and adds a structure for "dutch". Additional languages may
 	be added using these files as examples.<BR>The language files need
 	to be updated for proper language, grammar, etc.</P>
+	<H2 ALIGN=LEFT>Amendments from 1.5.2 to 1.5.3 </H2>
+		<p>The following files have been updated:</p>
+		<p>admin\includes\classes\products_with_attributes_stock.php</p>
+			<ul>
+				<li>Updates to prevent bad user input from casing database errors.</li>
+				<li>Updated function zen_get_customid() to better support customid.</li>
+			</ul>
+		<p>admin\products_with_attributes_stock.php</p>
+			<ul>
+				<li>Updates to prevent bad user input from casing database errors.</li>
+				<li>Update to properly select language i use.</li>
+				<li>Update to remove "EVAL()" command, as it caused some problems on some hosts.</li>
+			</ul>
+		<p>admin\stock_by_attr_install.php</p>
+			<ul>
+				<li>Script updated to support new options and to provide clearer user notices.</li>
+			</ul>
+		<p>includes\functions\functions_lookups.php</p>
+		<ul>
+			<li>Updated to support "Multiple Attribute Combinations" for a single stock entry.</li>
+		</ul>
+		<p>includes\functions\extra_functions\products_with_attributes.php</p>
+			<ul>
+				<li>Added function cartProductCount()</li>
+				<li>Updated function zen_get_customid() to better support customid.</li>
+			</ul>
+		<p>includes\modules\pages\shopping_cart\header_php.php</p>
+			<ul>	
+				<li>Updated to cleanup display errors.</li>
+				<li>Updated to test for proper quantities when the a product is in the cart multiple times with different attribute selections.</li>
+			</ul>
+		<p>includes\modules\YOUR_TEMPLATE\attributes.php</p>
+			<ul>
+			<li>Updated to cleanup display error and moved to a template over-ride folder.</li>
+			</ul>
+		<p>includes\templates\YOUR_TEMPLATE\templates\tpl_shopping_cart_default.php</p>
+			<ul>
+				<li>Updated to cleanup display.</li>
+			</ul>
+		<p>Added Language Files:</p>
+			<ul>
+				<li>admin\includes\languages\dutch</li>
+				<li>admin\includes\languages\french</li>
+				<li>includes\languages\dutch\extra_definitions</li>
+				<li>includes\languages\french\extra_definitions</li>
+			</ul>
+	<H2 ALIGN=LEFT>Amendments from 1.5.3 to 1.5.4 </H2>
+		<p>TBD</p>
 	<H2 ALIGN=LEFT>License &amp; Copyright</H2>
 	<P ALIGN=LEFT>Zen Cart Open Source E-commerce - Stock by Attributes</P>
 	<P ALIGN=LEFT>Updated 2013-2014 <A HREF="http://www.zen-cart.com/member.php?119580-potteryhouse">POTTERYHOUSE</A><BR>Portions
