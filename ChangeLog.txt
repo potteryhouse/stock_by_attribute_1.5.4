@@ -34,6 +34,7 @@ includes\modules\YOUR_TEMPLATE\attributes.php
 -- Added option to display images when a selection is changed in select list. 
 -- Change to correct customid display behaviour with various option switches.
 -- Added a new option switch 'SBA_SHOW_IMAGE_ON_PRODUCT_INFO'.
+-- Moved Out of Stock label to after attribute name.
 
 includes\templates\YOUR_TEMPLATE\jscript\jquery.form.js
 includes\templates\YOUR_TEMPLATE\jscript\jquery-1.10.2.min.js
