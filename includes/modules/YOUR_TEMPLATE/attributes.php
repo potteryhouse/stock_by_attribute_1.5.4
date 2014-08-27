@@ -169,7 +169,7 @@ if ($pr_attr->fields['total'] > 0) {
 				if( $products_options->fields['pasqty'] < 1 && STOCK_CHECK == 'true' &&  $products_options->fields['pasid'] > 0 ){
 					//test, only applicable to products with-out the read-only attribute set
 					if( $products_options_READONLY->fields['attributes_display_only'] < 1 ){
-						$products_options->fields['products_options_values_name'] = PWA_OUT_OF_STOCK . $products_options->fields['products_options_values_name'];
+						$products_options->fields['products_options_values_name'] = $products_options->fields['products_options_values_name'] . PWA_OUT_OF_STOCK;
 					}
 				}
 
@@ -203,7 +203,7 @@ if ($pr_attr->fields['total'] > 0) {
 								$PWA_STOCK_QTY = PWA_STOCK_QTY . $products_options->fields['products_quantity'] . ' ';
 							}
 							else{
-								$products_options->fields['products_options_values_name'] = PWA_OUT_OF_STOCK . $products_options->fields['products_options_values_name'];
+								$products_options->fields['products_options_values_name'] = $products_options->fields['products_options_values_name'] . PWA_OUT_OF_STOCK;
 							}
 							
 							//show custom ID if flag set to true
