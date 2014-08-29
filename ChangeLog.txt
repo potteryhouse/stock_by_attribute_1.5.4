@@ -54,3 +54,49 @@ Make changes as needed for your site.
 	margin: 0.1em;
 }
 
+------------------------------------------
+
+New concept, this includes a parentid, childis, and siblingid for the table products_with_attributes_stock.
+
+There are two new tables to use with the orders and customer basket.
+
+customers_basket_sba_attributes
+
+CREATE TABLE `zen_customers_basket_sba_attributes` (
+	`customers_basket_sba_attributes_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`customers_id` INT(11) NOT NULL DEFAULT '0',
+	`stock_id` INT(11) NOT NULL,
+	`products_id` INT(11) NOT NULL,
+	`product_attribute_combo` VARCHAR(255) NULL DEFAULT NULL,
+	`stock_attributes` VARCHAR(255) NOT NULL,
+	`quantity` FLOAT NOT NULL DEFAULT '0',
+	`sort` INT(11) NOT NULL DEFAULT '0',
+	`customid` VARCHAR(255) NULL DEFAULT NULL,
+	`title` VARCHAR(100) NULL DEFAULT NULL,
+	PRIMARY KEY (`customers_basket_sba_attributes_id`),
+	INDEX `idx_cust_id_prod_id_sba` (`customers_id`, `products_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+
+orders_products_sba_attributes
+
+CREATE TABLE `zen_orders_products_sba_attributes` (
+	`orders_products_sba_attributes_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`orders_id` INT(11) NOT NULL DEFAULT '0',
+	`orders_products_id` INT(11) NOT NULL DEFAULT '0',
+	`stock_id` INT(11) NOT NULL,
+	`products_id` INT(11) NOT NULL,
+	`product_attribute_combo` VARCHAR(255) NULL DEFAULT NULL,
+	`stock_attributes` VARCHAR(255) NOT NULL,
+	`quantity` FLOAT NOT NULL DEFAULT '0',
+	`customid` VARCHAR(255) NULL DEFAULT NULL,
+	`title` VARCHAR(100) NULL DEFAULT NULL,
+	`products_prid` TINYTEXT NOT NULL,
+	PRIMARY KEY (`orders_products_sba_attributes_id`),
+	INDEX `idx_orders_id_prod_id_sba` (`orders_id`, `orders_products_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+
+The code to use the new tables and the new fields is in work, not included here.
