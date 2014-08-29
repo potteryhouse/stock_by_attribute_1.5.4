@@ -98,6 +98,46 @@ $(document).ready(function(){
             }
         }        
     })
+
+    //stockAttributesCellParent
+    $(".stockAttributesCellParent").click(function(event){
+        var $tgt = $(event.target);
+        var $id = this.id;
+        var $inner = this.innerHTML;
+        if (!$tgt.is('input')) {
+            if(!this.hasEventHander){
+            var $newLi = '<input type="text" name="' + $id + '" id="' + $id + '" value="' + $inner + '" size="5"/>';
+            this.innerHTML = $newLi;
+                this.hasEventHander = true;
+            }
+        }        
+    })
+    //stockAttributesCellChild
+    $(".stockAttributesCellChild").click(function(event){
+        var $tgt = $(event.target);
+        var $id = this.id;
+        var $inner = this.innerHTML;
+        if (!$tgt.is('input')) {
+            if(!this.hasEventHander){
+            var $newLi = '<input type="text" name="' + $id + '" id="' + $id + '" value="' + $inner + '" size="25"/>';
+            this.innerHTML = $newLi;
+                this.hasEventHander = true;
+            }
+        }        
+    })
+    //stockAttributesCellSibling
+    $(".stockAttributesCellSibling").click(function(event){
+        var $tgt = $(event.target);
+        var $id = this.id;
+        var $inner = this.innerHTML;
+        if (!$tgt.is('input')) {
+            if(!this.hasEventHander){
+            var $newLi = '<input type="text" name="' + $id + '" id="' + $id + '" value="' + $inner + '" size="25"/>';
+            this.innerHTML = $newLi;
+                this.hasEventHander = true;
+            }
+        }        
+    })
     
 });
 
@@ -167,6 +207,67 @@ function addEvent() {
 //stockAttributesCellTitle
 function addEvent() {
 	$('.stockAttributesCellTitle').each(
+			function(){
+				if(!this.hasEventHander)
+					$(this).click(function(event){    
+					/*/ Our Eventhanderl /*/    
+	                var $tgt = $(event.target);
+	                var $id = this.id;
+	                var $inner = this.innerHTML;
+	                if (!$tgt.is('input')) {
+	                	var $newLi = '<input type="text" name="' + $id + '" id="' + $id + '" value="' + $inner + '" size="25"/>';
+	                    this.innerHTML = $newLi;
+	                    //this.unbind("click");
+	                }        
+					});
+	           this.hasEventHander = true;
+			}
+	);
+}
+
+//stockAttributesCellParent
+function addEvent() {
+	$('.stockAttributesCellParent').each(
+			function(){
+				if(!this.hasEventHander)
+					$(this).click(function(event){    
+					/*/ Our Eventhanderl /*/    
+	                var $tgt = $(event.target);
+	                var $id = this.id;
+	                var $inner = this.innerHTML;
+	                if (!$tgt.is('input')) {
+	                	var $newLi = '<input type="text" name="' + $id + '" id="' + $id + '" value="' + $inner + '" size="5"/>';
+	                    this.innerHTML = $newLi;
+	                    //this.unbind("click");
+	                }        
+					});
+	           this.hasEventHander = true;
+			}
+	);
+}
+//stockAttributesCellChild
+function addEvent() {
+	$('.stockAttributesCellChild').each(
+			function(){
+				if(!this.hasEventHander)
+					$(this).click(function(event){    
+					/*/ Our Eventhanderl /*/    
+	                var $tgt = $(event.target);
+	                var $id = this.id;
+	                var $inner = this.innerHTML;
+	                if (!$tgt.is('input')) {
+	                	var $newLi = '<input type="text" name="' + $id + '" id="' + $id + '" value="' + $inner + '" size="25"/>';
+	                    this.innerHTML = $newLi;
+	                    //this.unbind("click");
+	                }        
+					});
+	           this.hasEventHander = true;
+			}
+	);
+}
+//stockAttributesCellSibling
+function addEvent() {
+	$('.stockAttributesCellSibling').each(
 			function(){
 				if(!this.hasEventHander)
 					$(this).click(function(event){    

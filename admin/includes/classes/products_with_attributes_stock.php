@@ -218,14 +218,18 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
               $html .= '<table class="stockAttributesTable">';
               $html .= '<tr>';
               $html .= '<th class="stockAttributesHeadingStockId">'.PWA_STOCK_ID.'</th>
-              			<th class="stockAttributesHeadingStockId" title="This number is the Product ID and related Attributes (Unique Combo).">'.PWA_PAC.'</th>
+              			<th class="stockAttributesHeadingComboId" title="This number is the Product ID and related Attributes (Unique Combo).">'.PWA_PAC.'</th>
               			<th class="stockAttributesHeadingVariant">'.PWA_VARIANT.'</th>
               			<th class="stockAttributesHeadingQuantity">'.PWA_QUANTITY_IN_STOCK.'</th>
               			<th class="stockAttributesHeadingSort">'.PWA_SORT_ORDER.'</th>
               			<th class="stockAttributesHeadingCustomid" title="The Custom ID MUST be Unique, no duplicates allowed!">'.PWA_CUSTOM_ID.'</th>
               			<th class="stockAttributesHeadingStockId">'.PWA_SKU_TITLE.'</th>
               			<th class="stockAttributesHeadingEdit">'.PWA_EDIT.'</th>
-              			<th class="stockAttributesHeadingDelete">'.PWA_DELETE.'</th>';
+              			<th class="stockAttributesHeadingDelete">'.PWA_DELETE.'</th>
+              			<th class="stockAttributesHeadingSpace"></th>
+              			<th class="stockAttributesHeadingParent" title="Parent Stock ID">'.PWA_PARENT.'</th>
+              			<th class="stockAttributesHeadingChild" title="Child Stock ID">'.PWA_CHILD.'</th>
+              			<th class="stockAttributesHeadingSibling" title="Sibling Stock ID">'.PWA_SIBLING.'</th>';
               $html .= '</tr>';
 
               while(!$attribute_products->EOF){
@@ -257,12 +261,19 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
                   $html .= '<td class="stockAttributesCellSort" id="stockid3-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['sort'].'</td>'."\n";
                   $html .= '<td class="stockAttributesCellCustomid" id="stockid4-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['customid'].'</td>'."\n";
                   $html .= '<td class="stockAttributesCellTitle" id="stockid1-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['title'].'</td>'."\n";
-                  $html .= '<td class="stockAttributesCellDelete">'."\n";
+                  $html .= '<td class="stockAttributesCellEdit">'."\n";
                   $html .= '<a href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=edit&amp;products_id=".$products->fields['products_id'].'&amp;attributes='.$attribute_products->fields['stock_attributes'].'&amp;q='.$attribute_products->fields['quantity'], 'NONSSL').'">'.PWA_EDIT_QUANTITY.'</a>'; //s_mack:prefill_quantity
                   $html .= '</td>'."\n";
-                  $html .= '<td class="stockAttributesCellEdit">'."\n";
+                  $html .= '<td class="stockAttributesCellDelete">'."\n";
                   $html .= '<a href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=delete&amp;products_id=".$products->fields['products_id'].'&amp;attributes='.$attribute_products->fields['stock_attributes'], 'NONSSL').'">'.PWA_DELETE_VARIANT.'</a>';
+                  
+                  $html .= '<td class="stockAttributesCellSpace"></td>'."\n";
+                  $html .= '<td class="stockAttributesCellParent" id="stockid5-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['parentid'].'</td>'."\n";
+                  $html .= '<td class="stockAttributesCellChild" id="stockid6-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['siblingid'].'</td>'."\n";
+                  $html .= '<td class="stockAttributesCellSibling" id="stockid7-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['childid'].'</td>'."\n";
+                  
                   $html .= '</div>';
+                  
                   $html .= '</td>'."\n";
                   $html .= '</tr>'."\n";
                  
@@ -290,7 +301,10 @@ function saveAttrib(){
     	$id1 = intval(str_replace('stockid1-', '', $key));//title
        	$id2 = intval(str_replace('stockid2-', '', $key));//quantity
     	$id3 = intval(str_replace('stockid3-', '', $key));//sort
-    	$id4 = intval(str_replace('stockid4-', '', $key));//customid	
+    	$id4 = intval(str_replace('stockid4-', '', $key));//customid
+    	$id5 = intval(str_replace('stockid5-', '', $key));//parentid
+    	$id6 = intval(str_replace('stockid6-', '', $key));//siblingid
+    	$id7 = intval(str_replace('stockid7-', '', $key));//childid
 
         if($id1 > 0){
         	$value = $stock->nullDataEntry($value);
@@ -322,6 +336,31 @@ function saveAttrib(){
         	$i++;
         }
 
+        if($id5 > 0){
+        	$value = addslashes($value);
+        	$value = $stock->nullDataEntry($value);
+        	if(empty($value) || is_null($value)){$value = 'null';}
+        	$sql = "UPDATE ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." SET parentid = $value WHERE stock_id = " .$id5. " LIMIT 1";
+        	$db->execute($sql);
+        	$i++;
+        }
+        if($id6 > 0){
+        	$value = addslashes($value);
+        	$value = $stock->nullDataEntry($value);
+        	if(empty($value) || is_null($value)){$value = 'null';}
+        	$sql = "UPDATE ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." SET siblingid = $value WHERE stock_id = " .$id6. " LIMIT 1";
+        	$db->execute($sql);
+        	$i++;
+        }
+        if($id7 > 0){
+        	$value = addslashes($value);
+        	$value = $stock->nullDataEntry($value);
+        	if(empty($value) || is_null($value)){$value = 'null';}
+        	$sql = "UPDATE ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." SET childid = $value WHERE stock_id = " .$id7. " LIMIT 1";
+        	$db->execute($sql);
+        	$i++;
+        }
+        
         
     }
     $html = print_r($_POST, true);

@@ -253,7 +253,7 @@ function dropSBATable(){
 	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing Table products_with_attributes_stock: ');
 	
 	$sql = "DROP TABLE IF EXISTS ".DB_PREFIX."products_with_attributes_stock";
-	//$result = $db->Execute($sql);
+
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
@@ -261,6 +261,46 @@ function dropSBATable(){
 	array_push($resultMmessage, '&bull; Deleted table products_with_attributes_stock ' . $msg);
 	
 	return;	
+}
+
+//Clean-up Drop table orders_products_sba_attributes
+function dropOrdersSBATable(){
+	global $db, $resultMmessage;
+
+	/*
+	 * DROP TABLE IF EXISTS 'orders_products_sba_attributes';
+	*/
+	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing Table orders_products_sba_attributes: ');
+
+	$sql = "DROP TABLE IF EXISTS ".DB_PREFIX."orders_products_sba_attributes";
+
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted table orders_products_sba_attributes ' . $msg);
+
+	return;
+}
+
+//Clean-up Drop table customers_basket_sba_attributes
+function dropBasketSBATable(){
+	global $db, $resultMmessage;
+
+	/*
+	 * DROP TABLE IF EXISTS 'customers_basket_sba_attributes';
+	*/
+	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing Table customers_basket_sba_attributes: ');
+
+	$sql = "DROP TABLE IF EXISTS ".DB_PREFIX."customers_basket_sba_attributes";
+
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted table customers_basket_sba_attributes ' . $msg);
+
+	return;
 }
 
 //Add this script to the configuration menu
@@ -446,6 +486,104 @@ function insertSBAconfiguration(){
 	return;
 }
 
+//Add new table orders_products_sba_attributes
+function addOrdersSBAtable(){
+	global $db, $resultMmessage, $failed;
+	
+	/*
+	 * CREATE TABLE `orders_products_sba_attributes` (
+		`orders_products_sba_attributes_id` INT(11) NOT NULL AUTO_INCREMENT,
+		`orders_id` INT(11) NOT NULL DEFAULT '0',
+		`orders_products_id` INT(11) NOT NULL DEFAULT '0',
+		`stock_id` INT(11) NOT NULL,
+		`products_id` INT(11) NOT NULL,
+		`product_attribute_combo` VARCHAR(255) NULL DEFAULT NULL,
+		`stock_attributes` VARCHAR(255) NOT NULL,
+		`quantity` FLOAT NOT NULL DEFAULT '0',
+		`customid` VARCHAR(255) NULL DEFAULT NULL,
+		`title` VARCHAR(100) NULL DEFAULT NULL,	
+		`products_prid` TINYTEXT NOT NULL,
+		PRIMARY KEY (`orders_products_sba_attributes_id`),
+		INDEX `idx_orders_id_prod_id_sba` (`orders_id`, `orders_products_id`)
+	);
+	 */
+
+	//check if the required tables if not already present
+	if(!checkSBAtable(DB_PREFIX."orders_products_sba_attributes")) {
+	
+		$result = $db->Execute("CREATE TABLE `".DB_PREFIX."orders_products_sba_attributes` (
+			`orders_products_sba_attributes_id` INT(11) NOT NULL AUTO_INCREMENT,
+			`orders_id` INT(11) NOT NULL DEFAULT '0',
+			`orders_products_id` INT(11) NOT NULL DEFAULT '0',
+			`stock_id` INT(11) NOT NULL,
+			`products_id` INT(11) NOT NULL,
+			`product_attribute_combo` VARCHAR(255) NULL DEFAULT NULL,
+			`stock_attributes` VARCHAR(255) NOT NULL,
+			`quantity` FLOAT NOT NULL DEFAULT '0',
+			`customid` VARCHAR(255) NULL DEFAULT NULL,
+			`title` VARCHAR(100) NULL DEFAULT NULL,	
+			`products_prid` TINYTEXT NOT NULL,
+			PRIMARY KEY (`orders_products_sba_attributes_id`),
+			INDEX `idx_orders_id_prod_id_sba` (`orders_id`, `orders_products_id`)
+		);");
+	
+		if($db->error){
+			$msg = ' Error Message: ' . $db->error;
+			$failed = true;
+		}
+		array_push($resultMmessage, '<br /><b>Added New Table</b> orders_products_sba_attributes. ' . $msg);
+	}
+	return;
+}
+
+//Add new table customers_basket_sba_attributes
+function addBasketSBAtable(){
+	global $db, $resultMmessage, $failed;
+	
+	/*
+	 * CREATE TABLE `customers_basket_sba_attributes` (
+		`customers_basket_sba_attributes_id` INT(11) NOT NULL AUTO_INCREMENT,
+		`customers_id` INT(11) NOT NULL DEFAULT '0',
+		`stock_id` INT(11) NOT NULL,
+		`products_id` INT(11) NOT NULL,
+		`product_attribute_combo` VARCHAR(255) NULL DEFAULT NULL,
+		`stock_attributes` VARCHAR(255) NOT NULL,
+		`quantity` FLOAT NOT NULL DEFAULT '0',
+		`sort` INT(11) NOT NULL DEFAULT '0',
+		`customid` VARCHAR(255) NULL DEFAULT NULL,
+		`title` VARCHAR(100) NULL DEFAULT NULL,			
+		PRIMARY KEY (`customers_basket_sba_attributes_id`),
+		INDEX `idx_cust_id_prod_id_sba` (`customers_id`, `products_id`)
+	);
+	 */
+
+	//check if the required tables if not already present
+	if(!checkSBAtable(DB_PREFIX."customers_basket_sba_attributes")) {
+	
+		$result = $db->Execute("CREATE TABLE `".DB_PREFIX."customers_basket_sba_attributes` (
+			`customers_basket_sba_attributes_id` INT(11) NOT NULL AUTO_INCREMENT,
+			`customers_id` INT(11) NOT NULL DEFAULT '0',
+			`stock_id` INT(11) NOT NULL,
+			`products_id` INT(11) NOT NULL,
+			`product_attribute_combo` VARCHAR(255) NULL DEFAULT NULL,
+			`stock_attributes` VARCHAR(255) NOT NULL,
+			`quantity` FLOAT NOT NULL DEFAULT '0',
+			`sort` INT(11) NOT NULL DEFAULT '0',
+			`customid` VARCHAR(255) NULL DEFAULT NULL,
+			`title` VARCHAR(100) NULL DEFAULT NULL,			
+			PRIMARY KEY (`customers_basket_sba_attributes_id`),
+			INDEX `idx_cust_id_prod_id_sba` (`customers_id`, `products_id`)
+		);");
+	
+		if($db->error){
+			$msg = ' Error Message: ' . $db->error;
+			$failed = true;
+		}
+		array_push($resultMmessage, '<br /><b>Added New Table</b> customers_basket_sba_attributes. ' . $msg);
+	}
+	return;
+}
+
 //Add new table products_with_attributes_stock
 function addSBAtable(){
 	global $db, $resultMmessage, $failed;
@@ -488,6 +626,9 @@ function addSBAtable(){
 		  `sort` int(11) NOT NULL DEFAULT '0',
 		  `customid` varchar(255) DEFAULT NULL,
 		  `title` varchar(100) DEFAULT NULL,
+		  `parentid` int(11) NOT NULL DEFAULT '0',
+		  `siblingid` varchar(255) DEFAULT NULL,
+		  `childid` varchar(255) DEFAULT NULL,
 		  PRIMARY KEY (`stock_id`),
 		  UNIQUE KEY `idx_products_id_stock_attributes` (`products_id`,`stock_attributes`),
 		  UNIQUE KEY `idx_products_id_attributes_id` (`product_attribute_combo`),
@@ -509,9 +650,9 @@ function addSBAtable(){
 		alterSBAtableUniqueCombo();//call function to add new table field product_attribute_combo
 		
 		//TODO: New Fields, needs addition planning
-		//alterSBAtableParentid();//call function to add new table field parentid
-		//alterSBAtableSiblingid();//call function to add new table field siblingid
-		//alterSBAtableChildid();//call function to add new table field childid
+		alterSBAtableParentid();//call function to add new table field parentid
+		alterSBAtableSiblingid();//call function to add new table field siblingid
+		alterSBAtableChildid();//call function to add new table field childid
 	}
 	return;
 }
@@ -551,6 +692,86 @@ function alterSBAtableParentid(){
 				array_push($resultMmessage, '<b>Added</b> parentid field to table products_with_attributes_stock. ');
 			}
 				
+		}
+	}
+	return;
+}
+
+//Test that the table is already present, and that it does not already have the siblingid field
+//Upgrade existing table with siblingid field
+function alterSBAtableSiblingid(){
+	global $db, $resultMmessage, $failed;
+
+	if( checkSBAtable(DB_PREFIX."products_with_attributes_stock") ) {
+
+		$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+						WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
+							AND TABLE_NAME = '". DB_PREFIX . "products_with_attributes_stock'
+							AND COLUMN_NAME = 'siblingid';";
+		$result = $db->Execute($sql);
+
+		$num_rows = null;
+		while (!$result->EOF) {
+			if( $result->fields['COLUMN_NAME'] ){
+				$num_rows = 1;
+			}
+			$result->MoveNext();
+		}
+			
+		if(empty($num_rows)){
+			//ADD COLUMN `siblingid`
+			$db->Execute("ALTER TABLE `" . DB_PREFIX . "products_with_attributes_stock`
+									ADD COLUMN `siblingid` varchar(255) DEFAULT NULL AFTER `parentid`;");
+
+			if( $db->error ){
+				$msg = ' Error Message: ' . $db->error;
+				$failed = true;
+				array_push($resultMmessage, '<b>Failure</b> while Adding siblingid field to table products_with_attributes_stock. ' . $msg);
+			}
+			else{
+				array_push($resultMmessage, '<b>Added</b> siblingid field to table products_with_attributes_stock. ');
+			}
+
+		}
+	}
+	return;
+}
+
+//Test that the table is already present, and that it does not already have the childid field
+//Upgrade existing table with childid field
+function alterSBAtableChildid(){
+	global $db, $resultMmessage, $failed;
+
+	if( checkSBAtable(DB_PREFIX."products_with_attributes_stock") ) {
+
+		$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+						WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
+							AND TABLE_NAME = '". DB_PREFIX . "products_with_attributes_stock'
+							AND COLUMN_NAME = 'childid';";
+		$result = $db->Execute($sql);
+
+		$num_rows = null;
+		while (!$result->EOF) {
+			if( $result->fields['COLUMN_NAME'] ){
+				$num_rows = 1;
+			}
+			$result->MoveNext();
+		}
+			
+		if(empty($num_rows)){
+			//ADD COLUMN `childid`
+			$db->Execute("ALTER TABLE `" . DB_PREFIX . "products_with_attributes_stock`
+									ADD COLUMN `childid` varchar(255) DEFAULT NULL AFTER `siblingid`;");
+
+			if( $db->error ){
+				$msg = ' Error Message: ' . $db->error;
+				$failed = true;
+				array_push($resultMmessage, '<b>Failure</b> while Adding childid field to table products_with_attributes_stock. ' . $msg);
+			}
+			else{
+				array_push($resultMmessage, '<b>Added</b> childid field to table products_with_attributes_stock. ');
+			}
+
 		}
 	}
 	return;
@@ -1770,6 +1991,8 @@ echo '<div id="" style="background-color: green; padding: 2px 10px;"></div>
 		insertSBAadminPages();//Call function to Add New Admin Pages entry
 		insertSBAconfiguration();//Call function to Add New configuration entries
 		addSBAtable();//Call function to Add New table products_with_attributes_stock
+		addOrdersSBAtable();//Call function to Add New table
+		addBasketSBAtable();//Call function to Add New table
 		insertSBAconfigurationMenu();//add install script to configuration menu
 		insertSBAproductsOptionsTypes();//Call function to Add New entries	
 		//Test for proper New file placement
@@ -1781,6 +2004,8 @@ echo '<div id="" style="background-color: green; padding: 2px 10px;"></div>
 		removeSBAconfiguration();//Call function to Remove configuration entries
 		removeSBAadminPages();//Call function to Remove Admin Pages entry
 		dropSBATable();//Call function to remove SBA table
+		dropBasketSBATable();//remove table
+		dropOrdersSBATable();//remove table
 		echo removeSBAfiles();//show instructions for file removal/reversion to previous state
 		echo showScriptResult('Remove All');//show results of table modifications
 	}
