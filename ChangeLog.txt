@@ -1,4 +1,4 @@
-Updates from 1.5.3 to 1.5.x
+Updates from 1.5.3 to 1.5.4
 
 admin\ajax
 -- Folder removed, files relocated.
@@ -16,7 +16,7 @@ admin\products_with_attributes_stock_ajax.js
 -- Moved file from admin\ajax folder, minor comments clean-up.
 
 admin\stock_by_attr_install.php
--- Bug fixe changed order of alterSBAtableCustomid() and alterSBAtabeSort().
+-- Bug fix changed order of alterSBAtableCustomid() and alterSBAtabeSort().
 -- Addition of new select options.
 -- Changed the default settings for the 'Configuration -> Stock' SBA Options.
 -- Updated on-screen help.
