@@ -37,3 +37,7 @@ define('PWA_PAC', 'Unique Combo');
 define('PWA_EDIT', 'Editer');
 define('PWA_DELETE', 'Supprimer');
 define('PWA_SUBMIT','Soumettre');
+
+define('PWA_PARENT', 'Parent');
+define('PWA_CHILD', 'Child');
+define('PWA_SIBLING', 'Sibling');

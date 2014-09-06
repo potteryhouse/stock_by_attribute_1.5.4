@@ -38,6 +38,12 @@ tr.productRow{font-weight: bold; background-color: #eee;}
 tr.productRow td {padding: 6px;}
 td.stockAttributesCellStockId, td.stockAttributesCellQuantity, td.stockAttributesCellVariant, td.stockAttributesCellDelete, td.stockAttributesCellEdit { padding: 5px; background-color: #fdffff;}
 
+tr.stockAttributesHeadingSpace {padding: 20px;}
+td.stockAttributesCellSpace { padding: 20px; background-color: #c0c0c0;}
+td.stockAttributesCellParent { padding: 5px; background-color: #ff80c0;}
+td.stockAttributesCellChild { padding: 5px; background-color: #ff8000;}
+td.stockAttributesCellSibling { padding: 5px; background-color: #ff00ff;}
+
 td.stockAttributesCellSort{ padding: 5px; background-color: silver;}
 td.stockAttributesCellCustomid{ padding: 5px; background-color: orange;}
 td.stockAttributesCellTitle{ padding: 5px; background-color: yellow;}
