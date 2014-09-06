@@ -19,6 +19,7 @@ define('PWA_QUANTITY', 'Quantity: ');
 define('PWA_QUANTITY_FOR_ALL_VARIANTS', 'Quantity for all variants');
 define('PWA_ADD_QUANTITY', 'Add Quantity For Product Variant');
 define('PWA_SYNC_QUANTITY', 'Sync Quantities');
+define('TEXT_IMAGE_NONEXISTENT', 'No Picture Available');
 
 define('PWA_EDIT_QUANTITY', 'Edit Quantity');
 define('PWA_DELETE_VARIANT', 'Delete Variant');

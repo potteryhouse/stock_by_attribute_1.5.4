@@ -19,6 +19,7 @@ define('PWA_QUANTITY', 'Quantity: ');
 define('PWA_QUANTITY_FOR_ALL_VARIANTS', 'Quantity for all variants');
 define('PWA_ADD_QUANTITY', 'Add Quantity For Product Variant');
 define('PWA_SYNC_QUANTITY', 'Sync Quantities');
+define('TEXT_IMAGE_NONEXISTENT', 'No Picture Available');
 
 define('PWA_EDIT_QUANTITY', 'Edit Quantity');
 define('PWA_DELETE_VARIANT', 'Delete Variant');
@@ -36,3 +37,7 @@ define('PWA_PAC', 'Unique Combo');
 define('PWA_EDIT', 'Edit');
 define('PWA_DELETE', 'Delete');
 define('PWA_SUBMIT','Submit');
+
+define('PWA_PARENT', 'Parent');
+define('PWA_CHILD', 'Child');
+define('PWA_SIBLING', 'Sibling');

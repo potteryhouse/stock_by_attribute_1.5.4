@@ -6,6 +6,15 @@ admin\ajax
 admin\includes\classes\products_with_attributes_stock.php
 -- Update for bug related to a zero value entry
 
+admin\includes\languages\dutch\products_with_attributes_stock.php
+admin\includes\languages\english\products_with_attributes_stock.php
+admin\includes\languages\french\products_with_attributes_stock.php
+-- Added defines
+	define('TEXT_IMAGE_NONEXISTENT', 'No Picture Available');
+	define('PWA_PARENT', 'Parent');
+	define('PWA_CHILD', 'Child');
+	define('PWA_SIBLING', 'Sibling');
+
 admin\orders.php
 -- Files updated with changes from Zen Cart 1.5.3.
 
@@ -56,7 +65,7 @@ Make changes as needed for your site.
 
 ------------------------------------------
 
-New concept, this includes a parentid, childis, and siblingid for the table products_with_attributes_stock.
+New concept, this includes a parentid, childid, and siblingid for the table products_with_attributes_stock.
 
 There are two new tables to use with the orders and customer basket.
 
@@ -99,4 +108,4 @@ CREATE TABLE `zen_orders_products_sba_attributes` (
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB;
 
-The code to use the new tables and the new fields is in work, not included here.
+The code to use the new tables and fields is not yet written.
