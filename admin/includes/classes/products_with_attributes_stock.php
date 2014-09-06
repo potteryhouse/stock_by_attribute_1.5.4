@@ -218,12 +218,12 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
               $html .= '<table class="stockAttributesTable">';
               $html .= '<tr>';
               $html .= '<th class="stockAttributesHeadingStockId">'.PWA_STOCK_ID.'</th>
-              			<th class="stockAttributesHeadingStockId" title="This number is the Product ID and related Attributes (Unique Combo).">'.PWA_PAC.'</th>
+              			<th class="stockAttributesHeadingComboId" title="This number is the Product ID and related Attributes (Unique Combo).">'.PWA_PAC.'</th>
               			<th class="stockAttributesHeadingVariant">'.PWA_VARIANT.'</th>
               			<th class="stockAttributesHeadingQuantity">'.PWA_QUANTITY_IN_STOCK.'</th>
               			<th class="stockAttributesHeadingSort">'.PWA_SORT_ORDER.'</th>
               			<th class="stockAttributesHeadingCustomid" title="The Custom ID MUST be Unique, no duplicates allowed!">'.PWA_CUSTOM_ID.'</th>
-              			<th class="stockAttributesHeadingStockId">'.PWA_SKU_TITLE.'</th>
+              			<th class="stockAttributesHeadingSKUTitleId">'.PWA_SKU_TITLE.'</th>
               			<th class="stockAttributesHeadingEdit">'.PWA_EDIT.'</th>
               			<th class="stockAttributesHeadingDelete">'.PWA_DELETE.'</th>';
               $html .= '</tr>';
@@ -257,10 +257,10 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
                   $html .= '<td class="stockAttributesCellSort" id="stockid3-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['sort'].'</td>'."\n";
                   $html .= '<td class="stockAttributesCellCustomid" id="stockid4-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['customid'].'</td>'."\n";
                   $html .= '<td class="stockAttributesCellTitle" id="stockid1-'. $attribute_products->fields['stock_id'] .'">'.$attribute_products->fields['title'].'</td>'."\n";
-                  $html .= '<td class="stockAttributesCellDelete">'."\n";
+                  $html .= '<td class="stockAttributesCellEdit">'."\n";
                   $html .= '<a href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=edit&amp;products_id=".$products->fields['products_id'].'&amp;attributes='.$attribute_products->fields['stock_attributes'].'&amp;q='.$attribute_products->fields['quantity'], 'NONSSL').'">'.PWA_EDIT_QUANTITY.'</a>'; //s_mack:prefill_quantity
                   $html .= '</td>'."\n";
-                  $html .= '<td class="stockAttributesCellEdit">'."\n";
+                  $html .= '<td class="stockAttributesCellDelete">'."\n";
                   $html .= '<a href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=delete&amp;products_id=".$products->fields['products_id'].'&amp;attributes='.$attribute_products->fields['stock_attributes'], 'NONSSL').'">'.PWA_DELETE_VARIANT.'</a>';
                   $html .= '</div>';
                   $html .= '</td>'."\n";
