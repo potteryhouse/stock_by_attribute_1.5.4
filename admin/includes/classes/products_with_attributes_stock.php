@@ -223,7 +223,7 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
               			<th class="stockAttributesHeadingQuantity">'.PWA_QUANTITY_IN_STOCK.'</th>
               			<th class="stockAttributesHeadingSort">'.PWA_SORT_ORDER.'</th>
               			<th class="stockAttributesHeadingCustomid" title="The Custom ID MUST be Unique, no duplicates allowed!">'.PWA_CUSTOM_ID.'</th>
-              			<th class="stockAttributesHeadingStockId">'.PWA_SKU_TITLE.'</th>
+              			<th class="stockAttributesHeadingSKUTitleId">'.PWA_SKU_TITLE.'</th>
               			<th class="stockAttributesHeadingEdit">'.PWA_EDIT.'</th>
               			<th class="stockAttributesHeadingDelete">'.PWA_DELETE.'</th>
               			<th class="stockAttributesHeadingSpace"></th>

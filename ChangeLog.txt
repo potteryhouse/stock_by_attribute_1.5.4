@@ -5,6 +5,11 @@ admin\ajax
 
 admin\includes\classes\products_with_attributes_stock.php
 -- Update for bug related to a zero value entry
+-- Update to correct 'Class' IDs
+	stockAttributesHeadingStockId
+	stockAttributesHeadingSKUTitleId
+	stockAttributesCellDelete
+	stockAttributesCellEdit
 
 admin\includes\languages\dutch\products_with_attributes_stock.php
 admin\includes\languages\english\products_with_attributes_stock.php
