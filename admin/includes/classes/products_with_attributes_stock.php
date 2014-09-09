@@ -1,10 +1,11 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @package admin/includes/classes
+ * products_with_attributes_stock.php
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: products_with_attributes_stock.php  $
+ * @version $Id:  $
  *
  * Updated for Stock by Attributes 1.5.4
  */
@@ -675,7 +676,7 @@ function nullDataEntry($fieldtoNULL){
   			//if no attributes return products_model
 			$no_attribute_stock_query = 'select products_model 
   										from '.TABLE_PRODUCTS.' 
-  										where products_id = '. (int)$products_id . '';
+  										where products_id = '. (int)$products_id . ';';
   		$customid = $db->Execute($no_attribute_stock_query);
   		return $customid->fields['products_model'];
   	} 
@@ -686,33 +687,28 @@ function nullDataEntry($fieldtoNULL){
   			// if there are will we continue, otherwise we'll use product level data
 			$attribute_stock = $db->Execute("select stock_id 
 							  					from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " 
-							  					where products_id = " . (int)$products_id . "");
+							  					where products_id = " . (int)$products_id . ";");
   	
   			if ($attribute_stock->RecordCount() > 0) {
   				// search for details for the particular attributes combination
-  				if(sizeof($attributes) > 1){
   					$first_search = 'where options_values_id in ("'.implode('","',$attributes).'")';
-  				} else {
-  					//even though there is only one attribute, it is still in an array and must be retrieved
-  					foreach($attributes as $attribute){
-  						$first_search = ' where options_values_id="'.$attribute.' "';
-  					}
-  				}
   				
   				// obtain the attribute ids
   				$query = 'select products_attributes_id 
   						from '.TABLE_PRODUCTS_ATTRIBUTES.' 
   								'.$first_search.' 
   								and products_id='.$products_id.' 
-  								order by products_attributes_id';
+  								order by products_attributes_id;';
   				$attributes_new = $db->Execute($query);
   				
   				while(!$attributes_new->EOF){
   					$stock_attributes[] = $attributes_new->fields['products_attributes_id'];
   					$attributes_new->MoveNext();
   				}
+
   				if(sizeof($stock_attributes) > 1){
   					$stock_attributes = implode(',',$stock_attributes);
+  					$stock_attributes = str_ireplace(',', '","', $stock_attributes);					
   				} else {
   					$stock_attributes = $stock_attributes[0];
   				}
@@ -721,36 +717,38 @@ function nullDataEntry($fieldtoNULL){
   			//Get product model
   			$customid_model_query = 'select products_model 
 						  					from '.TABLE_PRODUCTS.' 
-						  					where products_id = '. (int)$products_id . '';
+						  					where products_id = '. (int)$products_id . ';';
 
   			//Get custom id as products_model
   			$customid_query = 'select customid as products_model
 		  							from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' 
 		  							where products_id = '.(int)$products_id.' 
-		  							and stock_attributes = "'.$stock_attributes.'"';  
+		  							and stock_attributes in ("'.$stock_attributes.'");';  
   		}
   		
-  		if($customid_query){
+  		$customid = $db->Execute($customid_query);
+  		if($customid->fields['products_model']){
   		
 	  		//Test to see if a custom ID exists
-	  		$has_customid = $db->Execute($customid_query);
-	  		//if there is a custom ID with the attribute, then return it.
-	  		if ($has_customid->RecordCount() > 0) {
-	  			$customid = $db->Execute($customid_query);
-	  		} 
-	  		else {//if no custom ID then return the products_model from the product
-	  	  		$customid = $db->Execute($customid_model_query);
-	  		}
+	  		//if there are a custom IDs with the attribute, then return them.
+	  			$multiplecid = null;
+	  			while(!$customid->EOF){
+	  				$multiplecid .= $customid->fields['products_model'] . ', ';
+	  				$customid->MoveNext();
+	  			}
+	  			$multiplecid = rtrim($multiplecid, ', ');
+	  			
+	  			//return result for display
+	  			return $multiplecid;
 	  	
-  		//return result for display
-  		return $customid->fields['products_model'];
   		}
   		else{
-  			//This is used as a fallback when custom ID is set to be displayed but no attribute is available.
+  			$customid = null;
+  			//This is used as a fall-back when custom ID is set to be displayed but no attribute is available.
   			//Get product model
   			$customid_model_query = 'select products_model
 						  					from '.TABLE_PRODUCTS.'
-						  					where products_id = '. (int)$products_id . '';
+						  					where products_id = '. (int)$products_id . ';';
   			$customid = $db->Execute($customid_model_query);
   			//return result for display
   			return $customid->fields['products_model'];
