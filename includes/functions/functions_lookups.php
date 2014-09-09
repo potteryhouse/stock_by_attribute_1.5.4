@@ -175,7 +175,7 @@
     	//	2. Check if the attribute(s) are listed in seperate rows or are combined into a single row.
 
       $attribute_stock = $db->Execute("select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = '" . (int)$products_id . "'");
-// 	  echo $attribute_stock->RecordCount();//Debug Line
+	  
       // check if any attribute stock values have been set for the product in the SBA table, if not do the else part
       if ( $attribute_stock->RecordCount() > 0 ) {
 

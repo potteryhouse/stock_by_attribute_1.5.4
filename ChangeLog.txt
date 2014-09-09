@@ -11,6 +11,11 @@ admin\includes\classes\products_with_attributes_stock.php
 	stockAttributesCellDelete
 	stockAttributesCellEdit
 
+admin\includes\languages\dutch\products_with_attributes_stock.php
+admin\includes\languages\english\products_with_attributes_stock.php
+admin\includes\languages\french\products_with_attributes_stock.php
+-- Added defines
+	define('TEXT_IMAGE_NONEXISTENT', 'No Picture Available');
 admin\orders.php
 -- Files updated with changes from Zen Cart 1.5.3.
 
@@ -58,4 +63,12 @@ Make changes as needed for your site.
 	font-size: 1em;
 	margin: 0.1em;
 }
+
+Note: This new feature relies on the use of an 'id="SBA_ProductImage"' tag added to the image box in tpl_modules_main_product_image.php
+
+Example (default template):
+document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_link(FILENAME_POPUP_IMAGE, 'pID=' . $_GET['products_id']) . '\\\')">' . zen_image(addslashes($products_image_medium), addslashes($products_name), MEDIUM_IMAGE_WIDTH, MEDIUM_IMAGE_HEIGHT,'id="SBA_ProductImage"') . '<br /><span class="imgLink">' . TEXT_CLICK_TO_ENLARGE . '</span></a>'; ?>');
+
+Example (using zen_lightbox mod)
+document.write('<?php echo '<a href="' . zen_lightbox($products_image_large, addslashes($products_name), LARGE_IMAGE_WIDTH, LARGE_IMAGE_HEIGHT) . '" rel="' . $rel . '" title="' . addslashes($products_name) . '">' . zen_image($products_image_medium, addslashes($products_name), MEDIUM_IMAGE_WIDTH, MEDIUM_IMAGE_HEIGHT,'id="SBA_ProductImage"') . '<br /><span class="imgLink">' . TEXT_CLICK_TO_ENLARGE . '</span></a>'; ?>');
 

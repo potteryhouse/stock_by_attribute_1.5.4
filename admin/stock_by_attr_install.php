@@ -253,7 +253,7 @@ function dropSBATable(){
 	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing Table products_with_attributes_stock: ');
 	
 	$sql = "DROP TABLE IF EXISTS ".DB_PREFIX."products_with_attributes_stock";
-	//$result = $db->Execute($sql);
+
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;

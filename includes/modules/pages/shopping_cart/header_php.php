@@ -8,7 +8,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
  * 
- * Updated for Stock by Attributes 1.5.4
+ * Updated for Stock by Attributes 1.5.3.1
  */
 
 // This should be first line of the script:
@@ -229,15 +229,12 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 			}
 			
 		}
-		else{
 				
 			//Set Custom ID variable.
 			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
 				$customid = zen_get_customid($products[$i]['id'], $attributes);
 			}
 			
-		}
-		
   } //end IF attributes push to array
   else{
   	//Section for products without attributes
