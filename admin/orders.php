@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Wed Nov 6 21:04:33 2013 -0500 Modified in v1.5.2 $
  * 
- * Updated for Stock by Attributes 1.5.4
+ * Updated for Stock by Attributes 1.5.3.1
  */
 
   require('includes/application_top.php');
