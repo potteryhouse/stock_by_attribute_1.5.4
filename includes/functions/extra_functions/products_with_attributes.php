@@ -156,7 +156,7 @@ function cartProductCount($products_id){
   		if($customid->fields['products_model']){
   		
 	  		//Test to see if a custom ID exists
-	  		//if there are a custom IDs with the attribute, then return them.
+	  		//if there are custom IDs with the attribute, then return them.
 	  			$multiplecid = null;
 	  			while(!$customid->EOF){
 	  				$multiplecid .= $customid->fields['products_model'] . ', ';
