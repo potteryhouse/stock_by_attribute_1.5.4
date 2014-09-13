@@ -36,6 +36,11 @@ admin\stock_by_attr_install.php
 -- Updated on-screen help.
 -- Change folder for Export and Import, now used the 'admin\backups' folder.
 
+admin\invoice.php
+admin\orders.php
+admin\packingslip.php
+-- Custom ID display correction
+
 ----------------------------------------------
 
 includes\functions\extra_functions\products_with_attributes.php
@@ -53,6 +58,10 @@ includes\modules\YOUR_TEMPLATE\attributes.php
 includes\templates\YOUR_TEMPLATE\jscript\jquery.form.js
 includes\templates\YOUR_TEMPLATE\jscript\jquery-1.10.2.min.js
 -- Moved file from admin\ajax folder.
+
+includes\templates\YOUR_TEMPLATE\templates\tpl_account_history_info_default.php
+includes\templates\YOUR_TEMPLATE\templates\tpl_checkout_confirmation_default.php
+-- Custom ID display correction
 
 ------------------------------------------
 

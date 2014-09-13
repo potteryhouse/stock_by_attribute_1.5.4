@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: packingslip.php 15788 2010-04-02 10:44:40Z drbyte $
  * 
- * Updated for Stock by Attributes 1.5.2
+ * Updated for Stock by Attributes 1.5.3.1
 */
 
   require('includes/application_top.php');
@@ -167,6 +167,7 @@
 
 			//"Stock by Attributes" add custom ID to display
 			$customid = null;
+			$attributes = null;
 			//test if this is to be displayed
 			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
 				//create array for use in zen_get_customid
