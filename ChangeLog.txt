@@ -16,6 +16,7 @@ admin\includes\languages\english\products_with_attributes_stock.php
 admin\includes\languages\french\products_with_attributes_stock.php
 -- Added defines
 	define('TEXT_IMAGE_NONEXISTENT', 'No Picture Available');
+
 admin\orders.php
 -- Files updated with changes from Zen Cart 1.5.3.
 
@@ -31,6 +32,11 @@ admin\stock_by_attr_install.php
 -- Changed the default settings for the 'Configuration -> Stock' SBA Options.
 -- Updated on-screen help.
 -- Change folder for Export and Import, now used the 'admin\backups' folder.
+
+admin\invoice.php
+admin\orders.php
+admin\packingslip.php
+-- Custom ID display correction
 
 ----------------------------------------------
 
@@ -49,6 +55,10 @@ includes\modules\YOUR_TEMPLATE\attributes.php
 includes\templates\YOUR_TEMPLATE\jscript\jquery.form.js
 includes\templates\YOUR_TEMPLATE\jscript\jquery-1.10.2.min.js
 -- Moved file from admin\ajax folder.
+
+includes\templates\YOUR_TEMPLATE\templates\tpl_account_history_info_default.php
+includes\templates\YOUR_TEMPLATE\templates\tpl_checkout_confirmation_default.php
+-- Custom ID display correction
 
 ------------------------------------------
 

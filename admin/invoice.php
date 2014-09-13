@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: invoice.php 19136 2011-07-18 16:56:18Z wilt $
  * 
- * Updated for Stock by Attributes 1.5.2
+ * Updated for Stock by Attributes 1.5.3.1
 */
 
   require('includes/application_top.php');
@@ -183,6 +183,7 @@ function couponpopupWindow(url) {
 
 			//"Stock by Attributes" add custom ID to display
 			$customid = null;
+			$attributes = null;
 			//test if this is to be displayed
 			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
 				//create array for use in zen_get_customid
