@@ -70,6 +70,9 @@ function cartProductCount($products_id){
       if( !empty($options_menu_images[$i]['src']) ){
       	$field .= ' data-src="' . $options_menu_images[$i]['src'] . '"';
       }
+      else{
+      	$field .= ' data-src="images/no_picture.gif"';
+      }
       
       //close tag and add displaed text
       $field .= '>' . zen_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";

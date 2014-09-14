@@ -149,7 +149,10 @@
 			$customid = '<br />(';
 			//get custom ID
 			for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j++) {
-				$customid .= zen_get_customid($order->products[$i]['id'],$attributes) . ', ';
+ 				if( $tmpCheck != $order->products[$i]['id'] ){
+ 					$tmpCheck = $order->products[$i]['id'];
+					$customid .= zen_get_customid($order->products[$i]['id'],$attributes) . ', ';
+				}
 			}
 			$customid = rtrim($customid,', ');
 			$customid .= ')';

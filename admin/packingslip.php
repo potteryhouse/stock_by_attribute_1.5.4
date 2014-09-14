@@ -181,7 +181,7 @@
 				}
 			}
 		  //"Stock by Attributes" add custom ID to display
-          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . ' ' . $customid . ' ';
+          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . ' (' . $customid . ') ';
           // END "Stock by Attributes"
           echo '</i></small></nobr>';
         }
