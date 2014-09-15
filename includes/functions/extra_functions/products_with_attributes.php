@@ -50,11 +50,11 @@ function cartProductCount($products_id){
   					
   	$field .= '<select name="' . zen_output_string($name) . '" onclick=""';
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (zen_not_null($parameters)) {$field .= ' ' . $parameters;}
 
     $field .= '>' . "\n";
 
-    if (empty($default) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) ) $default = stripslashes($GLOBALS[$name]);
+    if (empty($default) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) ) {$default = stripslashes($GLOBALS[$name]);}
 
     for ($i=0, $n=sizeof($values); $i<$n; $i++) {
       $field .= '  <option value="' . zen_output_string($values[$i]['id']) . '"';
@@ -70,11 +70,8 @@ function cartProductCount($products_id){
       if( !empty($options_menu_images[$i]['src']) ){
       	$field .= ' data-src="' . $options_menu_images[$i]['src'] . '"';
       }
-      else{
-      	$field .= ' data-src="images/no_picture.gif"';
-      }
       
-      //close tag and add displaed text
+      //close tag and add displyed text
       $field .= '>' . zen_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";
     }
     
