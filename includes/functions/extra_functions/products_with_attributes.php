@@ -71,7 +71,7 @@ function cartProductCount($products_id){
       	$field .= ' data-src="' . $options_menu_images[$i]['src'] . '"';
       }
       
-      //close tag and add displyed text
+      //close tag and display text
       $field .= '>' . zen_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";
     }
     
