@@ -45,6 +45,8 @@ includes\functions\extra_functions\products_with_attributes.php
 
 includes\modules\pages\shopping_cart\header_php.php
 -- Updated when 'customid' is shown.
+includes\modules\pages\checkout_success\header_php.php
+-- Updated query to add DISTINCT, corrects notification page error.
 
 includes\modules\YOUR_TEMPLATE\attributes.php
 -- Added option to display images when a selection is changed in select list. 
