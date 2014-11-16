@@ -17,7 +17,7 @@ $SBAversion = 'SBA Version 1.5.4';
 $ZCversion = 'Zen Cart Version 1.5.3';
 
 $version_check_index=true;//used in admin/includes/header.php
-require('./includes/application_top.php');//Provides most of the page display admin menu
+require('includes/application_top.php');//Provides most of the page display admin menu
 
 // Check for language in use
 $languages = zen_get_languages();
@@ -70,7 +70,7 @@ else{
 <body onLoad="init()">
 <!-- header //-->
 <?php 
-require(DIR_WS_INCLUDES . './header.php');
+require(DIR_WS_INCLUDES . 'header.php');
 
 //create result message stack
 //array_push($resultMmessage, $some_data);
@@ -132,67 +132,67 @@ function removeSBAconfiguration(){
 	$msg = null;
 	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing from configuration: ');
 
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SHOW_IMAGE'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SHOW_IMAGE'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted STOCK_SHOW_IMAGE  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SHOW_LOW_IN_CART'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SHOW_LOW_IN_CART'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted STOCK_SHOW_LOW_IN_CART  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SHOW_ATTRIB_LEVEL_STOCK'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SHOW_ATTRIB_LEVEL_STOCK'";
 	$db->Execute($sql);
 	if($db->error){	
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted STOCK_SHOW_ATTRIB_LEVEL_STOCK  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SHOW_ORIGINAL_PRICE_STRUCK'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SHOW_ORIGINAL_PRICE_STRUCK'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted STOCK_SHOW_ORIGINAL_PRICE_STRUCK  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SET_SBA_SEARCHBOX'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SET_SBA_SEARCHBOX'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted STOCK_SET_SBA_SEARCHBOX  ' . $msg);
 	
-// 	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SET_SBA_NUMRECORDS'";
+// 	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SET_SBA_NUMRECORDS'";
 // 	$db->Execute($sql);
 // 	array_push($resultMmessage, '&bull; Deleted STOCK_SET_SBA_NUMRECORDS  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SBA_SEARCHLIST'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SBA_SEARCHLIST'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted STOCK_SBA_SEARCHLIST  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'STOCK_SBA_DISPLAY_CUSTOMID'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SBA_DISPLAY_CUSTOMID'";
 	$db->Execute($sql);
 	if($db->error){	
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted STOCK_SBA_DISPLAY_CUSTOMID  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'SBA_SHOW_IMAGE_ON_PRODUCT_INFO'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'SBA_SHOW_IMAGE_ON_PRODUCT_INFO'";
 	$db->Execute($sql);
 	if($db->error){	
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted SBA_SHOW_IMAGE_ON_PRODUCT_INFO  ' . $msg);
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."configuration` WHERE `configuration_key` = 'PRODUCTS_OPTIONS_TYPE_SELECT_SBA'";
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODUCTS_OPTIONS_TYPE_SELECT_SBA'";
 	$db->Execute($sql);
 	if($db->error){		
 		$msg = ' Error Message: ' . $db->error;
@@ -202,7 +202,7 @@ function removeSBAconfiguration(){
 	//DELETE FROM `products_options_types` 
 	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing from products_options_types: ');
 	
-	$sql = "DELETE IGNORE FROM `".DB_PREFIX."products_options_types` WHERE `products_options_types_name` = 'SBA Select List (Dropdown) Basic'";
+	$sql = "DELETE IGNORE FROM `".TABLE_PRODUCTS_OPTIONS_TYPES."` WHERE `products_options_types_name` = 'SBA Select List (Dropdown) Basic'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
@@ -222,7 +222,7 @@ function removeSBAadminPages(){
 	$msg = null;
 	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing from admin_pages: ');
 	
-	$sql = "DELETE FROM`".DB_PREFIX."admin_pages` WHERE page_key = 'productsWithAttributesStock'";
+	$sql = "DELETE FROM`".TABLE_ADMIN_PAGES."` WHERE page_key = 'productsWithAttributesStock'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
@@ -233,7 +233,7 @@ function removeSBAadminPages(){
 	 DELETE FROM admin_pages  WHERE  page_key = 'productsWithAttributesStockSetup';
 	*/
 	
-	$sql = "DELETE FROM`".DB_PREFIX."admin_pages` WHERE page_key = 'productsWithAttributesStockSetup'";
+	$sql = "DELETE FROM`".TABLE_ADMIN_PAGES."` WHERE page_key = 'productsWithAttributesStockSetup'";
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
@@ -252,13 +252,29 @@ function dropSBATable(){
 	 */
 	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing Table products_with_attributes_stock: ');
 	
-	$sql = "DROP TABLE IF EXISTS ".DB_PREFIX."products_with_attributes_stock";
+	$sql = "DROP TABLE IF EXISTS ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK;
 
 	$db->Execute($sql);
 	if($db->error){
 		$msg = ' Error Message: ' . $db->error;
 	}
 	array_push($resultMmessage, '&bull; Deleted table products_with_attributes_stock ' . $msg);
+	
+	return;	
+}
+
+//Clean-up Drop table products_with_attributes_stock
+function dropSBAOrdersTable(){
+	global $db, $resultMmessage;
+	
+	/*
+	 * DROP TABLE IF EXISTS 'orders_products_attributes_stock';
+	 */
+	array_push($resultMmessage, '<br />Clean-Up, Removing Table orders_products_attributes_stock: ');
+	
+	$sql = "DROP TABLE IF EXISTS ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK;
+	$result = $db->Execute($sql);
+	array_push($resultMmessage, 'Deleted table orders_products_attributes_stock: ' . $result);
 	
 	return;	
 }
@@ -272,13 +288,13 @@ function insertSBAconfigurationMenu(){
 	//get current max sort number used, then add 1 to it.
 	//this will place the new entry 'productsWithAttributesStock' at the bottom of the list
 	$sql = "SELECT ap.sort_order
-			FROM ".DB_PREFIX."admin_pages ap
+			FROM ".TABLE_ADMIN_PAGES." ap
 			WHERE ap.menu_key = 'configuration'
 			order by ap.sort_order desc limit 1";
 	$result = $db->Execute($sql);
 	$result = $result->fields['sort_order'] + 1;
 	
-	$sql = "INSERT INTO `".DB_PREFIX."admin_pages` (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) 
+	$sql = "INSERT INTO `".TABLE_ADMIN_PAGES."` (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) 
 			VALUES 
 			('productsWithAttributesStockSetup', 'BOX_CONFIGURATION_PRODUCTS_WITH_ATTRIBUTES_STOCK_SETUP', 'FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK_SETUP', '', 'configuration', 'Y', ".$result.")";
 	$db->Execute($sql);
@@ -299,13 +315,13 @@ function insertSBAadminPages(){
 	//get current max sort number used, then add 1 to it.
 	//this will place the new entry 'productsWithAttributesStock' at the bottom of the list
 	$sql = "SELECT ap.sort_order
-			FROM ".DB_PREFIX."admin_pages ap
+			FROM ".TABLE_ADMIN_PAGES." ap
 	 		WHERE ap.menu_key = 'catalog'
 			order by ap.sort_order desc limit 1";
 	$result = $db->Execute($sql);
 	$result = $result->fields['sort_order'] + 1;
 
-	$sql = "INSERT INTO `".DB_PREFIX."admin_pages` (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+	$sql = "INSERT INTO `".TABLE_ADMIN_PAGES."` (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
 			VALUES
 			('productsWithAttributesStock', 'BOX_CATALOG_PRODUCTS_WITH_ATTRIBUTES_STOCK', 'FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK', '', 'catalog', 'Y', ".$result.")";
 	$db->Execute($sql);
@@ -326,12 +342,12 @@ function insertSBAproductsOptionsTypes(){
 	//get current max sort number used, then add 1 to it.
 	//this will place the new entries at the bottom of the list
 	$sql = "SELECT pot.products_options_types_id, products_options_types_name
-			FROM ".DB_PREFIX."products_options_types pot	
+			FROM ".TABLE_PRODUCTS_OPTIONS_TYPES." pot	
 			order by pot.products_options_types_id desc limit 1";
 	$result = $db->Execute($sql);
 	$resultGID = $result->fields['products_options_types_id'] + 1;
 
-	$sql = "INSERT INTO ".DB_PREFIX."products_options_types (`products_options_types_id`, `products_options_types_name`) 
+	$sql = "INSERT INTO ".TABLE_PRODUCTS_OPTIONS_TYPES." (`products_options_types_id`, `products_options_types_name`) 
 			VALUES (".$resultGID.", 'SBA Select List (Dropdown) Basic');";
 
 	$result = $db->Execute($sql);
@@ -347,7 +363,7 @@ function insertSBAproductsOptionsTypes(){
 
 		array_push($resultMmessage, '<br /><b>Adding</b> to configuration: ');
 		
-		$sql = "INSERT INTO ".DB_PREFIX."configuration (configuration_title, configuration_key, configuration_value,
+		$sql = "INSERT INTO ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value,
 		configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function)
 			
 		VALUES
@@ -376,13 +392,13 @@ function insertSBAconfiguration(){
 	//get current max sort number used, then add 1 to it.
 	//this will place the new entries at the bottom of the list
 	$sql ="SELECT c.sort_order
-			FROM ".DB_PREFIX."configuration c
+			FROM ".TABLE_CONFIGURATION." c
 			WHERE c.configuration_group_id = 9
 			order by c.sort_order desc limit 1";
 	$result = $db->Execute($sql);
 	$result = $result->fields['sort_order'] + 1;
 	
-	$sql = "INSERT INTO `".DB_PREFIX."configuration` (configuration_title, configuration_key, configuration_value, 
+	$sql = "INSERT INTO `".TABLE_CONFIGURATION."` (configuration_title, configuration_key, configuration_value, 
 	       configuration_description, configuration_group_id, sort_order, 
 	       last_modified, date_added, use_function, set_function) 
 		
@@ -477,9 +493,9 @@ function addSBAtable(){
 	//Add Table for products_with_attributes_stock
 	//New version of table with UNIQUE INDEX
 	//check if the required tables if not already present
-	if(!checkSBAtable(DB_PREFIX."products_with_attributes_stock")) {
+	if(!checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK)) {
 
-		$result = $db->Execute("CREATE TABLE IF NOT EXISTS `".DB_PREFIX."products_with_attributes_stock` (
+		$result = $db->Execute("CREATE TABLE IF NOT EXISTS `".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK."` (
 		  `stock_id` int(11) NOT NULL AUTO_INCREMENT,
 		  `products_id` int(11) NOT NULL,
 		  `product_attribute_combo` varchar(255) DEFAULT NULL,
@@ -513,6 +529,43 @@ function addSBAtable(){
 		//alterSBAtableSiblingid();//call function to add new table field siblingid
 		//alterSBAtableChildid();//call function to add new table field childid
 	}
+
+  /*
+   * CREATE TABLE orders_products_attributes_stock ( 
+   * orders_products_attributes_stock_id int(11) NOT NULL auto_increment, 
+   * orders_products_attributes_id int(11) NOT NULL default '0', 
+   * orders_id int(11) NOT NULL default '0', 
+   * orders_products_id int(11) NOT NULL default '0', 
+   * stock_id int(11) NOT NULL default '0', 
+   * stock_attribute VARCHAR(255) NULL DEFAULT NULL, 
+   * products_prid tinytext NOT NULL, 
+   * PRIMARY KEY (orders_products_attributes_stock_id), 
+   * KEY idx_orders_id_prod_id_zen (orders_id,orders_products_id), 
+   * KEY idx_orders_stock_id_stock_id (orders_products_attributes_stock_id,stock_id) )
+   */
+  
+  if(!checkSBAtable(TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK)) {
+		$result = $db->Execute("CREATE TABLE IF NOT EXISTS `".TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK."` (
+    `orders_products_attributes_stock_id` INT(11) NOT NULL auto_increment, 
+    `orders_products_attributes_id` INT(11) NOT NULL default '0',
+    `orders_id` INT(11) NOT NULL default '0', 
+    `orders_products_id` INT(11) NOT NULL default '0', 
+    `stock_id` INT(11) NOT NULL default '0', 
+    `stock_attribute` VARCHAR(255) NULL DEFAULT NULL, 
+    `products_prid` TINYTEXT NOT NULL, 
+		PRIMARY KEY (`orders_products_attributes_stock_id`), 
+    KEY idx_orders_id_prod_id_zen (`orders_id`,`orders_products_id`), 
+    KEY idx_orders_stock_id_stock_id (`orders_products_attributes_stock_id`,`stock_id`) 
+		)");
+	
+		array_push($resultMmessage, '<br />Added Table orders_products_with_attributes_stock: ' . $result);
+	}
+	else{
+		//Alter / upgrade existing database table
+//		alterSBAtabeSort();//Call function to Alter table products_with_attributes_stock sort field
+//		alterSBAtableCustomid();//Call function to Alter table products_with_attributes_stock to add customid
+//		alterSBAtableUniqueIndex();//Call function to Alter table products_with_attributes_stock UNIQUE INDEX
+	}
 	return;
 }
 
@@ -521,11 +574,11 @@ function addSBAtable(){
 function alterSBAtableParentid(){
 	global $db, $resultMmessage, $failed;
 
-	if( checkSBAtable(DB_PREFIX."products_with_attributes_stock") ) {
+	if( checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK) ) {
 
 		$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 						WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
-							AND TABLE_NAME = '". DB_PREFIX . "products_with_attributes_stock'
+							AND TABLE_NAME = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
 							AND COLUMN_NAME = 'parentid';";
 		$result = $db->Execute($sql);
 
@@ -539,7 +592,7 @@ function alterSBAtableParentid(){
 			
 		if(empty($num_rows)){
 			//ADD COLUMN `parentid`
-			$db->Execute("ALTER TABLE `" . DB_PREFIX . "products_with_attributes_stock`
+			$db->Execute("ALTER TABLE `" . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "`
 									ADD COLUMN `parentid` int(11) NOT NULL DEFAULT '0' AFTER `title`;");
 
 			if( $db->error ){
@@ -561,11 +614,11 @@ function alterSBAtableParentid(){
 function alterSBAtableTitle(){
 	global $db, $resultMmessage, $failed;
 
-	if( checkSBAtable(DB_PREFIX."products_with_attributes_stock") ) {
+	if( checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK) ) {
 
 		$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 						WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
-							AND TABLE_NAME = '". DB_PREFIX . "products_with_attributes_stock'
+							AND TABLE_NAME = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
 							AND COLUMN_NAME = 'title';";
 		$result = $db->Execute($sql);
 
@@ -579,7 +632,7 @@ function alterSBAtableTitle(){
 			
 		if(empty($num_rows)){
 			//ADD COLUMN `title`
-			$db->Execute("ALTER TABLE `" . DB_PREFIX . "products_with_attributes_stock`
+			$db->Execute("ALTER TABLE `" . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "`
 									ADD COLUMN `title` varchar(100) DEFAULT NULL AFTER `customid`;");
 				
 			if( $db->error ){
@@ -601,11 +654,11 @@ function alterSBAtableTitle(){
 function alterSBAtableUniqueCombo(){
 	global $db, $resultMmessage, $failed;
 
-	if( checkSBAtable(DB_PREFIX."products_with_attributes_stock") ) {
+	if( checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK) ) {
 
 		$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 						WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
-							AND TABLE_NAME = '". DB_PREFIX . "products_with_attributes_stock'
+							AND TABLE_NAME = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
 							AND COLUMN_NAME = 'product_attribute_combo';";
 		$result = $db->Execute($sql);
 
@@ -619,7 +672,7 @@ function alterSBAtableUniqueCombo(){
 			
 		if(empty($num_rows)){
 			//ADD COLUMN `product_attribute_combo`
-			$db->Execute("ALTER TABLE `" . DB_PREFIX . "products_with_attributes_stock`
+			$db->Execute("ALTER TABLE `" . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "`
 									ADD COLUMN `product_attribute_combo` varchar(255) DEFAULT NULL AFTER `products_id`;");
 				
 			if( $db->error ){
@@ -629,7 +682,7 @@ function alterSBAtableUniqueCombo(){
 			}
 			else{
 				//ADD UNIQUE INDEX idx_products_id_attributes_id
-				$db->Execute("ALTER TABLE " . DB_PREFIX . "products_with_attributes_stock
+				$db->Execute("ALTER TABLE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "
 										ADD UNIQUE INDEX idx_products_id_attributes_id (`product_attribute_combo`);");
 			}
 
@@ -652,11 +705,11 @@ function alterSBAtableUniqueCombo(){
 function alterSBAtableCustomid(){
 	global $db, $resultMmessage, $failed;
 	
-	if( checkSBAtable(DB_PREFIX."products_with_attributes_stock") ) {
+	if( checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK) ) {
 	
 		$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 						WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
-							AND TABLE_NAME = '". DB_PREFIX . "products_with_attributes_stock'
+							AND TABLE_NAME = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
 							AND COLUMN_NAME = 'customid';";
 		$result = $db->Execute($sql);
 
@@ -670,7 +723,7 @@ function alterSBAtableCustomid(){
 			
 		if(empty($num_rows)){
 			//ADD COLUMN `customid`
-			$db->Execute("ALTER TABLE `" . DB_PREFIX . "products_with_attributes_stock`
+			$db->Execute("ALTER TABLE `" . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "`
 									ADD COLUMN `customid` VARCHAR(255) NULL DEFAULT NULL AFTER `sort`;");
 			
 			if( $db->error ){			
@@ -680,7 +733,7 @@ function alterSBAtableCustomid(){
 			}
 			else{
 				//ADD UNIQUE INDEX idx_customid
-				$db->Execute("ALTER TABLE " . DB_PREFIX . "products_with_attributes_stock 
+				$db->Execute("ALTER TABLE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " 
 										ADD UNIQUE INDEX idx_customid (`customid`);");
 			}
 
@@ -705,7 +758,7 @@ function alterSBAtableUniqueIndex(){
 	
 	$sql = "SELECT * FROM information_schema.statistics
 			WHERE table_schema = '".DB_DATABASE."'
-			AND table_name = '". DB_PREFIX . "products_with_attributes_stock'
+			AND table_name = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
 			AND column_name = 'products_id';";
 	$result = $db->Execute($sql);
 
@@ -713,6 +766,7 @@ function alterSBAtableUniqueIndex(){
 	while (!$result->EOF) {
 		if( $result->fields['COLUMN_NAME'] ){
 			$num_rows = 1;
+			continue; // mc12345678 does not appear to be a need to continue looping if entered this if.
 		}
 		$result->MoveNext();
 	}
@@ -720,7 +774,7 @@ function alterSBAtableUniqueIndex(){
 	if(empty($num_rows)){
 		//test for records that are not unique before adding UNIQUE INDEX
 		$sql = "SELECT pas.stock_id, COUNT(pas.stock_id) AS stockCount
-				FROM " . DB_PREFIX . "products_with_attributes_stock pas
+				FROM " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pas
 				GROUP BY pas.products_id, pas.stock_attributes
 				HAVING stockCount > 1";
 		$result = $db->Execute($sql);
@@ -731,12 +785,13 @@ function alterSBAtableUniqueIndex(){
 				$num_rows = 1;
 				$failed = true;
 				array_push($resultMmessage, 'FAILURE: Can not add UNIQUE INDEX (products_id, stock_attributes) to the products_with_attributes_stock table, there are records that are not unique!');
+				continue; // No need to continue in while loop as have met a failing condition.
 			}	
 			$result->MoveNext();
 		}
 		$num_rows = rtrim($num_rows, ', ');
 		if(empty($num_rows)){
-			$sql = "ALTER TABLE " . DB_PREFIX . "products_with_attributes_stock ADD UNIQUE INDEX idx_products_id_stock_attributes (`products_id`, `stock_attributes`);";
+			$sql = "ALTER TABLE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " ADD UNIQUE INDEX idx_products_id_stock_attributes (`products_id`, `stock_attributes`);";
 			$db->Execute($sql);
 			if($db->error){				
 				$msg = ' Error Message: ' . $db->error;
@@ -756,7 +811,7 @@ function alterSBAtabeSort(){
 	
 	$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
 					WHERE TABLE_SCHEMA = '".DB_DATABASE."'
-						AND TABLE_NAME = '". DB_PREFIX . "products_with_attributes_stock'
+						AND TABLE_NAME = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
 						AND COLUMN_NAME = 'sort';";
 	$result = $db->Execute($sql);
 	
@@ -769,7 +824,7 @@ function alterSBAtabeSort(){
  	}
 
 	if(empty($num_rows)){
-		$sql = "ALTER TABLE " . DB_PREFIX."products_with_attributes_stock ADD sort INT(11) NOT NULL DEFAULT 0 AFTER `quantity`";
+		$sql = "ALTER TABLE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." ADD sort INT(11) NOT NULL DEFAULT 0 AFTER `quantity`";
 		$db->Execute($sql);
 		if($db->error){	
 			$msg = ' Error Message: ' . $db->error;
@@ -781,13 +836,13 @@ function alterSBAtabeSort(){
 		$sql = "SELECT column_default 
 				FROM INFORMATION_SCHEMA.COLUMNS 
 				WHERE TABLE_SCHEMA = '".DB_DATABASE."'
-					AND TABLE_NAME = 'zen_products_with_attributes_stock'
+					AND TABLE_NAME = '".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK."'
 					AND COLUMN_NAME = 'sort'";
 		$result = $db->Execute($sql);
 		$result = $result->fields['column_default'];
 		
 		if( $result === null ){
-			$sql = "ALTER TABLE " . DB_PREFIX."products_with_attributes_stock CHANGE COLUMN `sort` `sort` INT(11) NOT NULL DEFAULT 0 AFTER `quantity`;";
+			$sql = "ALTER TABLE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." CHANGE COLUMN `sort` `sort` INT(11) NOT NULL DEFAULT 0 AFTER `quantity`;";
 			$db->Execute($sql);
 			
 			if($db->error){				
@@ -807,9 +862,9 @@ function truncateProductAttributeStockTable(){
 	//TRUNCATE `products_with_attributes_stock`;
 	global $db, $resultMmessage, $failed;
 	
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock", null, false)) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, null, false)) {
 		
-		$sql = "TRUNCATE ".DB_PREFIX."products_with_attributes_stock;";
+		$sql = "TRUNCATE ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.";";
 		
 		$db->Execute($sql);
 		if($db->error){
@@ -831,11 +886,11 @@ function updateProductAttributeCombo(){
 	 */	
 	global $db, $resultMmessage, $failed;
 	
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock", null, false)) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, null, false)) {
 	
-		$sql = "UPDATE ".DB_PREFIX."products_with_attributes_stock SET `product_attribute_combo` = 
+		$sql = "UPDATE ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." SET `product_attribute_combo` = 
 				replace(
-				(SELECT CONCAT(".DB_PREFIX."products_with_attributes_stock.products_id,'-',".DB_PREFIX."products_with_attributes_stock.stock_attributes))
+				(SELECT CONCAT(".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".products_id,'-',".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".stock_attributes))
 				, ',','-');";
 
 		$db->Execute($sql);
@@ -881,18 +936,18 @@ function installOptionalSQL1(){
 	$insertQtyValue = 'p.products_quantity';
 	
 	//check if the required tables is present
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock", null, false)) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, null, false)) {
 		
-		$sql = "INSERT INTO ".DB_PREFIX."products_with_attributes_stock (products_id, stock_attributes, quantity) 
+		$sql = "INSERT INTO ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." (products_id, stock_attributes, quantity) 
 		
 				SELECT p.products_id, pa.products_attributes_id, $insertQtyValue
 				
-				FROM ".DB_PREFIX."products p
-					LEFT JOIN ".DB_PREFIX."products_attributes pa ON (p.products_id = pa.products_id)
-					LEFT JOIN ".DB_PREFIX."products_options_values pv ON (pa.options_values_id = pv.products_options_values_id)
-					LEFT JOIN ".DB_PREFIX."products_options_values_to_products_options povpo ON (pv.products_options_values_id = povpo.products_options_values_id)
-					LEFT JOIN ".DB_PREFIX."products_options po ON(povpo.products_options_id = po.products_options_id)
-					LEFT JOIN ".DB_PREFIX."products_options_types pot ON (po.products_options_type = pot.products_options_types_id)			
+				FROM ".TABLE_PRODUCTS." p
+					LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
+					LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
+					LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." povpo ON (pv.products_options_values_id = povpo.products_options_values_id)
+					LEFT JOIN ".TABLE_PRODUCTS_OPTIONS." po ON(povpo.products_options_id = po.products_options_id)
+					LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_TYPES." pot ON (po.products_options_type = pot.products_options_types_id)			
 							
 				WHERE pa.products_attributes_id is not null
 					AND pa.options_values_id > 0
@@ -901,7 +956,7 @@ function installOptionalSQL1(){
 				ORDER BY p.products_id, pa.products_attributes_id
 							
 				ON DUPLICATE KEY UPDATE
-					`products_id` = ".DB_PREFIX."products_with_attributes_stock.products_id;";
+					`products_id` = ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".products_id;";
 		
 		$db->Execute($sql);
 		if($db->error){		
@@ -942,16 +997,16 @@ function installOptionalSQL2(){
 	$insertQtyValue = 'p.products_quantity';
 
 	//check if the required table is present
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock", null, false)) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, null, false)) {
 		
-		$sql = "INSERT INTO ".DB_PREFIX."products_with_attributes_stock (products_id, stock_attributes, quantity)
+		$sql = "INSERT INTO ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." (products_id, stock_attributes, quantity)
 
 		SELECT p.products_id, pa.products_attributes_id, $insertQtyValue
 
-		FROM ".DB_PREFIX."products p
+		FROM ".TABLE_PRODUCTS." p
 							
-			LEFT JOIN ".DB_PREFIX."products_attributes pa ON (p.products_id = pa.products_id)
-			LEFT JOIN ".DB_PREFIX."products_options_values pv ON (pa.options_values_id = pv.products_options_values_id)
+			LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
+			LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
 				
 		WHERE pa.products_attributes_id is not null
 			AND pa.options_values_id > 0
@@ -959,7 +1014,7 @@ function installOptionalSQL2(){
 		ORDER BY p.products_id, pa.products_attributes_id
 				
 		ON DUPLICATE KEY UPDATE
-			`products_id` = ".DB_PREFIX."products_with_attributes_stock.products_id;";
+			`products_id` = ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".products_id;";
 
 		$db->Execute($sql);
 		if($db->error){	
@@ -1001,15 +1056,15 @@ function installOptionalSQL3(){
 	$insertQtyValue = 'p.products_quantity';
 
 	//check if the required table is present
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock", null, false)) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, null, false)) {
 		
-		$sql = "INSERT INTO ".DB_PREFIX."products_with_attributes_stock (products_id, stock_attributes, quantity)
+		$sql = "INSERT INTO ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." (products_id, stock_attributes, quantity)
 
 		SELECT p.products_id, pa.products_attributes_id, $insertQtyValue
 
-		FROM ".DB_PREFIX."products p
-				LEFT JOIN ".DB_PREFIX."products_attributes pa ON (p.products_id = pa.products_id)
-				LEFT JOIN ".DB_PREFIX."products_options_values pv ON (pa.options_values_id = pv.products_options_values_id)
+		FROM ".TABLE_PRODUCTS." p
+				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
+				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
 			
 			WHERE pa.products_attributes_id is not null
 				AND pa.options_values_id > 0
@@ -1018,7 +1073,7 @@ function installOptionalSQL3(){
 			ORDER BY p.products_id, pa.products_attributes_id
 				
 			ON DUPLICATE KEY UPDATE
-				`products_id` = ".DB_PREFIX."products_with_attributes_stock.products_id;";
+				`products_id` = ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".products_id;";
 	
 	$db->Execute($sql);
 		if($db->error){	
@@ -1060,15 +1115,15 @@ function installOptionalSQL4(){
 	$insertQtyValue = 'p.products_quantity';
 
 	//check if the required tables is present
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock", null, false)) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, null, false)) {
 
-		$sql = "INSERT INTO ".DB_PREFIX."products_with_attributes_stock (products_id, stock_attributes, quantity)
+		$sql = "INSERT INTO ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." (products_id, stock_attributes, quantity)
 
 		SELECT p.products_id, pa.products_attributes_id, $insertQtyValue
 
-		FROM ".DB_PREFIX."products p
-					LEFT JOIN ".DB_PREFIX."products_attributes pa ON (p.products_id = pa.products_id)
-					LEFT JOIN ".DB_PREFIX."products_options_values pv ON (pa.options_values_id = pv.products_options_values_id)
+		FROM ".TABLE_PRODUCTS." p
+					LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
+					LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
 				
 				WHERE pa.products_attributes_id is not null
 					AND pa.options_values_id > 0
@@ -1076,7 +1131,7 @@ function installOptionalSQL4(){
 				ORDER BY p.products_id, pa.products_attributes_id
 				
 				ON DUPLICATE KEY UPDATE
-					`products_id` = ".DB_PREFIX."products_with_attributes_stock.products_id;";
+					`products_id` = ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".products_id;";
 
 		$db->Execute($sql);
 		if($db->error){
@@ -1203,14 +1258,14 @@ function exportSBAtableData(){
 	$sql = "SELECT DISTINCT `stock_id`, SBA.`products_id`, p.`products_model`,
 					SBA.`stock_attributes`, po.`products_options_name`,
 					pov.`products_options_values_name`, pov.`products_options_values_id`, `quantity`, `sort`, `customid`, `title`
-			FROM `".DB_PREFIX."products_with_attributes_stock` SBA
-			LEFT JOIN `".DB_PREFIX."products` p ON (SBA.`products_id` = p.`products_id`)
-			LEFT JOIN `".DB_PREFIX."products_attributes` pa ON (SBA.`stock_attributes` = pa.`products_attributes_id`)
-			LEFT JOIN `".DB_PREFIX."products_options` po ON (po.`products_options_id` = pa.`options_id`)
-			LEFT JOIN `".DB_PREFIX."products_options_values` pov ON (pa.`options_values_id` = pov.`products_options_values_id`)
+			FROM `".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK."` SBA
+			LEFT JOIN `".TABLE_PRODUCTS."` p ON (SBA.`products_id` = p.`products_id`)
+			LEFT JOIN `".TABLE_PRODUCTS_ATTRIBUTES."` pa ON (SBA.`stock_attributes` = pa.`products_attributes_id`)
+			LEFT JOIN `".TABLE_PRODUCTS_OPTIONS."` po ON (po.`products_options_id` = pa.`options_id`)
+			LEFT JOIN `".TABLE_PRODUCTS_OPTIONS_VALUES."` pov ON (pa.`options_values_id` = pov.`products_options_values_id`)
 			ORDER BY SBA.`stock_id` ASC";
 	
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock")) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK)) {
 		$returned = $db->Execute($sql);
 
 	 	//Header row
@@ -1261,7 +1316,7 @@ function importSBAtableData(){
 	//ini_set('max_execution_time','0'); //If set to zero, no time limit is imposed, remove when done
 	//ini_set('max_input_time','0'); //If set to zero, no time limit is imposed, remove when done
 	
-	if(checkSBAtable(DB_PREFIX."products_with_attributes_stock")) {
+	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK)) {
 		$ReportFile = file($SBAtableReport);//get file data
 	}
 	else{

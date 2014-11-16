@@ -304,6 +304,8 @@ switch($action)
 				$intVars = sizeof($arrMain);
 				$arrNew = array();
 			
+        $arrNew = return_attribute_combinations($arrNew, $intVars);
+/*        
 				if ($intVars >= 1) {
 					//adds attribute combinations
 					// there are X variables / attributes
@@ -325,7 +327,13 @@ switch($action)
 													for ($m = 0;$m < sizeof($arrMain[4]);$m++) {
 														if ($intVars >= 6) {
 															for ($n = 0;$n < sizeof($arrMain[5]);$n++) {
-																$arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m], $arrMain[5][$n]);
+                                if ($intVars >= 7){
+                                  for ($o = 0; $o < sizeof($arrMain[6]); $o++) {
+                                  $arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m], $arrMain[5][$n], $arrMain[6][$o]);
+                                  }
+                                } else {
+                                  $arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m], $arrMain[5][$n]);
+                                }
 															}
 														} else {
 															$arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m]);
@@ -348,14 +356,14 @@ switch($action)
 						}
 					}
 					
-					}
+				}*/
 					
 				//loop through the list of variables / attributes
 				//add each one to the database
 				for ($i = 0;$i < sizeof($arrNew);$i++) {
 					//used to add multi attribute combinations at one time
 					$strAttributes = implode(",", $arrNew[$i]);
-					$productAttributeCombo = $products_id . '-' . str_replace(',', '-', $strAttributes);;
+					$productAttributeCombo = $products_id . '-' . str_replace(',', '-', $strAttributes);
 					$saveResult = $stock->insertNewAttribQty($products_id, $productAttributeCombo, $strAttributes, $quantity);//can not include the $customid since it must be unique
 				}
 				
@@ -438,7 +446,7 @@ switch($action)
 	case 'auto_sort':
 		// get all attributes
 		$sql = $db->Execute("SELECT stock_id, stock_attributes FROM " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " ORDER BY stock_id ASC;");
-		$count = 0;
+		$count = 0; // mc12345678 why not use $sql->RecordCount()? If doesn't return correct value, then above SQL needs to be called to include a cache "reset".
 		while (!$sql->EOF) {
 		  // get main attribute only for sort
 		  $attributes = explode(',', $sql->fields['stock_attributes']);
@@ -472,14 +480,14 @@ global $template_dir;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="./includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="./includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<link rel="stylesheet" type="text/css" href="./includes/products_with_attributes_stock_ajax.css" media="all" id="hoverJS">
-<script src="<?php echo HTTPS_CATALOG_SERVER . '/' . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="<?php echo HTTPS_CATALOG_SERVER . '/' . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery.form.js"></script>
-<script type="text/javascript" src="./products_with_attributes_stock_ajax.js"></script>
-<script type="text/javascript" src="./includes/menu.js"></script>
-<script type="text/javascript" src="./includes/general.js"></script>
+<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="includes/products_with_attributes_stock_ajax.css" media="all" id="hoverJS">
+<script src="<?php echo DIR_WS_CATALOG_TEMPLATE . $template_dir; /*mc12345678 Still not sure that trying to call the store template is the best way to incorporate the javascript instead of it being in the admin panel on it's own.  Yes two places to store, but... */ ?>/jscript/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="<?php echo DIR_WS_CATALOG_TEMPLATE . $template_dir; ?>/jscript/jquery.form.js"></script>
+<script type="text/javascript" src="products_with_attributes_stock_ajax.js"></script>
+<script type="text/javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/general.js"></script>
 <script type="text/javascript">
 <!--
 function init()

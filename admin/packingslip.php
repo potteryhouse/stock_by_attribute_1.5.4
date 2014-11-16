@@ -167,9 +167,9 @@
 
 			//"Stock by Attributes" add custom ID to display
 			$customid = null;
-			$attributes = null;
 			//test if this is to be displayed
 			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
+  			$attributes = array(); // mc12345678 moved into if statement otherwise doesn't apply in code.
 				//create array for use in zen_get_customid
 				$attributes[] = $order->products[$i]['attributes'][$j]['value_id'];
 				//get custom ID

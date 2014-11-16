@@ -667,12 +667,7 @@ function nullDataEntry($fieldtoNULL){
   					$attributes_new->MoveNext();
   				}
 
-  				if(sizeof($stock_attributes) > 1){
-  					$stock_attributes = implode(',',$stock_attributes);
-  					$stock_attributes = str_ireplace(',', '","', $stock_attributes);					
-  				} else {
-  					$stock_attributes = $stock_attributes[0];
-  				}
+ 					$stock_attributes = implode('","',$stock_attributes);
   			}
   			
   			//Get product model
