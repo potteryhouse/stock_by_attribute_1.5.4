@@ -153,10 +153,21 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 		$productsQty = 0;
 
 		// Added to allow individual stock of different attributes
-		if( is_array($products[$i]['attributes']) ){
-			$attributes = $products[$i]['attributes'];
-		}
-		
+		if(is_array($products[$i]['attributes'])){
+      $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
+      $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
+       
+      $inSBA_result = $db->Execute($inSBA_query);
+
+      if (sizeof($inSBA_result) > 0 && zen_not_null($inSBA_result)) {
+    		$attributes = $products[$i]['attributes'];
+      } else {
+		    $attributes = null; //Force normal operation if the product is not monitored by SBA.
+      }
+	  } else {
+      $attributes = null;
+	  }
+
 		if ( STOCK_CHECK == 'true' ) {
 
 			if($attributes){
@@ -214,7 +225,23 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 						}
 					}
 				}
-			}
+			} else {
+        // mc12345678 Added to account for products that have attributes, but the attributes are not tracked by SBA and further that the products can be added in mixed quantities to the cart.  Ideally though this and the below "no attributes" section should be better merged to support future upgrades.  That is something that will need to be performed at a later date, but for now to make this functional. 2014-11-23
+        $flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
+// bof: extra check on stock for mixed YES
+        if ($flagStockCheck != true) {
+//echo zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) . '<br>';
+          if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+            $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+          } else {
+            $flagStockCheck = '';
+          }
+        }
+// eof: extra check on stock for mixed YES
+        if ($flagStockCheck == true) {
+          $flagAnyOutOfStock = true;
+        }
+      }
 						
 			if (zen_not_null($flagStockCheck)){
 				$flagStockCheck = '<span class="markProductOutOfStock">' . $flagStockCheck . '</span>';
