@@ -48,28 +48,40 @@
 		// Added to allow individual stock of different attributes
 	    unset($attributes);
 	    if(is_array($products[$i]['attributes'])){
-			$attributes = $products[$i]['attributes'];
-	    } 
-	    else{
-		      $attributes = null;
+        $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
+        $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
+        
+        $inSBA_result = $db->Execute($inSBA_query);
+
+        if (sizeof($inSBA_result) > 0 && zen_not_null($inSBA_result)) {
+    			$attributes = $products[$i]['attributes'];
+        } else {
+		      $attributes = null; //Force normal operation if the product is not monitored by SBA.
+        }
+	    } else {
+        $attributes = null;
 	    }
 	
-		if(!empty($attributes)){
+		  if(!empty($attributes)){
 	    	if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'], $attributes)) {
 	    		zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
 	    		break;
 	    	}
-	    }
-	    else{
-        	if ( zen_check_stock($products[$i]['id'], $products[$i]['quantity']) ) {
-	      		zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
-	      		break;
-	      	}
-	    }
- 	}   
+	    } else {
+        if (zen_check_stock($products[$i]['id'], $products[$i]['quantity']) ) {
+	      	zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+	      	break;
+	      } else {
+          // extra check on stock for mixed YES
+          if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+            zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+            break;
+          }
+        }
+      }
+    }   
 	// END "Stock by Attributes"
- }
-
+  }
 // if no shipping destination address was selected, use the customers own address as default
   if (!$_SESSION['sendto']) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];

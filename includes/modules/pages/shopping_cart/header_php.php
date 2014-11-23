@@ -90,9 +90,9 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
     	//LPAD - Return the string argument, left-padded with the specified string
     	//example: LPAD(popt.products_options_sort_order,11,"0") the field is 11 digits, and is left padded with 0
-      $options_order_by= ' ORDER BY LPAD(popt.products_options_sort_order,11,"0")';
+      $options_order_by= ' ORDER BY LPAD(popt.products_options_sort_order,11,"0");';
     } else {
-      $options_order_by= ' ORDER BY popt.products_options_name';
+      $options_order_by= ' ORDER BY popt.products_options_name;';
     }
 
     // START "Stock by Attributes"
@@ -100,18 +100,18 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     foreach ($products[$i]['attributes'] as $option => $value) {
 
     	$attributes = "SELECT popt.products_options_name, popt.products_options_type,
-    						  poval.products_options_values_name, 
-							  pa.options_values_price, pa.price_prefix
+      						  poval.products_options_values_name, 
+      						  pa.options_values_price, pa.price_prefix
 
-                     	FROM  	  " . TABLE_PRODUCTS_OPTIONS        . " popt 
-						LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES     . " pa    ON (pa.options_id = popt.products_options_id)
-						LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval ON (pa.options_values_id = poval.products_options_values_id)
+                   	FROM  	  " . TABLE_PRODUCTS_OPTIONS        . " popt 
+              			LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES     . " pa    ON (pa.options_id = popt.products_options_id)
+                    LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval ON (pa.options_values_id = poval.products_options_values_id)
     			
-    					WHERE pa.products_id       = :productsID
+                    WHERE pa.products_id       = :productsID
 		                  AND pa.options_id        = :optionsID
-	    				  AND pa.options_values_id = :optionsValuesID
-	    				  AND popt.language_id     = :languageID
-	                      AND poval.language_id    = :languageID " . $options_order_by;
+                      AND pa.options_values_id = :optionsValuesID
+                      AND popt.language_id     = :languageID
+	                    AND poval.language_id    = :languageID " . $options_order_by;
 
     	//Bind variables to query
       	$attributes = $db->bindVars($attributes, ':productsID', $products[$i]['id'], 'integer');
@@ -153,10 +153,21 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 		$productsQty = 0;
 
 		// Added to allow individual stock of different attributes
-		if( is_array($products[$i]['attributes']) ){
-			$attributes = $products[$i]['attributes'];
-		}
-		
+		if(is_array($products[$i]['attributes'])){
+      $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
+      $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
+       
+      $inSBA_result = $db->Execute($inSBA_query);
+
+      if (sizeof($inSBA_result) > 0 && zen_not_null($inSBA_result)) {
+    		$attributes = $products[$i]['attributes'];
+      } else {
+		    $attributes = null; //Force normal operation if the product is not monitored by SBA.
+      }
+	  } else {
+      $attributes = null;
+	  }
+
 		if ( STOCK_CHECK == 'true' ) {
 
 			if($attributes){
@@ -214,7 +225,23 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 						}
 					}
 				}
-			}
+			} else {
+        // mc12345678 Added to account for products that have attributes, but the attributes are not tracked by SBA and further that the products can be added in mixed quantities to the cart.  Ideally though this and the below "no attributes" section should be better merged to support future upgrades.  That is something that will need to be performed at a later date, but for now to make this functional. 2014-11-23
+        $flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
+// bof: extra check on stock for mixed YES
+        if ($flagStockCheck != true) {
+//echo zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) . '<br>';
+          if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+            $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+          } else {
+            $flagStockCheck = '';
+          }
+        }
+// eof: extra check on stock for mixed YES
+        if ($flagStockCheck == true) {
+          $flagAnyOutOfStock = true;
+        }
+      }
 						
 			if (zen_not_null($flagStockCheck)){
 				$flagStockCheck = '<span class="markProductOutOfStock">' . $flagStockCheck . '</span>';
@@ -227,13 +254,12 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 			if(empty($stockAvailable)){
 				$stockAvailable = 0;
 			}
-			
 		}
 				
-			//Set Custom ID variable.
-			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
-				$customid = zen_get_customid($products[$i]['id'], $attributes);
-			}
+		//Set Custom ID variable.
+		if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
+			$customid = zen_get_customid($products[$i]['id'], $attributes);
+		}
 			
   } //end IF attributes push to array
   else{
@@ -275,9 +301,11 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   $productsImage = (IMAGE_SHOPPING_CART_STATUS == 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) : '');
   $show_products_quantity_max = zen_get_products_quantity_order_max($products[$i]['id']);
   $showFixedQuantity = (($show_products_quantity_max == 1 or zen_get_products_qty_box_status($products[$i]['id']) == 0) ? true : false);
+
 //  $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('products_id[]', $products[$i]['id']) . zen_draw_hidden_field('cart_quantity[]', 1);
 //  $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', 1);
   $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
+  
   $showMinUnits = zen_get_products_quantity_min_units_display($products[$i]['id']);
   $quantityField = zen_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"');
   $ppe = $products[$i]['final_price'];
@@ -286,6 +314,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   $productsPriceEach = $currencies->format($ppe) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
   $productsPriceTotal = $currencies->format($ppt) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
   $buttonUpdate = ((SHOW_SHOPPING_CART_UPDATE == 1 or SHOW_SHOPPING_CART_UPDATE == 3) ? zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT) : '') . zen_draw_hidden_field('products_id[]', $products[$i]['id']);
+
 //  $productsPriceEach = $currencies->display_price($products[$i]['final_price'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
 //  $productsPriceTotal = $currencies->display_price($products[$i]['final_price'], zen_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
 //  $productsPriceTotal = $currencies->display_price($products[$i]['final_price'], zen_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
@@ -298,8 +327,8 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
                             'linkProductsImage'=>$linkProductsImage,
                             'linkProductsName'=>$linkProductsName,
                             'stockAvailable'=>$stockAvailable,
-							'lowproductstock'=>$lowproductstock,
-							'customid'=>$customid,
+                            'lowproductstock'=>$lowproductstock,
+                            'customid'=>$customid,
                             'productsImage'=>$productsImage,
                             'productsName'=>$productsName,
                             'showFixedQuantity'=>$showFixedQuantity,
@@ -316,7 +345,5 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
                             'attributes'=>$attrArray);
 } // end FOR loop
 
-
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');
-?>
