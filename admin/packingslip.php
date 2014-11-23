@@ -157,7 +157,6 @@
 	// END "Stock by Attributes"
 
     for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-
       echo '      <tr class="dataTableRow">' . "\n" .
            '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
            '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];

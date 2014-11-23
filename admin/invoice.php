@@ -166,7 +166,6 @@ function couponpopupWindow(url) {
 
     $decimals = $currencies->get_decimal_places($order->info['currency']);
     for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
-	
       if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true')
       {
         $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']),$decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
@@ -176,7 +175,7 @@ function couponpopupWindow(url) {
       }
       echo '      <tr class="dataTableRow">' . "\n" .
            '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
-      	   '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
+           '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
 
       if (isset($order->products[$i]['attributes']) && (($k = sizeof($order->products[$i]['attributes'])) > 0)) {
         for ($j = 0; $j < $k; $j++) {

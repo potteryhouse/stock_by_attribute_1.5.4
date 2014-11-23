@@ -292,6 +292,7 @@
  * @param int The product id of the product whos's stock is to be checked
  * @param int Is this amount of stock available
  *
+ * @TODO naughty html in a function
 */
 
 // START "Stock by Attributes"
@@ -304,9 +305,10 @@
   		$stock_left = (zen_get_products_stock($products_id) - $products_quantity);
   	}
   	
-    $out_of_stock = null;
+    $out_of_stock = '';
+
     if ($stock_left < 0) {
-      $out_of_stock = STOCK_MARK_PRODUCT_OUT_OF_STOCK;
+      $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
     }
 
     return $out_of_stock;
