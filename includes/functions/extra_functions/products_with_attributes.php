@@ -16,12 +16,14 @@ function cartProductCount($products_id){
 	
 	global $db;
 	$products_id = zen_get_prid($products_id);
-	
-	$productCount = $db->Execute('select products_id
+
+  $query = 'select products_id
   									from ' . TABLE_CUSTOMERS_BASKET . '
-  									where products_id like ":products_id::%" and customers_basket_id = :cust_bask_id:');
-  $db->bindVars($productCount, ':products_id:', $products_id, 'integer');
-  $db->bindVars($productCount, ':cust_bask_id:', $_SESSION['cart']->cartID, 'integer');
+  									where products_id like ":products_id::%" and customers_basket_id = :cust_bask_id:';
+  $query = $db->bindVars($query, ':products_id:', $products_id, 'integer');
+  $query = $db->bindVars($query, ':cust_bask_id:', $_SESSION['cart']->cartID, 'integer');
+          
+	$productCount = $db->Execute($query);
           	
 	return $productCount->RecordCount();
 }
