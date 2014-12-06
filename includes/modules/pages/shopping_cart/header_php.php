@@ -100,16 +100,16 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     foreach ($products[$i]['attributes'] as $option => $value) {
 
     	$attributes = "SELECT popt.products_options_name, popt.products_options_type,
-      						  poval.products_options_values_name, 
-      						  pa.options_values_price, pa.price_prefix
+                      poval.products_options_values_name, 
+                      pa.options_values_price, pa.price_prefix
 
                    	FROM  	  " . TABLE_PRODUCTS_OPTIONS        . " popt 
-              			LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES     . " pa    ON (pa.options_id = popt.products_options_id)
-                    LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval ON (pa.options_values_id = poval.products_options_values_id)
-    			
-                    WHERE pa.products_id       = :productsID
-		                  AND pa.options_id        = :optionsID
-                      AND pa.options_values_id = :optionsValuesID
+                   	LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES     . " pa    ON (pa.options_id = popt.products_options_id)
+                   	LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval ON (pa.options_values_id = poval.products_options_values_id)
+
+                   	WHERE pa.products_id       = :productsID
+                   	  AND pa.options_id        = :optionsID
+                   	  AND pa.options_values_id = :optionsValuesID
                       AND popt.language_id     = :languageID
 	                    AND poval.language_id    = :languageID " . $options_order_by;
 

@@ -558,7 +558,11 @@ function addSBAtable(){
     KEY idx_orders_stock_id_stock_id (`orders_products_attributes_stock_id`,`stock_id`) 
 		)");
 	
-		array_push($resultMmessage, '<br />Added Table orders_products_with_attributes_stock: ' . $result);
+		if($db->error){		
+			$msg = ' Error Message: ' . $db->error;
+			$failed = true;
+		}
+		array_push($resultMmessage, '<br />Added Table orders_products_with_attributes_stock: ' . $msg);
 	}
 	else{
 		//Alter / upgrade existing database table
@@ -759,14 +763,14 @@ function alterSBAtableUniqueIndex(){
 	$sql = "SELECT * FROM information_schema.statistics
 			WHERE table_schema = '".DB_DATABASE."'
 			AND table_name = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
-			AND column_name = 'products_id';";
+			AND column_name = 'products_id'";
 	$result = $db->Execute($sql);
 
 	$num_rows = null;
 	while (!$result->EOF) {
 		if( $result->fields['COLUMN_NAME'] ){
 			$num_rows = 1;
-			continue; // mc12345678 does not appear to be a need to continue looping if entered this if.
+			break; // mc12345678 does not appear to be a need to continue looping if entered this if.
 		}
 		$result->MoveNext();
 	}
@@ -785,7 +789,7 @@ function alterSBAtableUniqueIndex(){
 				$num_rows = 1;
 				$failed = true;
 				array_push($resultMmessage, 'FAILURE: Can not add UNIQUE INDEX (products_id, stock_attributes) to the products_with_attributes_stock table, there are records that are not unique!');
-				continue; // No need to continue in while loop as have met a failing condition.
+				break; // No need to continue in while loop as have met a failing condition.
 			}	
 			$result->MoveNext();
 		}
@@ -1157,7 +1161,7 @@ function checkSBAtable($table = null, $field = null, $display = true) {
 	$check = $db->Execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
 							WHERE TABLE_SCHEMA = '".DB_DATABASE."'
 							AND TABLE_NAME = '". $table . "'
-							AND COLUMN_NAME like '%".$field."%';");
+							AND COLUMN_NAME like '%".$field."%'");
 
 	while (!$check->EOF) {
 		if( $check->fields['COLUMN_NAME'] ){

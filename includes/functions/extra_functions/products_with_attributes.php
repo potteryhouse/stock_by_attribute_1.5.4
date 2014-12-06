@@ -11,7 +11,7 @@
  * Updated for Stock by Attributes 1.5.3.1
  */
 
-//test for multiple entry of same product in shopping cart
+//test for multiple entry of same product in customer's shopping cart
 function cartProductCount($products_id){
 	
 	global $db;
@@ -19,8 +19,10 @@ function cartProductCount($products_id){
 	
 	$productCount = $db->Execute('select products_id
   									from ' . TABLE_CUSTOMERS_BASKET . '
-  									where products_id like "' . (int)$products_id . ':%"');
-	
+  									where products_id like ":products_id::%" and customers_basket_id = :cust_bask_id:');
+  $db->bindVars($productCount, ':products_id:', $products_id, 'integer');
+  $db->bindVars($productCount, ':cust_bask_id:', $_SESSION['cart']->cartID, 'integer');
+          	
 	return $productCount->RecordCount();
 }
 
