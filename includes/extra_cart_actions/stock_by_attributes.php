@@ -1,92 +1,271 @@
 <?php
 
-//What about: 'multiple_products_add_product' (Needs to be addressed), 'update_product' (Needs to be addressed), or 'cart' (does a notify action, so may need to address?)actions?
-if (isset($_GET['action']) && ($_GET['action'] == 'add_product')) {
-  $_SESSION['cart_posted'] = $_POST;
-}
-if (isset($_GET['action']) && ($_GET['action'] == 'add_product')) {
-//Loop for each product in the cart
-  $attributes = (isset($_POST['id']) && zen_not_null($_POST['id']) ? $_POST['id'] : null );
-  $product_id = zen_get_uprid($_POST['products_id'], $attributes);
-  //$product_id = $product['id'];
-  $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . ' where products_id = :products_id:';
-  $query = $db->bindVars($query, ':products_id:', $_POST['products_id'], 'integer');
-  $stock_id = $db->Execute($query);
-//  $_SESSION['stock_idquery'] = $stock_id->RecordCount();
-//Check if item is an SBA tracked item, if so, then perform analysis of whether to add or not.
-  if ($stock_id->RecordCount() > 0) {
-//Looks like $_SESSION['cart']->in_cart_mixed($prodId) could be used here to pull the attribute related product information to verify same product is being added to cart... This also may help in the shopping_cart routine added for SBA as all SBA products will have this modifier.
-    $cart_quantity = 0;
-    $new_quantity = $_POST['cart_quantity']; //Number of items being added (Known to be SBA tracked already)
-//  $_SESSION['stock_idquery2'] = $new_quantity . " " . ($_SESSION['cart']->in_cart($product_id) ? "true" : "false");
-    if ($_SESSION['cart']->in_cart($product_id)) {
-      $cart_quantity = $_SESSION['cart']->get_quantity($product_id);
-//Evaluate product to see if the same attributes are on both of them... If so, then need to maintain record of this for verification.
-      $_SESSION['stock_idquery3'] = $cart_quantity;
+
+//What about: 'multiple_products_add_product' (Needs to be addressed though don't see at the moment why since generally unable to select multiple products each with attributes, perhaps something to consider for later, but let's get serious here at the moment as there are more routine actions to be handled properly first.), 'update_product' (Needs to be addressed), or 'cart' (does a notify action, so may need to address?)actions?
+if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
+  if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
+
+  $productIsSBA = array();
+  for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
+    $adjust_max= 'false';
+    if ($_POST['cart_quantity'][$i] == '') {
+      $_POST['cart_quantity'][$i] = 0;
     }
-//obtain the quantity remaining of that product with attributes.
-    $sbaAvailable = zen_get_products_stock($product_id, $attributes  /*$attributes = null*/ /*(as an array)*/);
-//If have more being purchased than available, take action.
-    if ($cart_quantity + $new_quantity > $sbaAvailable) {
-//If not adding to the cart then do the following:
-//Give message then prevent the item from being added to the cart.
-      $messageStack->add_session('header', 'Out of stock. Item not added to cart.');
-      $_GET['action'] = '';
+    if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
+      // adjust quantity when not a value
+      $chk_link = '<a href="' . zen_href_link(zen_get_info_page($_POST['products_id'][$i]), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($_POST['products_id'][$i]))) . '&products_id=' . $_POST['products_id'][$i]) . '">' . zen_get_products_name($_POST['products_id'][$i]) . '</a>';
+      $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity'][$i]), 'caution');
+      $_POST['cart_quantity'][$i] = 0;
+      continue;
     }
-  }
-/*
-  $products = $_SESSION['cart']->get_products();
-  for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-    $product_id = $products[$i]['id'];
-//Check if SBA tracked product.
-    $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . ' where products_id = :products_id:';
-    $db->bindVars($query, ':products_id:', $product_id, 'integer');
-    $stock_id = $db->Execute($query);
-//Thought is this: If the product is SBA tracked, then need to evaluate the specific stock_id, and increment the count of that stock_id
-// as an array ($stocknum[$stock_id]++;)
-// and do this for all products, then when done with all products in the cart
-// use a $key=>value loop of the products and see if the product being added is out of range... Hmmm.. This also means that need to
-// instead of all of this looking only through the cart, look through the cart for the item being added to reduce some of the work...
-// Point is that one product is being added to the cart, which already does or does not have product in it,
-// The POST variables are still available to review for this, so there is a lot that can be done here... This is just before taking an
-// action to modify the cart...
-    if ($stock_id->RecordCount() > 0) {
-// If it is a product tracked by SBA
-//obtain the quantity remaining of that product with attributes.
-*/  //    $sbaAvailable = zen_get_products_stock($product_id, $attributes = null /*(as an array)*/);
-//COMMENT ABOUT CARTPRODUCTCOUNT FUNCTION... It does not seem to differentiate between customers, but instead
-//Simply identify that the product is in a shopping cart.. So, how would this work/was is the expected result
-// if there were two customers with the same product in the cart?
-// cartProductCount($products_id)
-//Need a way to look at all products with the same attributes to then compare with the SBA table...
-/*      if ( 0 > $sbaAvailable) {
-//if the quantity being added exceeds the quantity available
-// display error message
-// Option to reduce quantity added to the maximum available?
-// bof: adjust new quantity to be same as current in stock // TAKEN FROM INCLUDES/CLASSES/SHOPPING_CART.PHP
-        $chk_current_qty = zen_get_products_stock($_POST['products_id'], $_POST['attributes']);
-        $this->flag_duplicate_msgs_set = FALSE;
-        if (STOCK_ALLOW_CHECKOUT == 'false' && ($cart_qty + $new_qty > $chk_current_qty)) {
-          $new_qty = $chk_current_qty;
-          $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'C: FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
-          $this->flag_duplicate_msgs_set = TRUE;
+    if ( in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array())) or $_POST['cart_quantity'][$i]==0) {
+      $_SESSION['cart']->remove($_POST['products_id'][$i]);
+    } else {
+      $add_max = zen_get_products_quantity_order_max($_POST['products_id'][$i]); // maximum allowed
+      $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK .  ' where products_id = :products_id:';
+      $query = $db->bindVars($query, ':products_id:', zen_get_prid($_POST['products_id'][$i]), 'integer');
+      $stock_id = $db->Execute($query, false, false, 0, true);
+      $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : null;
+      if ($stock_id->RecordCount()) {
+        $productIsSBA[$i] = true;
+      } else {
+        $productIsSBA[$i] = false;
+      }
+      if (!$productIsSBA[$i]) {
+        $cart_qty = $_SESSION['cart']->in_cart_mixed($_POST['products_id'][$i]); // total currently in cart
+      } else {
+// Mine        $cart_qty = $_SESSION['cart']->get_quantity($product_id);
+        $cart_qty = $_SESSION['cart']->in_cart_mixed($_POST['products_id'][$i]);
+      }
+      if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' cart_qty: ' . $cart_qty . ' <br>', 'caution');
+      $new_qty = $_POST['cart_quantity'][$i]; // new quantity
+      $current_qty = $_SESSION['cart']->get_quantity($_POST['products_id'][$i]); // how many currently in cart for attribute
+      $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
+
+      $new_qty = $_SESSION['cart']->adjust_quantity($new_qty, $_POST['products_id'][$i], 'shopping_cart');
+// bof: adjust new quantity to be same as current in stock
+// Mine          $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i]);
+//          if (!$productIsSBA[$i]) {
+//            $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i]);
+//          } else {
+          $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i], $attributes);
+//          }
+//          $_SESSION['qty_chk_current_qty'] = $chk_current_qty;
+        if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty > $chk_current_qty)) {
+            $new_qty = $chk_current_qty;
+            $messageStack->add_session('shopping_cart', ($_SESSION['cart']->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
         }
 
+      $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+
 // eof: adjust new quantity to be same as current in stock
+      if (($add_max == 1 and $cart_qty == 1) && $new_qty != $cart_qty) {
+        // do not add
+        $adjust_max= 'true';
+      } else {
+      if ($add_max != 0) {
+// bof: adjust new quantity to be same as current in stock
+          if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
+              $adjust_new_qty = 'true';
+              $alter_qty = $chk_current_qty - $cart_qty;
+              $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+              $messageStack->add_session('shopping_cart', ($_SESSION['cart']->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
+          }
+// eof: adjust new quantity to be same as current in stock
+        // adjust quantity if needed
+      switch (true) {
+        case ($new_qty == $current_qty): // no change
+          $adjust_max= 'false';
+          $new_qty = $current_qty;
+          break;
+        case ($new_qty > $add_max && $chk_mixed == false):
+          $adjust_max= 'true';
+          $new_qty = $add_max ;
+          break;
+        case (($add_max - $cart_qty + $new_qty >= $add_max) && $new_qty > $add_max && $chk_mixed == true):
+          $adjust_max= 'true';
+          $requested_qty = $new_qty;
+          $new_qty = $current_qty;
+          break;
+        case (($cart_qty + $new_qty - $current_qty > $add_max) && $chk_mixed == true):
+          $adjust_max= 'true';
+          $requested_qty = $new_qty;
+          $new_qty = $current_qty;
+          break;
+        default:
+          $adjust_max= 'false';
+        }
+        $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+        $_SESSION['cart']->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
+      } else {
+        // adjust minimum and units
+        $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+        $_SESSION['CTest'.$i] = $attributes;
+        $_SESSION['cart']->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
+      }
+      }
+      if ($adjust_max == 'true') {
+        if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . '<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id'][$i]) . '<br>requested_qty: ' . $requested_qty . ' current_qty: ' . $current_qty , 'caution');
         $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id'][$i]), 'caution');
-// includes/classes/responsive_sheffield_blue/shopping_cart.php
-// Line #1876 : $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . zen_get_products_name($prodId), 'caution');
-        $messageStack->add_session('header', 'Out of stock');
-// Otherwise don't add and reset the action to not add the product.
-        $messageStack->add_session('header', 'Out of stock');
-// $messageStack->add('', 'Note to customer', 'caution'); //<- Used if displaying on the current page... (ie. not after a redirect).
-// OR if to be displayed after a redirect:
-// $messageStack->add_session('shopping_cart', 'Out of stock');
-// The following should be performed only if no products are being added to the cart.
+      } else {
+// display message if all is good and not on shopping_cart page
+        if ((DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART) && $messageStack->size('shopping_cart') == 0) {
+          $messageStack->add_session('header', ($_SESSION['cart']->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
+        } else {
+          if ($_GET['main_page'] != FILENAME_SHOPPING_CART) {
+            zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+          }
+        }
+      }
+    }
+
+  }
+  zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
+}
+
+if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
+  if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'A: FUNCTION ' . __FUNCTION__, 'caution');
+  if (isset($_POST['products_id'] ) && is_numeric ( $_POST['products_id'])) {
+//Loop for each product in the cart
+    if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'A2: FUNCTION ' . __FUNCTION__, 'caution');
+    $the_list = '';
+    $adjust_max= 'false';
+    if (isset($_POST['id'])) {
+      foreach ($_POST['id'] as $key => $value) {
+        $check = zen_get_attributes_valid($_POST['products_id'], $key, $value);
+        if ($check == false) {
+          $the_list .= TEXT_ERROR_OPTION_FOR . '<span class="alertBlack">' . zen_options_name($key) . '</span>' . TEXT_INVALID_SELECTION . '<span class="alertBlack">' . ($value == (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID ? TEXT_INVALID_USER_INPUT : zen_values_name($value)) . '</span>' . '<br />';
+        }
+      }
+    }
+    if (!is_numeric($_POST['cart_quantity']) || $_POST['cart_quantity'] < 0) {
+      // adjust quantity when not a value
+      $chk_link = '<a href="' . zen_href_link(zen_get_info_page($_POST['products_id']), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($_POST['products_id']))) . '&products_id=' . $_POST['products_id']) . '">' . zen_get_products_name($_POST['products_id']) . '</a>';
+      $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity']), 'caution');
+      $_POST['cart_quantity'] = 0;
+    }
+
+    $attributes = (isset($_POST['id']) && zen_not_null($_POST['id'])  ? $_POST['id']  : null );
+    $product_id = zen_get_uprid($_POST['products_id'], $attributes);
+
+    $add_max = zen_get_products_quantity_order_max($_POST['products_id']);
+    $cart_qty = $_SESSION['cart']->get_quantity($product_id);
+    
+    if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'B: FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'] . ' cart_qty: ' . $cart_qty . ' $_POST[cart_quantity]: ' . $_POST['cart_quantity'] . ' <br>', 'caution');
+      
+    $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK .  ' where products_id = :products_id:';
+    $query = $db->bindVars($query, ':products_id:',  $_POST['products_id'], 'integer');
+    $stock_id = $db->Execute($query, false, false, 0, true);
+//  $_SESSION['stock_idquery'] = $stock_id->RecordCount();
+//Check if item is an SBA tracked item, if so, then perform analysis of whether to add or not.
+    
+    if ($stock_id->RecordCount() > 0) {
+//Looks like $_SESSION['cart']->in_cart_mixed($prodId) could be used here to pull the attribute related product information to verify same product is being added to cart... This also may help in the shopping_cart routine added for SBA as all SBA products will have this modifier.
+//      $cart_qty = 0;
+      $new_qty = $_POST['cart_quantity']; //Number of items being added (Known to be SBA tracked already)
+      $new_qty = $_SESSION['cart']->adjust_quantity($new_qty, $_POST['products_id'], 'header');
+
+// bof: adjust new quantity to be same as current in stock
+      $chk_current_qty = zen_get_products_stock($product_id, $attributes);
+      $_SESSION['cart']->flag_duplicate_msgs_set = FALSE;
+      
+      if (STOCK_ALLOW_CHECKOUT == 'false' && ($cart_qty + $new_qty > $chk_current_qty)) {
+          $new_qty = $chk_current_qty;
+          $messageStack->add_session('shopping_cart', ($_SESSION['cart']->display_debug_messages ? 'C: FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
+          $_SESSION['cart']->flag_duplicate_msgs_set = TRUE;
+      }
+  // eof: adjust new quantity to be same as current in stock
+      if (($add_max == 1 and $cart_qty == 1)) {
+        // do not add
+        $new_qty = 0;
+        $adjust_max= 'true';
+      } else {
+// bof: adjust new quantity to be same as current in stock
+        if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
+          $adjust_new_qty = 'true';
+          $alter_qty = $chk_current_qty - $cart_qty;
+          $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+          if (!$_SESSION['cart']->flag_duplicate_msgs_set) {
+            $messageStack->add_session('shopping_cart', ($_SESSION['cart']->display_debug_messages ? 'D: FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
+          }
+        }
+// eof: adjust new quantity to be same as current in stock
+        // adjust quantity if needed
+        if (($new_qty + $cart_qty > $add_max) and $add_max != 0) {
+          $adjust_max= 'true';
+          $new_qty = $add_max - $cart_qty;
+        }
+      }
+      if ((zen_get_products_quantity_order_max($_POST['products_id']) == 1 and $_SESSION['cart']->in_cart_mixed($_POST['products_id']) == 1)) {
+
+        // do not add
+      } else {
+        // process normally
+        // bof: set error message
+        if ($the_list != '') {
+          $messageStack->add('product_info', ERROR_CORRECTIONS_HEADING . $the_list, 'caution');
+        } else {
+          // process normally
+          // iii 030813 added: File uploading: save uploaded files with unique file names
+          $real_ids = isset($_POST['id']) ? $_POST['id'] : "";
+          if (isset($_GET['number_of_uploads']) && $_GET['number_of_uploads'] > 0) {
+            /**
+             * Need the upload class for attribute type that allows user uploads.
+             *
+             */
+            include(DIR_WS_CLASSES . 'upload.php');
+            for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
+              if (zen_not_null($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) and ($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] != 'none')) {
+                $products_options_file = new upload('id');
+                $products_options_file->set_destination(DIR_FS_UPLOADS);
+                $products_options_file->set_output_messages('session');
+                if ($products_options_file->parse(TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i])) {
+                  $products_image_extension = substr($products_options_file->filename, strrpos($products_options_file->filename, '.'));
+                  if ($_SESSION['customer_id']) {
+                    $db->Execute("insert into " . TABLE_FILES_UPLOADED . " (sesskey, customers_id, files_uploaded_name) values('" . zen_session_id() . "', '" . $_SESSION['customer_id'] . "', '" . zen_db_input($products_options_file->filename) . "')");
+                  } else {
+                    $db->Execute("insert into " . TABLE_FILES_UPLOADED . " (sesskey, files_uploaded_name) values('" . zen_session_id() . "', '" . zen_db_input($products_options_file->filename) . "')");
+                  }
+                  $insert_id = $db->Insert_ID();
+                  $real_ids[TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] = $insert_id . ". " . $products_options_file->filename;
+                  $products_options_file->set_filename("$insert_id" . $products_image_extension);
+                  if (!($products_options_file->save())) {
+                    break;
+                  }
+                } else {
+                  break;
+                }
+              } else { // No file uploaded -- use previous value
+                $real_ids[TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] = $_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i];
+              }
+            }
+          }
+
+          $_SESSION['CTest'.$i] = $attributes;
+          $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(zen_get_uprid($_POST['products_id'], $real_ids))+($new_qty), $real_ids);
+          // iii 030813 end of changes.
+        } // eof: set error message
+      } // eof: quantity maximum = 1
+
+      if ($adjust_max == 'true') {
+        $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
+        if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'E: FUNCTION ' . __FUNCTION__ . '<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
+      }
+    
+      if ($the_list == '') {
+        // no errors
+  // display message if all is good and not on shopping_cart page
+        if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {
+          $messageStack->add_session('header', ($_SESSION['cart']->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
+          zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
+        } else {
+          zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+        }
+      } else {
+        // errors found with attributes - perhaps display an additional message here, using an observer class to add to the messageStack
+        $_SESSION['cart']->notify('NOTIFIER_CART_OPTIONAL_ATTRIBUTE_ERROR_MESSAGE_HOOK', $_POST, $the_list);
         $_GET['action'] = '';
       }
-    } else {
-// If it is not a product tracked by SBA do nothing special.
     }
-  }*/
+  }
 }

@@ -56,19 +56,64 @@ class products_with_attributes_stock
 		{
 			global $db;
 
-			$query = 'select sum(quantity) as quantity from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' where products_id = "'.(int)$products_id.'"';
-			$quantity = $db->Execute($query);
-			$query = 'update '.TABLE_PRODUCTS.' set  products_quantity="'.$quantity->fields['quantity'].'" where products_id="'.(int)$products_id.'"';
-			$db->Execute($query);
+			$query = 'select sum(quantity) as quantity, products_id from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' where products_id = :products_id:';
+      $query = $db->bindVars($query, ':products_id:', zen_get_prid($products_id), 'integer');
+      $quantity = $db->Execute($query);
+
+      $query = 'update :table: set  products_quantity=:quantity: where products_id=:products_id:';
+      $query = $db->bindVars($query, ':table:', TABLE_PRODUCTS, 'passthru');
+      $query = $db->bindVars($query, ':products_id:', zen_get_prid($products_id), 'integer');
+
+      // Tests are this: If the the item was found in the SBA table then update with those results.
+      // Else pull the value from the current stock quantity  and if the "switch" has not been
+      //  turned off, the value will stay the same otherwise, it would be set to zero.
+      if ($quantity->RecordCount() > 0 && $quantity->fields['products_id'] == zen_get_prid($products_id)) {
+        $query = $db->bindVars($query, ':quantity:', $quantity->fields['quantity'], 'float');
+      } else {
+        // Should add a switch to allow not resetting the quantity to zero when synchronizing quantities... This doesn't entirely make sense that because the product is not listed in the SBA table, that it should be zero'd out...
+        $query2 = "select p.products_quantity as quantity from :table: p where products_id=:products_id:";
+        $query2 = $db->bindVars($query2, ':table:', TABLE_PRODUCTS, 'passthru');
+        $query2 = $db->bindVars($query2, ':products_id:', zen_get_prid($products_id), 'integer');
+        $quantity_orig = $db->Execute($query2);
+        
+        if ($quantity_orig->RecordCount() > 0 && true /* This is where a switch could be introduced to allow setting to 0 when synchronizing with the SBA table. But as long as true, and the item is not tracked by SBA, then there is no change in the quantity.  header message probably should also appear.. */) {
+          $query = $db->bindVars($query, ':quantity:', $quantity_orig->fields['quantity'], 'float');
+        } else {
+          $query = $db->bindVars($query, ':quantity:', 0, 'float');
+        }
+      }
+
+      $db->Execute($query);
 		}
     
     function update_all_parent_products_stock() {
       global $db;
       $products_array = $this->get_products_with_attributes();
       foreach ($products_array as $products_id) {
-        $query = 'select sum(quantity) as quantity from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' where products_id = "'.(int)$products_id.'"';
+        $query = 'select sum(quantity) as quantity, products_id from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' where products_id = :products_id:';
+        $query = $db->bindVars($query, ':products_id:', zen_get_prid($products_id), 'integer');
         $quantity = $db->Execute($query);
-        $query = 'update '.TABLE_PRODUCTS.' set  products_quantity="'.$quantity->fields['quantity'].'" where products_id="'.(int)$products_id.'"';
+
+        $query = 'update '.TABLE_PRODUCTS.' set  products_quantity=:quantity: where products_id=:products_id:';
+        $query = $db->bindVars($query, ':products_id:', zen_get_prid($products_id), 'integer');
+        // Tests are this: If the the item was found in the SBA table then update with those results.
+        // Else pull the value from the current stock quantity  and if the "switch" has not been
+        //  turned off, the value will stay the same otherwise, it would be set to zero.
+        if ($quantity->RecordCount() > 0 && $quantity->fields['products_id'] == zen_get_prid($products_id)) {
+          $query = $db->bindVars($query, ':quantity:', $quantity->fields['quantity'], 'float');
+        } else {
+          // Should add a switch to allow not resetting the quantity to zero when synchronizing quantities... This doesn't entirely make sense that because the product is not listed in the SBA table, that it should be zero'd out...
+          $query2 = "select p.products_quantity as quantity from :table: p where products_id=:products_id:";
+          $query2 = $db->bindVars($query2, ':table:', TABLE_PRODUCTS, 'passthru');
+          $query2 = $db->bindVars($query2, ':products_id:', zen_get_prid($products_id), 'integer');
+          $quantity_orig = $db->Execute($query2);
+          if ($quantity_orig->RecordCount() > 0 && true /* This is where a switch could be introduced to allow setting to 0 when synchronizing with the SBA table. But as long as true, and the item is not tracked by SBA, then there is no change in the quantity.  header message probably should also appear.. */) {
+            $query = $db->bindVars($query, ':quantity:', $quantity_orig->fields['quantity'], 'float');
+          } else {
+            $query = $db->bindVars($query, ':quantity:', 0, 'float');
+          }
+        }
+        
         $db->Execute($query);
       }
     }
