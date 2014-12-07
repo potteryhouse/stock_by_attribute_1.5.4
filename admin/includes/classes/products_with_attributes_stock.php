@@ -85,7 +85,9 @@ class products_with_attributes_stock
 
       $db->Execute($query);
 		}
-    
+
+    // Technically the below update of all, could call the update of one... There doesn't
+    //  seem to be a way to do the update in any more of a faster way than to address each product.
     function update_all_parent_products_stock() {
       global $db;
       $products_array = $this->get_products_with_attributes();
