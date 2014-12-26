@@ -69,8 +69,7 @@
 <?php
   	if ( $product['flagShowFixedQuantity'] ) {
     	echo $product['showFixedQuantityAmount'] . '<br /><span class="alert bold">' . $product['flagStockCheck'] . '</span><br /><br />' . $product['showMinUnits'];
-  	} 
-  	else {
+  	} else {
     	echo $product['quantityField']           . '<br /><span class="alert bold">' . $product['flagStockCheck'] . '</span><br /><br />' . $product['showMinUnits'];
   	}
 ?>

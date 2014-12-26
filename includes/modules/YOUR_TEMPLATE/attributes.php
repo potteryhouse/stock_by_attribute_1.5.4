@@ -36,9 +36,9 @@ if ($pr_attr->fields['total'] > 0) {
 			  //LPAD - Return the string argument, left-padded with the specified string 
 			  //example: LPAD(po.products_options_sort_order,11,"0") the field is 11 digits, and is left padded with 0
               if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
-                $options_order_by = ' order by LPAD(po.products_options_sort_order,11,"0");';
+                $options_order_by = ' order by LPAD(po.products_options_sort_order,11,"0")';
               } else {
-                $options_order_by = ' order by po.products_options_name;';
+                $options_order_by = ' order by po.products_options_name';
               }
 
               //get the option/attribute list
@@ -126,7 +126,6 @@ if ($pr_attr->fields['total'] > 0) {
                 
 		              left join " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pas on 
 		              (p.products_id = pas.products_id and pa.products_attributes_id = pas.stock_attributes )
-		              				              		
 		              where pa.products_id = '" . (int)$_GET['products_id'] . "'
 		              and   pa.options_id  = '" . (int)$products_options_names->fields['products_options_id'] . "'
 		              and   pov.language_id = '" . (int)$_SESSION['languages_id'] . "' " .
@@ -161,7 +160,7 @@ if ($pr_attr->fields['total'] > 0) {
               			from " . TABLE_PRODUCTS_OPTIONS . " po
               			left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa on (pa.options_id = po.products_options_id)
               			where pa.products_id='" . (int)$_GET['products_id'] . "'
-               			and pa.products_attributes_id = '" . (int)$products_options->fields["products_attributes_id"] . "'; ";
+               			and pa.products_attributes_id = '" . (int)$products_options->fields["products_attributes_id"] . "' ";
 				$products_options_READONLY = $db->Execute($sqlRO);
 				
 				//echo 'ID: ' . $products_options->fields["products_attributes_id"] . ' Stock ID: ' . $products_options->fields['pasid'] . ' QTY: ' . $products_options->fields['pasqty'] . ' Custom ID: ' . $products_options->fields['customid'] . '<br />';//debug line
@@ -588,7 +587,7 @@ if ($pr_attr->fields['total'] > 0) {
                   // text
                   if (($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_TEXT)) {
                     //CLR 030714 Add logic for text option
-                    //            $products_attribs_query = zen_db_query("select distinct pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where pa.products_id='" . (int)$_GET['products_id'] . "' and pa.options_id = '" . $products_options_name['products_options_id'] . "'");
+                    //            $products_attribs_query = zen_db_query("select distinct pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id='" . (int)$_GET['products_id'] . "' and pa.options_id = '" . $products_options_name['products_options_id'] . "'");
                     //            $products_attribs_array = zen_db_fetch_array($products_attribs_query);
                     if ($_POST['id']) {
                       reset($_POST['id']);

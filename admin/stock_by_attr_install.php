@@ -372,6 +372,7 @@ function insertSBAproductsOptionsTypes(){
 		 '6', 0, now(), now(), NULL, NULL);";
 		
 		$db->Execute($sql);
+		
 		if($db->error){
 			$msg = ' Error Message: ' . $db->error;
 			$failed = true;
@@ -443,6 +444,8 @@ function insertSBAconfiguration(){
 		 */
 		
 		$result = $db->Execute($sql);
+		
+		
 		if($db->error){		
 			$msg = ' Error Message: ' . $db->error;
 			$failed = true;
@@ -721,6 +724,7 @@ function alterSBAtableCustomid(){
 		while (!$result->EOF) {
 			if( $result->fields['COLUMN_NAME'] ){
 				$num_rows = 1;
+				break; // mc12345678 does not appear to be a need to continue looping if entered this if.
 			}
 			$result->MoveNext();
 		}
@@ -789,13 +793,13 @@ function alterSBAtableUniqueIndex(){
 				$num_rows = 1;
 				$failed = true;
 				array_push($resultMmessage, 'FAILURE: Can not add UNIQUE INDEX (products_id, stock_attributes) to the products_with_attributes_stock table, there are records that are not unique!');
-				break; // No need to continue in while loop as have met a failing condition.
+				break; // No need to continue in loop as have met a failing condition.
 			}	
 			$result->MoveNext();
 		}
 		$num_rows = rtrim($num_rows, ', ');
 		if(empty($num_rows)){
-			$sql = "ALTER TABLE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " ADD UNIQUE INDEX idx_products_id_stock_attributes (`products_id`, `stock_attributes`);";
+			$sql = "ALTER TABLE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " ADD UNIQUE INDEX idx_products_id_stock_attributes (`products_id`, `stock_attributes`);"; //If this is going to be different than the previous version, then there should be part of the upgrade process that removes the old version(s).
 			$db->Execute($sql);
 			if($db->error){				
 				$msg = ' Error Message: ' . $db->error;
@@ -823,6 +827,7 @@ function alterSBAtabeSort(){
  	while (!$result->EOF) {
  		if( $result->fields['COLUMN_NAME'] ){
  			$num_rows = 1;
+ 			break;			
  		}
  		$result->MoveNext();
  	}
@@ -875,8 +880,9 @@ function truncateProductAttributeStockTable(){
 			$msg = ' Error Message: ' . $db->error;
 			$failed = true;
 		}
-		array_push($resultMmessage, 'Empty products_with_attributes_stock table ' . $msg);
+		array_push($resultMmessage, 'Empty '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' table ' . $msg);
 	}
+	
 	return;
 }
 

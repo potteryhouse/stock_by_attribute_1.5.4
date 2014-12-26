@@ -25,7 +25,7 @@ class products_with_attributes_stock
 			 			from '.TABLE_PRODUCTS_ATTRIBUTES.' pa
 			 			left join '.TABLE_PRODUCTS_OPTIONS.' po on (pa.options_id = po.products_options_id)
 			 			left join '.TABLE_PRODUCTS_OPTIONS_VALUES.' pov on (pa.options_values_id = pov.products_options_values_id)
-			 			where pa.products_id = "'.$products_id.'"  
+			 			where pa.products_id = "'.$products_id.'" 
 			 				AND po.language_id = "'.$languageId.'" and po.language_id = pov.language_id
 							and pa.attributes_display_only != 1';
 			
@@ -57,11 +57,10 @@ class products_with_attributes_stock
 			global $db;
 
 			$query = 'select sum(quantity) as quantity, products_id from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' where products_id = :products_id:';
-      $query = $db->bindVars($query, ':products_id:', zen_get_prid($products_id), 'integer');
-      $quantity = $db->Execute($query);
+      $query = $db->bindVars($query, ':products_id:', $products_id, 'integer');
+			$quantity = $db->Execute($query);
 
-      $query = 'update :table: set  products_quantity=:quantity: where products_id=:products_id:';
-      $query = $db->bindVars($query, ':table:', TABLE_PRODUCTS, 'passthru');
+      $query = 'update '.TABLE_PRODUCTS.' set products_quantity=:quantity: where products_id=:products_id:';
       $query = $db->bindVars($query, ':products_id:', zen_get_prid($products_id), 'integer');
 
       // Tests are this: If the the item was found in the SBA table then update with those results.
@@ -84,8 +83,8 @@ class products_with_attributes_stock
       }
 
       $db->Execute($query);
-		}
-
+    }
+    
     // Technically the below update of all, could call the update of one... There doesn't
     //  seem to be a way to do the update in any more of a faster way than to address each product.
     function update_all_parent_products_stock() {
@@ -128,7 +127,7 @@ class products_with_attributes_stock
                 FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa
                 left join '.TABLE_PRODUCTS_DESCRIPTION.' d on (pa.products_id = d.products_id)
                 left join '.TABLE_PRODUCTS.' p on (pa.products_id = p.products_id)
-                WHERE  d.language_id='.$language_id.' 
+                WHERE d.language_id='.$language_id.' 
                 ORDER BY d.products_name ';
       $products = $db->Execute($query);
       while(!$products->EOF){
@@ -177,14 +176,13 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
         global $db;
       
         if(isset($_SESSION['languages_id'])){ $language_id = $_SESSION['languages_id'];} else { $language_id=1;}
-        if( isset($_GET['search']) ){
+        if( isset($_GET['search']) && $_GET['search']){ // mc12345678 Why was $_GET['search'] omitted?
             $s = zen_db_input($_GET['search']);
          	//$w = "(p.products_id = '$s' OR d.products_name LIKE '%$s%' OR p.products_model LIKE '%$s%') AND  " ;//original version of search
             //$w = "( p.products_id = '$s' OR d.products_name LIKE '%$s%' OR p.products_model LIKE '$s%' ) AND  " ;//changed search to products_model 'startes with'.
          	//$w = "( p.products_id = '$s' OR d.products_name LIKE '%$s%' ) AND  " ;//removed products_model from search
             $w = " AND ( p.products_id = '$s' OR d.products_name LIKE '%$s%' OR p.products_model LIKE '$s%' ) " ;//changed search to products_model 'startes with'.
-		} 
-		else {
+		} else {
 		    $w = ''; 
 			$s = '';
 		}
@@ -294,7 +292,7 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
                         // delete stock attribute
                         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " WHERE stock_id = " . $attribute_products->fields['stock_id'] . " LIMIT 1;");
                       } else { 
-                        $attributes_output[] = '<strong>'.$stock_attribute['option'].':</strong> '.$stock_attribute['value'].'<br/>';
+                        $attributes_output[] = '<strong>'.$stock_attribute['option'].':</strong> '.$stock_attribute['value'].'<br />';
                       }
                   }
                   sort($attributes_output);
@@ -369,8 +367,6 @@ function saveAttrib(){
         	$db->execute($sql);
         	$i++;
         }
-
-        
     }
     $html = print_r($_POST, true);
     $html = "$i DS SAVED";

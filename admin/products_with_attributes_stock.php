@@ -10,7 +10,7 @@
  */
 
 $SBAversion = 'Version 1.5.4';
-//add required refernced files
+//add required referenced files
 require('includes/application_top.php');
 require(DIR_WS_CLASSES . 'currencies.php');
 require(DIR_WS_CLASSES . 'products_with_attributes_stock.php');
@@ -21,8 +21,7 @@ $stock = new products_with_attributes_stock;
 //set language
 if( isset($_SESSION['languages_id']) ){
 	$language_id = $_SESSION['languages_id'];
-}
-else{
+} else {
 	
 	$languages = zen_get_languages();
 	$languages_array = array();
@@ -38,10 +37,9 @@ else{
 }
 
 //action
-if( isset($_GET['action']) ){
+if( isset($_GET['action']) && $_GET['action']){
 	$action = addslashes(trim($_GET['action']));
-}
-else{
+} else {
 	$action = null;
 }
 
@@ -160,15 +158,9 @@ switch($action)
 			$s_mack_noconfirm .= "customid=" . $customid . "&"; //s_mack:noconfirm
 			$s_mack_noconfirm .= "skuTitle=" . $skuTitle . "&"; //s_mack:noconfirm
 			
-			if(sizeof($attributes) > 1)
-			{
-				sort($attributes);
-				$stock_attributes = implode(',',$attributes);
-			}
-			else
-			{
-				$stock_attributes = $attributes[0];
-			}
+  		sort($attributes);
+			$stock_attributes = implode(',',$attributes);
+
 			$s_mack_noconfirm .='attributes=' . $stock_attributes . '&'; //kuroi: to pass string not array
 
 			$query = 'select * 
@@ -208,13 +200,13 @@ switch($action)
 		if ($_GET['products_id']) { $products_id = doubleval($_GET['products_id']); } //s_mack:noconfirm
 
 		$customid = addslashes(trim($_POST['customid']));
-		if ($_GET['customid']) {$customid = addslashes(trim($_GET['customid'])); } //s_mack:noconfirm
+		if (isset($_GET['customid']) && $_GET['customid']) {$customid = addslashes(trim($_GET['customid'])); } //s_mack:noconfirm
 
 		$skuTitle = addslashes(trim($_POST['skuTitle']));
 		if ($_GET['skuTitle']) { $skuTitle = addslashes(trim($_GET['skuTitle'])); }
 	
 		//$quantity = $_GET['quantity']; //s_mack:noconfirm
-		if ($_GET['quantity']) { $quantity = doubleval($_GET['quantity']); } //s_mack:noconfirm
+		if (isset($_GET['quantity']) && $_GET['quantity']) { $quantity = doubleval($_GET['quantity']); } //s_mack:noconfirm
 		
 		//if invalid entry return to product
 		if( !is_numeric((int)$products_id) || is_null($products_id) ){
@@ -303,9 +295,10 @@ switch($action)
 				}
 				$intVars = sizeof($arrMain);
 				$arrNew = array();
-			
-        $arrNew = return_attribute_combinations($arrNew, $intVars);
-/*        
+
+        $arrNew = return_attribute_combinations($arrMain, $intVars);
+
+        /*        
 				if ($intVars >= 1) {
 					//adds attribute combinations
 					// there are X variables / attributes

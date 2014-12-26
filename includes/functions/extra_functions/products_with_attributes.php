@@ -120,7 +120,7 @@ function cartProductCount($products_id){
 							  					where products_id = " . (int)$products_id . ";");
   	
         //Why not left join this below query into the above or why even have a separate/second query? Especially seeing that $attributes_stock is never used in the below results...  
-  			if ($attribute_stock->RecordCount() > 0) {
+        if ($attribute_stock->RecordCount() > 0) {
   				// search for details for the particular attributes combination
   					$first_search = 'where options_values_id in ("'.implode('","',$attributes).'")';
   				

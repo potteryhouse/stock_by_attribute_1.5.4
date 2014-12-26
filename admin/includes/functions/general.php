@@ -49,21 +49,23 @@
   }
 
 function return_attribute_combinations($arrMain, $intVars, $currentLoop = array(), $currentIntVar = 0) {
- 
-     for ($currentLoop[$currentIntVar] = 0; $currentLoop[$currentIntVar] < sizeof($arrMain[$currentIntVar]); $currentLoop[$currentIntVar]++) {
-          if ($intVars == $currentIntVar + 1) {
-               $arrNew2 = array();
-               for ($i = 0; $i<$intVars;$i++) {
-                    $arrNew2[] = $arrMain[$i][$currentLoop[$i]];
-               }
-               if (zen_not_null($arrNew2) && sizeof($arrNew2) > 0) { //Something about this test right, but it's the concept that is important, as long as there is something to evaluate/assign that is not nothing, then do the assignment.
-                    $arrNew[] = $arrNew2;
-               }
-          } else {
-                $arrNew = return_attribute_combination($arrMain, $intVars, $currentLoop, $currentIntVar + 1);
-          }
-     }
-     return $arrNew;
+  $arrNew = array();
+
+  for ($currentLoop[$currentIntVar] = 0; $currentLoop[$currentIntVar] < sizeof($arrMain[$currentIntVar]); $currentLoop[$currentIntVar]++) {
+    if ($intVars == $currentIntVar + 1) {
+      $arrNew2 = array();
+      for ($i = 0; $i<$intVars;$i++) {
+        $arrNew2[] = $arrMain[$i][$currentLoop[$i]];  // This is a place where an evaluation could be made to do something unique with a single attribute that is to be assigned to a sba variant as this assigment is for one of the attributes to be combined for one record. If the goal would be not to add anything having this one attribute, then could call continue 2 to escape this for loop and move on to the next outer for loop.  If just want to not add the one attribute to the combination then place the above assignment so that it is bypassed when not to be added. 
+      }
+      if (zen_not_null($arrNew2) && sizeof($arrNew2) > 0) { // This is a place where an evaluation could be made to do something unique with a sba variant as this assigment is one of all attributes combined for one record.  //Still something about this test doesn't seem quite right, but it's the concept that is important, as long as there is something to evaluate/assign that is not nothing, then do the assignment.
+        $arrNew[] = $arrNew2;
+      }
+    } else {
+      $arrNew = array_merge($arrNew, return_attribute_combinations($arrMain, $intVars, $currentLoop, $currentIntVar + 1));
+    }
+  }
+
+  return $arrNew;
 }
 
   function zen_output_string_protected($string) {
@@ -1585,7 +1587,6 @@ while (!$chk_sale_categories_all->EOF) {
       foreach($stock_attrib_list as $stock_attrib){
         if (in_array($stock_attrib, $products_attributes_id)) {
           $stock_id_list[] = $products_stock_attributes->fields['stock_id'];
-          $_SESSION['stock_id_list'] = $stock_id_list;
           continue;
         }
       }
@@ -1597,7 +1598,7 @@ while (!$chk_sale_categories_all->EOF) {
   
   function zen_remove_order($order_id, $restock = false) {
     /* START STOCK BY ATTRIBUTES */
-    global $db, $order;
+    global $db;  // mc12345678 (Why global on $order? It isn't used in ZC, is there something that follows the call to this that needs it?)
     if ($restock == 'on') {
       $order = $db->Execute("select products_id, products_quantity
                              from " . TABLE_ORDERS_PRODUCTS . "
@@ -2439,6 +2440,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     }
 
     $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$delete_product_id . "'");
+    $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = '" . (int)$delete_product_id . "'");
 }
 
 
