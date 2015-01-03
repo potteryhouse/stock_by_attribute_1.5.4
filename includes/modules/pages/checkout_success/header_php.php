@@ -9,6 +9,7 @@
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
  * 
  * Stock by Attributes 1.5.3.1
+ * If header_php_sba.php works, this file change is not needed
  */
 
 // This should be first line of the script:

@@ -95,7 +95,8 @@ function cartProductCount($products_id){
   	$customid_model_query = null;
   	$customid_query = null;
   	$products_id = zen_get_prid($products_id);
-  
+	$customid = null;
+	
   	// check if there are attributes for this product
  	$stock_has_attributes = $db->Execute('select products_attributes_id 
   											from '.TABLE_PRODUCTS_ATTRIBUTES.' 
