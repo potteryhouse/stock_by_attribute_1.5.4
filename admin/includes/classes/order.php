@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: order.php 18695 2011-05-04 05:24:19Z drbyte $
  * 
- * Updated for Stock by Attributes 1.5.2
+ * Stock by Attributes 1.5.2
  */
 
   class order {

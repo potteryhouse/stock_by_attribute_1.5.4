@@ -9,7 +9,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jul 23 19:29:41 2013 -0400 Modified in v1.5.2 $
  * 
- * Updated for Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4
  */
 
 /**

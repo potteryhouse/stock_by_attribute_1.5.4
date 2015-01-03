@@ -7,7 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  *
- * Updated for Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4
  */
 
 if (!defined('IS_ADMIN_FLAG')) {

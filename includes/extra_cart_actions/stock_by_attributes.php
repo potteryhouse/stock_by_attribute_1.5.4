@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Stock by Attributes 1.5.4
+ */
 
 //What about: 'multiple_products_add_product' (Needs to be addressed though don't see at the moment why since generally unable to select multiple products each with attributes, perhaps something to consider for later, but let's get serious here at the moment as there are more routine actions to be handled properly first.), 'update_product' (Needs to be addressed), or 'cart' (does a notify action, so may need to address?)actions?
 if (isset($_GET['action']) && $_GET['action'] == 'update_product') {

@@ -12,6 +12,8 @@
  * @link        http://www.zen-cart.com/
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version     $Id: config.user_tracking.php xxxx 2013-06-28 20:31:10Z conor $
+ *
+ * Stock by Attributes 1.5.4
  */
 
  $autoLoadConfig[0][] = array(
