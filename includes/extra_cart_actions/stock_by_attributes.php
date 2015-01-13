@@ -100,7 +100,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
       } else {
         // adjust minimum and units
         $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
-        $_SESSION['CTest'.$i] = $attributes;
         $_SESSION['cart']->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
       }
       }
@@ -241,7 +240,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
             }
           }
 
-          $_SESSION['CTest'.$i] = $attributes;
           $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(zen_get_uprid($_POST['products_id'], $real_ids))+($new_qty), $real_ids);
           // iii 030813 end of changes.
         } // eof: set error message

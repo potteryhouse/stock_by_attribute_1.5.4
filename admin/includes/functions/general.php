@@ -48,6 +48,7 @@
     }
   }
 
+  /* START STOCK BY ATTRIBUTES */
 function return_attribute_combinations($arrMain, $intVars, $currentLoop = array(), $currentIntVar = 0) {
   $arrNew = array();
 
@@ -67,6 +68,7 @@ function return_attribute_combinations($arrMain, $intVars, $currentLoop = array(
 
   return $arrNew;
 }
+  /* END STOCK BY ATTRIBUTES */
 
   function zen_output_string_protected($string) {
     return zen_output_string($string, false, true);
@@ -1516,8 +1518,10 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
                   where product_id = '" . (int)$product_id . "'");
 
+  /* START STOCK BY ATTRIBUTES */
     $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "
                   where products_id = '" . (int)$product_id . "'");
+  /* END STOCK BY ATTRIBUTES */
   }
 
   function zen_products_attributes_download_delete($product_id) {
@@ -1597,8 +1601,7 @@ while (!$chk_sale_categories_all->EOF) {
   }  
   
   function zen_remove_order($order_id, $restock = false) {
-    /* START STOCK BY ATTRIBUTES */
-    global $db;  // mc12345678 (Why global on $order? It isn't used in ZC, is there something that follows the call to this that needs it?)
+    global $db;
     if ($restock == 'on') {
       $order = $db->Execute("select products_id, products_quantity
                              from " . TABLE_ORDERS_PRODUCTS . "
@@ -1650,7 +1653,6 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
                   where order_id = '" . (int)$order_id . "' and release_flag = 'N'");
   }
-  /* END STOCK BY ATTRIBUTES */
 
   function zen_get_file_permissions($mode) {
 // determine type
@@ -2440,7 +2442,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     }
 
     $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$delete_product_id . "'");
+  /* START STOCK BY ATTRIBUTES */
     $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = '" . (int)$delete_product_id . "'");
+  /* END STOCK BY ATTRIBUTES */
 }
 
 

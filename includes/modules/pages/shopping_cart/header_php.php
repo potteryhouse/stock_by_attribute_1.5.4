@@ -86,16 +86,23 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   $attrArray = false;
   $productsName = $products[$i]['name'];
   // Push all attributes information in an array
+  $inSBA = false;
   if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
     if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
     	//LPAD - Return the string argument, left-padded with the specified string
     	//example: LPAD(popt.products_options_sort_order,11,"0") the field is 11 digits, and is left padded with 0
-      $options_order_by= ' ORDER BY LPAD(popt.products_options_sort_order,11,"0");';
+      $options_order_by= ' ORDER BY LPAD(popt.products_options_sort_order,11,"0")';
     } else {
-      $options_order_by= ' ORDER BY popt.products_options_name;';
+      $options_order_by= ' ORDER BY popt.products_options_name';
     }
 
     // START "Stock by Attributes"
+		// Added to allow individual stock of different attributes
+    $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
+    $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
+    $inSBA_result = $db->Execute($inSBA_query);
+
+    $inSBA = (sizeof($inSBA_result) > 0 && !$inSBA_result->EOF);
     $products_options_type = null;
     foreach ($products[$i]['attributes'] as $option => $value) {
 
@@ -114,12 +121,12 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 	                    AND poval.language_id    = :languageID " . $options_order_by;
 
     	//Bind variables to query
-      	$attributes = $db->bindVars($attributes, ':productsID', $products[$i]['id'], 'integer');
-      	$attributes = $db->bindVars($attributes, ':optionsID', $option, 'integer');
-      	$attributes = $db->bindVars($attributes, ':optionsValuesID', $value, 'integer');
-      	$attributes = $db->bindVars($attributes, ':languageID', $_SESSION['languages_id'], 'integer');
-      	$attributes_values = $db->Execute($attributes);
-      
+      $attributes = $db->bindVars($attributes, ':productsID', $products[$i]['id'], 'integer');
+      $attributes = $db->bindVars($attributes, ':optionsID', $option, 'integer');
+      $attributes = $db->bindVars($attributes, ':optionsValuesID', $value, 'integer');
+      $attributes = $db->bindVars($attributes, ':languageID', $_SESSION['languages_id'], 'integer');
+      $attributes_values = $db->Execute($attributes);
+
       //clr 030714 determine if attribute is a text attribute and assign to $attr_value temporarily
       if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
         $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . TEXT_PREFIX . $option . ']',  $products[$i]['attributes_values'][$option]);
@@ -138,48 +145,43 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
       //Test to exclude specified attributes from the checks that follow
       if( $attributes_values->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_SELECT_SBA ){  
-      	// remove the elements who's values are equal to PRODUCTS_OPTIONS_TYPE_SELECT_SBA
-      	$products[$i]['attributes'] = array_diff( $products[$i]['attributes'], array($value) );
+        // remove the elements who's values are equal to PRODUCTS_OPTIONS_TYPE_SELECT_SBA
+    // Figured out why these are being removed.  The thought was that, the SBA Product Option 
+    // Type select is only used to capture an SBA variant and that all SBA variants use this 
+    // option type; however, neither is always true.  Instead the only real tell of a product 
+    // being tracked by SBA is for the the SBA data to be inspected.  Therefore this area is not
+    // the right place/method to evaluate that aspect and other action should be taken to prevent
+    // incorrectly using the below new code against non-SBA variants.
+//      	$products[$i]['attributes'] = array_diff( $products[$i]['attributes'], array($value) );
       }
-      
-  	}//end foreach [attributes]
+    } 
+  }//end foreach [attributes]
   	
 	    //Clear variables for each loop
 		$flagStockCheck = null;   
 		$stockAvailable = null;
 		$lowproductstock = false;
 		$customid = null;
-		unset($attributes);
+		//unset($attributes); //Unnecessary because reeassigned below.
 		$productsQty = 0;
 
-		// Added to allow individual stock of different attributes
-		if(is_array($products[$i]['attributes'])){
-      $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
-      $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
-       
-      $inSBA_result = $db->Execute($inSBA_query);
-
-      if (sizeof($inSBA_result) > 0 && zen_not_null($inSBA_result)) {
-    		$attributes = $products[$i]['attributes'];
-      } else {
-		    $attributes = null; //Force normal operation if the product is not monitored by SBA.
-      }
-	  } else {
-      $attributes = null;
-	  }
-
+    if ($inSBA) {
+      $attributes = $products[$i]['attributes']; 
+    }  else {
+      $attributes = null; //Force normal operation if the product is not monitored by SBA.
+    }
+    
 		if ( STOCK_CHECK == 'true' ) {
+			$flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity'], $attributes);
 
-			if($attributes){
-				$flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity'],$attributes);
-				
+			if($inSBA){
 				//check for product used multiple time in cart with different attributes
 				//test for total qty availability for each combination
 				if( cartProductCount($products[$i]['id']) > 1 ){
 					//Build array for use below
 					$duplicatesCOMPARE[$i] = array( 1 => $products[$i]['attributes'], 2 =>$products[$i]['id'], 3 => $products[$i]['quantity'] );
 
-					//used to find unique entries, keep for reference and tests
+					/*used to find unique entries, keep for reference and tests
 // 					foreach($products[$i] as $row){
 // 						foreach($row as $val){
 // 							//if the value exists and it isn't already in the dupcliates array
@@ -199,7 +201,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 					//The following is an attempt to account for duplicate entries of attributes on different products
 					//These attributes are expected to be limited in qty
 					//Skips products that have specific attributes combination qty
-					//This should only affect single attribute entries per product
+					//This should only affect single attribute entries per product*/
 					foreach($duplicatesCOMPARE as $dupCOMPARE){
 						foreach($dupCOMPARE[1] as $dupC){
 							foreach($products[$i]['attributes'] as $pAttr){
@@ -219,82 +221,36 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 										$flagStockCheck = zen_check_stock($products[$i]['id'], $productsQty, $attributes);
 // 										echo 'Flag: ' . $flagStockCheck . '<br /><br /><br />';
 										break 3;//this will break three time, to move out of the three loops
-									}
-								}
-							}
-						}
-					}
-				}
-			} else {
-        // mc12345678 Added to account for products that have attributes, but the attributes are not tracked by SBA and further that the products can be added in mixed quantities to the cart.  Ideally though this and the below "no attributes" section should be better merged to support future upgrades.  That is something that will need to be performed at a later date, but for now to make this functional. 2014-11-23
-        $flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
-// bof: extra check on stock for mixed YES
+									} // END if zen_get_products_stock != true
+								} // END if compare
+							} // END foreach $products[$i]['attributes']
+						} // END foreach dupCOMPARE[1]
+					} // End foreach duplicatesCOMPARE
+				} //End if CartProductCount > 1
+			} /* End of if $inSBA inside STOCK_CHECK == true */ else {
+        // mc12345678 this section is as if SBA is not installed/involved.  Normal response after the expectation to check stock is included. After this section should go straight to the next default ZC action.
+        // bof: extra check on stock for mixed YES
         if ($flagStockCheck != true) {
-//echo zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) . '<br>';
+    //echo zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) . '<br>';
           if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
             $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
           } else {
             $flagStockCheck = '';
-          }
-        }
-// eof: extra check on stock for mixed YES
-        if ($flagStockCheck == true) {
-          $flagAnyOutOfStock = true;
-        }
-      }
-						
-			if (zen_not_null($flagStockCheck)){
-				$flagStockCheck = '<span class="markProductOutOfStock">' . $flagStockCheck . '</span>';
-				$flagAnyOutOfStock = true;
-			  	$stockAvailable = zen_get_products_stock($products[$i]['id'], $attributes);	
-			  	if($stockAvailable > 0 && ($products[$i]['quantity'] > $stockAvailable)){
-			  		$lowproductstock = true;
-			  	}	
-			}
-			if(empty($stockAvailable)){
-				$stockAvailable = 0;
-			}
-		}
-				
-		//Set Custom ID variable.
-		if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
-			$customid = zen_get_customid($products[$i]['id'], $attributes);
-		}
-			
-  } //end IF attributes push to array
-  else{
-  	//Section for products without attributes
-  	//Clear variables for each loop
-  	$flagStockCheck = null;
-  	$stockAvailable = null;
-  	$lowproductstock = false;
-  	$customid = null;
+          } // End if/else mixed stock
+        } // End flagStockCheck != true
+      } //End of ZC Basic Function inside StockCheck == 'true'
 
-  	$stockAvailable = zen_get_products_stock($products[$i]['id']);//get available stock
-  	//run stock check on products without atribbutes when STOCK_CHECK flag is set
-  	if ( STOCK_CHECK == 'true' ) {
-  		
-  		$flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
-  		
-  		if (zen_not_null($flagStockCheck)) {
-  			$flagStockCheck = '<span class="markProductOutOfStock">' . $flagStockCheck . '</span>';
-  			$flagAnyOutOfStock = true;
-  			if($stockAvailable > 0 && ($products[$i]['quantity'] > $stockAvailable)){
-  				$lowproductstock = true;
-  			}
-  		}
-  		if(empty($stockAvailable)){
-  			$stockAvailable = 0;
-  		}
-  	}
-  	
-  	//Set Custom ID variable.
-  	if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
-  		$customid = zen_get_customid($products[$i]['id']);
-  	}
-  	
+      //Below seems appropriate for both ZC standard product as well as for SBA variants, therefore is outside the above "loop".
+// eof: extra check on stock for mixed YES
+    if ($flagStockCheck == true) {
+      $flagAnyOutOfStock = true;
+    }
+  } // End of STOCK_CHECK == 'true'
+
+  //Set Custom ID variable. //Indepdendent of Stock_check.
+  if(STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
+    $customid = zen_get_customid($products[$i]['id'], $attributes);
   }
-  // END "Stock by Attributes"
 
   $linkProductsImage = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
   $linkProductsName = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);

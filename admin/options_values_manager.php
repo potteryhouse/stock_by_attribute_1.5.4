@@ -5,6 +5,8 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: ajeh  Fri Oct 19 13:10:27 2012 -0400 Modified in v1.5.3 $
+ * 
+ * Modified for Stock by Attributes 1.5.4
  */
 
   require('includes/application_top.php');
@@ -473,7 +475,7 @@ die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from
             // check for associated downloads
             $downloads_remove_query = "select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . $current_products_id . "' and options_id='" . $options_id_from . "' and options_values_id='" . $options_values_values_id_from . "'";
             $downloads_remove = $db->Execute($downloads_remove_query);
-			//mc12345678 SBA Added
+			//mc12345678 SBA Added Start
             $downloads_remove_list = array();
             while (!$downloads_remove->EOF) {
               $downloads_remove_list[] = $downloads_remove->fields['products_attributes_id'];
@@ -486,7 +488,7 @@ die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from
               $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "
                             where stock_id in (" . implode(',', $stock_ids) . ")");
             }
-			//mc12345678 SBA Added            
+			//mc12345678 SBA Added End
             $sql = "delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . $current_products_id . "' and options_id='" . $options_id_from . "' and options_values_id='" . $options_values_values_id_from . "'";
             $delete_selected = $db->Execute($sql);
 
