@@ -9,7 +9,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  * 
- * Updated for Stock by Attributes 1.5.3.1
+ * Stock by Attributes 1.5.4
  */
 
 //test for multiple entry of same product in customer's shopping cart
@@ -96,7 +96,8 @@ function cartProductCount($products_id){
   	$customid_model_query = null;
   	$customid_query = null;
   	$products_id = zen_get_prid($products_id);
-  
+	$customid = null;
+	
   	// check if there are attributes for this product
  	$stock_has_attributes_query = 'select products_attributes_id 
   											from '.TABLE_PRODUCTS_ATTRIBUTES.' 

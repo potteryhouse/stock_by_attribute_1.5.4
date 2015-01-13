@@ -8,7 +8,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
  * 
- * Updated for Stock by Attributes 1.5.3.1
+ * Stock by Attributes 1.5.4
  */
 
 // This should be first line of the script:

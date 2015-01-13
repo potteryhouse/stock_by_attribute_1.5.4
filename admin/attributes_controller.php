@@ -5,8 +5,8 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Mar 4 14:33:25 2014 -0500 Modified in v1.5.3 $
- * 
- * Modified for Stock By Attributes 1.5.4
+ *
+  * Stock by Attributes 1.5.4
  */
   require('includes/application_top.php');
 
@@ -754,7 +754,7 @@ function popupWindow(url) {
   	        <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_option_names.gif', IMAGE_OPTION_NAMES); ?></a></td>
   	        <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_option_values.gif', IMAGE_OPTION_VALUES); ?></a></td>
 <?php  /* START STOCK BY ATTRIBUTES */ ?>
-  	        <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL') ?>"><?php /* mc12345678 Need an appropriate picture/statement for the goto SBA information here. */ echo zen_image_button('button_option_values.gif', IMAGE_OPTION_VALUES); ?></a></td>
+  	        <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL') ?>"><?php /* mc12345678 Need an appropriate picture/statement for the goto SBA information here. */ echo zen_image_button('button_sba_link.gif', IMAGE_OPTION_SBA); ?></a></td>
 <?php  /* END STOCK BY ATTRIBUTES */ ?>
           </tr>
         </table></td>

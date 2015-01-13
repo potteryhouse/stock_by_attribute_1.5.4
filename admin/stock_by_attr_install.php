@@ -273,8 +273,8 @@ function dropSBAOrdersTable(){
 	array_push($resultMmessage, '<br />Clean-Up, Removing Table orders_products_attributes_stock: ');
 	
 	$sql = "DROP TABLE IF EXISTS ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK;
-	$result = $db->Execute($sql);
-	array_push($resultMmessage, 'Deleted table orders_products_attributes_stock: ' . $result);
+	$db->Execute($sql);
+	array_push($resultMmessage, 'Deleted table orders_products_attributes_stock.' );
 	
 	return;	
 }
@@ -1200,6 +1200,16 @@ function checkSBAfileLocation(){
 	admin/includes/functions/general.php
 	admin/includes/classes/order.php
 	
+	admin/attributes_controller.php
+	admin/options_name_manager.php
+	admin/options_values_manager.php
+
+	includes/auto_loaders/config.products_with_attributes_stock.php
+	includes/classes/observers/class.products_with_attributes_stock.php
+	includes/extra_cart_actions/stock_by_attributes.php
+	includes/extra_datafiles/products_with_attributes_stock_database_tables.php
+	includes/modules/pages/checkout_success/header_php_sba.php
+
 	includes/classes/order.php
 	includes/functions/functions_lookups.php
 	includes/functions/extra_functions/products_with_attributes.php
@@ -1230,6 +1240,11 @@ function checkSBAfileLocation(){
 		DIR_FS_ADMIN . DIR_WS_INCLUDES . 'languages/english/products_with_attributes_stock.php',
 		DIR_FS_ADMIN . DIR_WS_INCLUDES . 'languages/english/extra_definitions/products_with_attributes.php',
 	
+		DIR_FS_CATALOG . DIR_WS_INCLUDES . 'auto_loaders/config.products_with_attributes_stock.php',
+		DIR_FS_CATALOG . DIR_WS_INCLUDES . 'classes/observers/class.products_with_attributes_stock.php',
+		DIR_FS_CATALOG . DIR_WS_INCLUDES . 'modules/pages/checkout_success/header_php_sba.php',
+
+		DIR_FS_CATALOG . DIR_WS_INCLUDES . 'extra_cart_actions/stock_by_attributes.php',
 		DIR_FS_CATALOG . DIR_WS_INCLUDES . 'extra_datafiles/products_with_attributes_stock_database_tables.php',
 		DIR_FS_CATALOG . DIR_WS_INCLUDES . 'functions/extra_functions/products_with_attributes.php',
 		DIR_FS_CATALOG . DIR_WS_INCLUDES . 'languages/english/extra_definitions/products_with_attributes.php',
@@ -1442,6 +1457,10 @@ function removeSBAfiles(){
 					<li>admin/includes/languages/english/extra_definitions/products_with_attributes.php</li>
 				  </ul>
 				  <ul>
+				  	<li>includes/auto_loaders/config.products_with_attributes_stock.php</li>
+					<li>includes/classes/observers/class.products_with_attributes_stock.php</li>
+					<li>includes/extra_cart_actions/stock_by_attributes.php</li>
+					<li>includes/modules/pages/checkout_success/header_php_sba.php</li>
 					<li>includes/extra_datafiles/products_with_attributes_stock_database_tables.php</li>
 					<li>includes/functions/extra_functions/products_with_attributes.php</li>
 					<li>includes/languages/english/extra_definitions/products_with_attributes.php</li>
@@ -1453,6 +1472,9 @@ function removeSBAfiles(){
 				<p><h1>Revert CORE Files that were changed</h1>
 				<h3>Core Zen Cart files need to have the SBA changes removed. Update files as applicable by removing the SBA modification.</h3>
 				  <ul>
+				  	<li>admin/attributes_controller.php</li>
+					<li>admin/options_name_manager.php</li>
+					<li>admin/options_values_manager.php</li>
 					<li>admin/invoice.php</li>
 				    <li>admin/orders.php</li>
 					<li>admin/packingslip.php</li>
@@ -1519,6 +1541,10 @@ function instructionsSBA(){
 					<li>admin/includes/languages/english/extra_definitions/products_with_attributes.php</li>
 				  </ul>
 				  <ul>
+				  	<li>includes/auto_loaders/config.products_with_attributes_stock.php</li>
+					<li>includes/classes/observers/class.products_with_attributes_stock.php</li>
+					<li>includes/extra_cart_actions/stock_by_attributes.php</li>
+					<li>includes/modules/pages/checkout_success/header_php_sba.php</li>
 					<li>includes/extra_datafiles/products_with_attributes_stock_database_tables.php</li>
 					<li>includes/functions/extra_functions/products_with_attributes.php</li>
 					<li>includes/languages/english/extra_definitions/products_with_attributes.php</li>
@@ -1531,6 +1557,9 @@ function instructionsSBA(){
 				<h3>These core Zen Cart files need to be modified for this add-on. 
 				    If other add-ons or customizations of the cart have been done since the Zen Cart installation or upgrade, Check whether they have changed any of the following files:</h3>
 				  <ul>
+					<li>admin/attributes_controller.php</li>
+					<li>admin/options_name_manager.php</li>
+					<li>admin/options_values_manager.php</li>
 					<li>admin/invoice.php</li>
 				    <li>admin/orders.php</li>
 					<li>admin/packingslip.php</li>

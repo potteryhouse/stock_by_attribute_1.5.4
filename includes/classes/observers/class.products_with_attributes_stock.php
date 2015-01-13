@@ -9,6 +9,8 @@
  * @property double $_attribute_stock_left This is the a referenced value that relates to the SBA tracked quantity that remain.
  * @property array $_stock_values The results of querying on the database for the stock remaining and other associated information.
  * @author mc12345678
+ *
+ * Stock by Attributes 1.5.4
  */
 class products_with_attributes_stock extends base {
 

@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: packingslip.php 15788 2010-04-02 10:44:40Z drbyte $
  * 
- * Updated for Stock by Attributes 1.5.3.1
+ * Stock by Attributes 1.5.4
 */
 
   require('includes/application_top.php');

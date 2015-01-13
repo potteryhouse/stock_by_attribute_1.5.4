@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: ajeh  Sat Apr 19 10:20:14 2014 -0400 Modified in v1.5.3 $
  * 
- * Updated for Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4
  */
 
 ////
@@ -1601,6 +1601,7 @@ while (!$chk_sale_categories_all->EOF) {
   }  
   
   function zen_remove_order($order_id, $restock = false) {
+    /* START STOCK BY ATTRIBUTES */
     global $db;
     if ($restock == 'on') {
       $order = $db->Execute("select products_id, products_quantity
@@ -1653,6 +1654,7 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
                   where order_id = '" . (int)$order_id . "' and release_flag = 'N'");
   }
+  /* END STOCK BY ATTRIBUTES */
 
   function zen_get_file_permissions($mode) {
 // determine type

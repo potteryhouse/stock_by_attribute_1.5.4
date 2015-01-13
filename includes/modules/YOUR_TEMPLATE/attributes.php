@@ -12,7 +12,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
  * 
- * Updated for Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

@@ -10,6 +10,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_modules_attributes.php 3208 2006-03-19 16:48:57Z birdbrain $
  * Modified to support products with attributes that are not tracked by SBA.
+ * 
+ * Stock by Attributes 1.5.4
  */
 ?>
 <div id="productAttributes">
