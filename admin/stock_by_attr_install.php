@@ -767,7 +767,7 @@ function alterSBAtableUniqueIndex(){
 	$sql = "SELECT * FROM information_schema.statistics
 			WHERE table_schema = '".DB_DATABASE."'
 			AND table_name = '". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "'
-			AND column_name = 'products_id'";
+			AND column_name = 'products_id';";
 	$result = $db->Execute($sql);
 
 	$num_rows = null;
@@ -1167,7 +1167,7 @@ function checkSBAtable($table = null, $field = null, $display = true) {
 	$check = $db->Execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
 							WHERE TABLE_SCHEMA = '".DB_DATABASE."'
 							AND TABLE_NAME = '". $table . "'
-							AND COLUMN_NAME like '%".$field."%'");
+							AND COLUMN_NAME like '%".$field."%';");
 
 	while (!$check->EOF) {
 		if( $check->fields['COLUMN_NAME'] ){
