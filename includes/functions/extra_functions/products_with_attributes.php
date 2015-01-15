@@ -150,6 +150,11 @@ function cartProductCount($products_id){
 		  							from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' 
 		  							where products_id = '.(int)$products_id.' 
 		  							and stock_attributes in ("'.$stock_attributes.'");';  
+  		} else {
+			$customid_query = 'select products_model
+						from '.TABLE_PRODUCTS.'
+						WHERE products_id = :products_id:';
+			$customid_query = $db->bindVars($customid_query, ':products_id:', $products_id , 'integer');
   		}
   		
   		$customid = $db->Execute($customid_query);
