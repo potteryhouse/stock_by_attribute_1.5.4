@@ -16,13 +16,18 @@
 ?>
 <div id="productAttributes">
      <?php
-     $inSBA_query = "select products_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :products_id:";
-     $inSBA_query = $db->bindVars($inSBA_query, ':products_id:', $_GET['products_id'], 'integer');
+    if (defined('TABLE_PRODUCTS_WITH_ATTRIBUTES')) {
+      $inSBA_query = "select products_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :products_id:";
+      $inSBA_query = $db->bindVars($inSBA_query, ':products_id:', $_GET['products_id'], 'integer');
 
-     $inSBA = $db->Execute($inSBA_query); // Determine that product is tracked by SBA
-
+      $inSBA = $db->Execute($inSBA_query); // Determine that product is tracked by SBA
+     } else { 
+       $inSBA = new queryFactoryResult;
+       $inSBA->EOF = true;
+     }
+     
      if ($zv_display_select_option > 0) {
-       if (!$inSBA->EOF && class_exists('pad_base')) {
+       if (class_exists('pad_base') && defined('TABLE_PRODUCTS_ATTRIBUTES' && !$inSBA->EOF)) {
          ?>
          <?php
          $products_attributes = $db->Execute("select count(distinct products_options_id) as total from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int) $_GET['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = " . (int) $_SESSION['languages_id'] . "");
