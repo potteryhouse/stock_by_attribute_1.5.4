@@ -475,7 +475,7 @@ global $template_dir;
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<link rel="stylesheet" type="text/css" href="includes/products_with_attributes_stock_ajax.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="includes/products_with_attributes_stock_ajax.css">
 <script src="<?php echo DIR_WS_CATALOG_TEMPLATE . $template_dir; /*mc12345678 Still not sure that trying to call the store template is the best way to incorporate the javascript instead of it being in the admin panel on it's own.  Yes two places to store, but... */ ?>/jscript/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="<?php echo DIR_WS_CATALOG_TEMPLATE . $template_dir; ?>/jscript/jquery.form.js"></script>
 <script type="text/javascript" src="products_with_attributes_stock_ajax.js"></script>

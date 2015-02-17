@@ -27,7 +27,7 @@
      }
      
      if ($zv_display_select_option > 0) {
-       if (class_exists('pad_base') && defined('TABLE_PRODUCTS_ATTRIBUTES' && !$inSBA->EOF)) {
+       if (class_exists('pad_base') && defined('TABLE_PRODUCTS_ATTRIBUTES') && !$inSBA->EOF) {
          ?>
          <?php
          $products_attributes = $db->Execute("select count(distinct products_options_id) as total from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int) $_GET['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = " . (int) $_SESSION['languages_id'] . "");
