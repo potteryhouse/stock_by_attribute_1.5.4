@@ -3,12 +3,12 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.5
  */
 
 // This should be first line of the script:
@@ -16,7 +16,9 @@ $zco_notifier->notify('NOTIFY_HEADER_START_SHOPPING_CART');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE);
-
+if (isset($_GET['jscript']) && $_GET['jscript'] == 'no') {
+  $messageStack->add('shopping_cart', PAYMENT_JAVASCRIPT_DISABLED, 'error');
+}
 // Validate Cart for checkout
 $_SESSION['valid_to_checkout'] = true;
 $_SESSION['cart_errors'] = '';
@@ -126,7 +128,6 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $attributes = $db->bindVars($attributes, ':optionsValuesID', $value, 'integer');
       $attributes = $db->bindVars($attributes, ':languageID', $_SESSION['languages_id'], 'integer');
       $attributes_values = $db->Execute($attributes);
-
       //clr 030714 determine if attribute is a text attribute and assign to $attr_value temporarily
       if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
         $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . TEXT_PREFIX . $option . ']',  $products[$i]['attributes_values'][$option]);
@@ -257,11 +258,9 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   $productsImage = (IMAGE_SHOPPING_CART_STATUS == 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) : '');
   $show_products_quantity_max = zen_get_products_quantity_order_max($products[$i]['id']);
   $showFixedQuantity = (($show_products_quantity_max == 1 or zen_get_products_qty_box_status($products[$i]['id']) == 0) ? true : false);
-
 //  $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('products_id[]', $products[$i]['id']) . zen_draw_hidden_field('cart_quantity[]', 1);
 //  $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', 1);
   $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
-  
   $showMinUnits = zen_get_products_quantity_min_units_display($products[$i]['id']);
   $quantityField = zen_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"');
   $ppe = $products[$i]['final_price'];
@@ -270,12 +269,10 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   $productsPriceEach = $currencies->format($ppe) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
   $productsPriceTotal = $currencies->format($ppt) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
   $buttonUpdate = ((SHOW_SHOPPING_CART_UPDATE == 1 or SHOW_SHOPPING_CART_UPDATE == 3) ? zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT) : '') . zen_draw_hidden_field('products_id[]', $products[$i]['id']);
-
 //  $productsPriceEach = $currencies->display_price($products[$i]['final_price'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
 //  $productsPriceTotal = $currencies->display_price($products[$i]['final_price'], zen_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
 //  $productsPriceTotal = $currencies->display_price($products[$i]['final_price'], zen_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . ($products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
 //  echo  $currencies->rateAdjusted($tmp);
-
   //This array is used in the tpl_shopping_cart_default.php
   $productArray[$i] = array('attributeHiddenField'=>$attributeHiddenField,
                             'flagStockCheck'=>$flagStockCheck,
@@ -300,6 +297,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
                             'id'=>$products[$i]['id'],
                             'attributes'=>$attrArray);
 } // end FOR loop
+
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');

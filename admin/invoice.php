@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: invoice.php 19136 2011-07-18 16:56:18Z wilt $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.5
 */
 
   require('includes/application_top.php');

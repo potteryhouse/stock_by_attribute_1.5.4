@@ -9,7 +9,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jul 23 19:29:41 2013 -0400 Modified in v1.5.2 $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.5
  */
 
 /**
@@ -303,16 +303,11 @@
  * @TODO naughty html in a function
 */
 
-// START "Stock by Attributes"
   function zen_check_stock($products_id, $products_quantity, $attributes = null) {
 
-//  	if(zen_not_null($attributes)){
+// START "Stock by Attributes"
     	$stock_left = zen_get_products_stock($products_id, $attributes) - $products_quantity;
-//  	}
-//  	else{
-//  		$stock_left = zen_get_products_stock($products_id) - $products_quantity;
-//  	}
-  	
+// END "Stock by Attributes"
     $out_of_stock = '';
 
     if ($stock_left < 0) {
@@ -321,7 +316,6 @@
 
     return $out_of_stock;
   }
-// END "Stock by Attributes"
 
 /*
  * List manufacturers (returned in an array)
