@@ -114,7 +114,7 @@ if ($pr_attr->fields['total'] > 0) {
       and   pov.language_id = '" . (int)$_SESSION['languages_id'] . "' " .
       $order_by;
      */
-    $sql = "select	pov.products_options_values_id,
+    $sql = "select distinct	pov.products_options_values_id,
 			                    pov.products_options_values_name,
 			                    pa.*, p.products_quantity, 
                 				pas.stock_id as pasid, pas.products_id, pas.product_attribute_combo, 
@@ -125,12 +125,11 @@ if ($pr_attr->fields['total'] > 0) {
 		              left join " . TABLE_PRODUCTS . " p on (pa.products_id = p.products_id)
                 
 		              left join " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pas on 
-		              (p.products_id = pas.products_id and pa.products_attributes_id = pas.stock_attributes )
+		              (p.products_id = pas.products_id and FIND_IN_SET(pa.products_attributes_id, pas.stock_attributes) > 0 )
 		              where pa.products_id = '" . (int) $_GET['products_id'] . "'
 		              and   pa.options_id  = '" . (int) $products_options_names->fields['products_options_id'] . "'
 		              and   pov.language_id = '" . (int) $_SESSION['languages_id'] . "' " .
-            $order_by;
-
+                $order_by;
 
     $products_options = $db->Execute($sql);
 

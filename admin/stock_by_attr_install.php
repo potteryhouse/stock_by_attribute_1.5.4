@@ -541,6 +541,7 @@ function addSBAtable(){
    * orders_products_id int(11) NOT NULL default '0', 
    * stock_id int(11) NOT NULL default '0', 
    * stock_attribute VARCHAR(255) NULL DEFAULT NULL, 
+   * customid varchar(255) DEFAULT NULL,
    * products_prid tinytext NOT NULL, 
    * PRIMARY KEY (orders_products_attributes_stock_id), 
    * KEY idx_orders_id_prod_id_zen (orders_id,orders_products_id), 
@@ -555,6 +556,7 @@ function addSBAtable(){
     `orders_products_id` INT(11) NOT NULL default '0', 
     `stock_id` INT(11) NOT NULL default '0', 
     `stock_attribute` VARCHAR(255) NULL DEFAULT NULL, 
+    'customid' varchar(255) DEFAULT NULL, 
     `products_prid` TINYTEXT NOT NULL, 
 		PRIMARY KEY (`orders_products_attributes_stock_id`), 
     KEY idx_orders_id_prod_id_zen (`orders_id`,`orders_products_id`), 
@@ -568,7 +570,7 @@ function addSBAtable(){
 		array_push($resultMmessage, '<br />Added Table orders_products_with_attributes_stock: ' . $msg);
 	}
 	else{
-		//Alter / upgrade existing database table
+		//Alter / upgrade existing database table THIS NEEDS TO BE DEVELOPED
 //		alterSBAtabeSort();//Call function to Alter table products_with_attributes_stock sort field
 //		alterSBAtableCustomid();//Call function to Alter table products_with_attributes_stock to add customid
 //		alterSBAtableUniqueIndex();//Call function to Alter table products_with_attributes_stock UNIQUE INDEX
