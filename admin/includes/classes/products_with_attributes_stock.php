@@ -225,14 +225,14 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
 
         $query_products =    "select distinct pa.products_id, d.products_name, p.products_quantity, p.products_model, p.products_image, p.products_type, p.master_categories_id FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa, ".TABLE_PRODUCTS_DESCRIPTION." d, ".TABLE_PRODUCTS." p WHERE d.language_id='".$language_id."' and pa.products_id = d.products_id and pa.products_id = p.products_id " . $w . " order by d.products_name ".$SearchRange."";
 
-        if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button'])) {
+        if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button']) && !isset($_GET['updateReturnedPID'])) {
           $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $query_products, $products_query_numrows);
         } 
         $products = $db->Execute($query_products);
 
 //        $html .= '<br/>';
         
-        if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button'])) {
+        if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button']) && !isset($_GET['updateReturnedPID'])) {
         $html .= '<table border="0" width="100%" cellspacing="0" cellpadding="2" class="pageResults">';
         $html .= '<tr>';
         $html .= '<td class="smallText" valign="top">'; 
@@ -345,7 +345,7 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
           $products->MoveNext();   
       }
       $html .= '</table>';
-        if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button'])) {
+        if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button']) && !isset($_GET['updateReturnedPID'])) {
       $html .= '<table border="0" width="100%" cellspacing="0" cellpadding="2" class="pageResults">';
       $html .= '<tr>';
       $html .= '<td class="smallText" valign="top">';

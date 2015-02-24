@@ -111,7 +111,7 @@ function cartProductCount($products_id){
 			$no_attribute_stock_query = 'select products_model 
   										from '.TABLE_PRODUCTS.' 
   										where products_id = :products_id:';
-      $no_attribute_stock_query = $db->Execute($no_attribute_stock_query, ':products_id:', $products_id, 'integer');
+		$no_attribute_stock_query = $db->bindVars($no_attribute_stock_query, ':products_id:', $products_id, 'integer');
   		$customid = $db->Execute($no_attribute_stock_query);
   		return $customid->fields['products_model'];
   	} 

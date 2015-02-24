@@ -355,7 +355,8 @@ switch($action)
 				//add each one to the database
 				for ($i = 0;$i < sizeof($arrNew);$i++) {
 					//used to add multi attribute combinations at one time
-					$strAttributes = implode(",", $arrNew[$i]);
+          sort($arrNew[$i]); // Ensures that values are in order prior to imploding
+          $strAttributes = implode(",", $arrNew[$i]);
 					$productAttributeCombo = $products_id . '-' . str_replace(',', '-', $strAttributes);
 					$saveResult = $stock->insertNewAttribQty($products_id, $productAttributeCombo, $strAttributes, $quantity);//can not include the $customid since it must be unique
 				}
