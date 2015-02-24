@@ -556,7 +556,7 @@ function addSBAtable(){
     `orders_products_id` INT(11) NOT NULL default '0', 
     `stock_id` INT(11) NOT NULL default '0', 
     `stock_attribute` VARCHAR(255) NULL DEFAULT NULL, 
-    'customid' varchar(255) DEFAULT NULL, 
+    `customid` varchar(255) DEFAULT NULL, 
     `products_prid` TINYTEXT NOT NULL, 
 		PRIMARY KEY (`orders_products_attributes_stock_id`), 
     KEY idx_orders_id_prod_id_zen (`orders_id`,`orders_products_id`), 
