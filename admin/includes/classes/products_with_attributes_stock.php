@@ -208,7 +208,7 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
 
     $html = zen_draw_form('stock_update', FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK . '_ajax', 'save=1&amp;pid='.$ReturnedProductID, 'post');
     $html .= zen_image_submit('button_save.gif', IMAGE_SAVE) . ' Hint: To quickly edit click in the "Quantity in Stock" field.';
-       $html .= '</form><br/>';
+       $html .= '<br/>';
         $retArr = array();
 /*        $query_products =    'select distinct pa.products_id, d.products_name, p.products_quantity, 
 						p.products_model, p.products_image, p.products_type, p.master_categories_id
@@ -358,7 +358,7 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
       $html .= '</table>';
         }
       $html .= zen_image_submit('button_save.gif', IMAGE_SAVE);
-      //$html .= '</form>'."\n";
+      $html .= '</form>'."\n";
 
       return $html;
     }
