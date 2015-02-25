@@ -747,7 +747,7 @@ function nullDataEntry($fieldtoNULL){
   					$attributes_new->MoveNext();
   				}
 
- 					$stock_attributes = implode('","',$stock_attributes);
+ 					$stock_attributes = implode(',',$stock_attributes);
   			}
   			
   			//Get product model
