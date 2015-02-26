@@ -56,7 +56,7 @@ if ($pr_attr->fields['total'] > 0) {
           $options_order_by;
 
   $products_options_names = $db->Execute($sql);
-
+$products_options_names_count = $products_options_names->RecordCount();
   // iii 030813 added: initialize $number_of_uploads
   $number_of_uploads = 0;
 
@@ -117,8 +117,7 @@ if ($pr_attr->fields['total'] > 0) {
     $sql = "select distinct	pov.products_options_values_id,
 			                    pov.products_options_values_name,
 			                    pa.*, p.products_quantity, 
-                				pas.stock_id as pasid, pas.products_id, pas.product_attribute_combo, 
-                				pas.stock_attributes, pas.quantity as pasqty, pas.sort,  pas.customid, pas.title
+                				" . ($products_options_names_count <= 1 ? " pas.stock_id as pasid, pas.quantity as pasqty, pas.sort,  pas.customid, pas.title, pas.product_attribute_combo, pas.stock_attributes, " : "") . " pas.products_id 
 
 		              from      " . TABLE_PRODUCTS_ATTRIBUTES . " pa
 		              left join " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov on (pa.options_values_id = pov.products_options_values_id)
@@ -195,10 +194,12 @@ if ($pr_attr->fields['total'] > 0) {
                 //test, only applicable to products with-out the read-only attribute set
                 if ($products_options_READONLY->fields['attributes_display_only'] < 1) {
                   //use the qty from the product, unless it is 0, then set to out of stock.
-                  if ($products_options->fields['products_quantity'] > 0) {
-                    $PWA_STOCK_QTY = PWA_STOCK_QTY . $products_options->fields['products_quantity'] . ' ';
-                  } else {
-                    $products_options->fields['products_options_values_name'] = $products_options->fields['products_options_values_name'] . PWA_OUT_OF_STOCK;
+                  if ($products_options_names_count <= 1) {
+                    if ($products_options->fields['products_quantity'] > 0) {
+                      $PWA_STOCK_QTY = PWA_STOCK_QTY . $products_options->fields['products_quantity'] . ' ';
+                    } else {
+                      $products_options->fields['products_options_values_name'] = $products_options->fields['products_options_values_name'] . PWA_OUT_OF_STOCK;
+                    }
                   }
 
                   //show custom ID if flag set to true
