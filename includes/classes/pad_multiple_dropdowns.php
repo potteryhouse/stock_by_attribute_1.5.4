@@ -186,7 +186,7 @@ THIS ALSO DOESN'T WORK BECAUSE OF THE COMPARISON(S) BEING PERFORMED... BECAUSE T
           $out.="    if (!instk) alert('".TEXT_OUT_OF_STOCK_MESSAGE."');\n";
           $out.="    return instk;\n";
           $out.="  }\n";
-          $out.="  document.cart_quantity.onsubmit=chksel;\n";
+          $out.="  document.cart_quantity.onsubmit=function () {chksel()};\n";
         }
         $out.="//--></script>\n";
       }
