@@ -221,12 +221,12 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
 						' . $w . '
 						order by d.products_name
 						'.$SearchRange.'';*/
-        if (isset($_GET['page']) && ($_GET['page'] > 1)) $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
+        if (isset($_GET['page']) && ($_GET['page'] > 1)) $rows = $_GET['page'] * STOCK_SET_SBA_NUMRECORDS - STOCK_SET_SBA_NUMRECORDS;
 
         $query_products =    "select distinct pa.products_id, d.products_name, p.products_quantity, p.products_model, p.products_image, p.products_type, p.master_categories_id FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa, ".TABLE_PRODUCTS_DESCRIPTION." d, ".TABLE_PRODUCTS." p WHERE d.language_id='".$language_id."' and pa.products_id = d.products_id and pa.products_id = p.products_id " . $w . " order by d.products_name ".$SearchRange."";
 
         if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button']) && !isset($_GET['updateReturnedPID'])) {
-          $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $query_products, $products_query_numrows);
+          $products_split = new splitPageResults($_GET['page'], STOCK_SET_SBA_NUMRECORDS, $query_products, $products_query_numrows);
         } 
         $products = $db->Execute($query_products);
 
@@ -236,10 +236,10 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
         $html .= '<table border="0" width="100%" cellspacing="0" cellpadding="2" class="pageResults">';
         $html .= '<tr>';
         $html .= '<td class="smallText" valign="top">'; 
-        $html .= $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); 
+        $html .= $products_split->display_count($products_query_numrows, STOCK_SET_SBA_NUMRECORDS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); 
         $html .= '</td>';
         $html .= '<td class="smallText" align="right">';
-        $html .= $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']);
+        $html .= $products_split->display_links($products_query_numrows, STOCK_SET_SBA_NUMRECORDS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']);
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '</table>';
@@ -349,10 +349,10 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
       $html .= '<table border="0" width="100%" cellspacing="0" cellpadding="2" class="pageResults">';
       $html .= '<tr>';
       $html .= '<td class="smallText" valign="top">';
-      $html .= $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); 
+      $html .= $products_split->display_count($products_query_numrows, STOCK_SET_SBA_NUMRECORDS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); 
       $html .= '</td>';
       $html .= '<td class="smallText" align="right">';
-      $html .= $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']);
+      $html .= $products_split->display_links($products_query_numrows, STOCK_SET_SBA_NUMRECORDS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']);
       $html .= '</td>';
       $html .= '</tr>';
       $html .= '</table>';
@@ -371,7 +371,7 @@ function saveAttrib(){
     $i = 0;
     foreach ($_POST as $key => $value) {
     	$id1 = intval(str_replace('stockid1-', '', $key));//title
-       	$id2 = intval(str_replace('stockid2-', '', $key));//quantity
+      $id2 = intval(str_replace('stockid2-', '', $key));//quantity
     	$id3 = intval(str_replace('stockid3-', '', $key));//sort
     	$id4 = intval(str_replace('stockid4-', '', $key));//customid	
 
@@ -416,7 +416,9 @@ function updateAttribQty($stock_id = null, $quantity = null){
 
 	if(empty($quantity) || is_null($quantity)){$quantity = 0;}
 	if( is_numeric($stock_id) && is_numeric($quantity) ){
-		$query = 'update `'.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.'` set quantity='.$quantity.' where stock_id='.$stock_id.' limit 1';
+		$query = 'update `'.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.'` set quantity=:quantity: where stock_id=:stock_id: limit 1';
+    $query = $db->bindVars($query, ':quantity:', $quantity, 'float');
+    $query = $db->bindVars($query, ':stock_id:', $stock_id, 'integer');
 		$result = $db->execute($query);
 	}
 
