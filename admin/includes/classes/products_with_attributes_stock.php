@@ -417,7 +417,7 @@ function updateAttribQty($stock_id = null, $quantity = null){
 	if(empty($quantity) || is_null($quantity)){$quantity = 0;}
 	if( is_numeric($stock_id) && is_numeric($quantity) ){
 		$query = 'update `'.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.'` set quantity=:quantity: where stock_id=:stock_id: limit 1';
-    $query = $db->bindVars($query, ':quantity:', $quantity, 'float');
+    $query = $db->bindVars($query, ':quantity:', $quantity, 'passthru');
     $query = $db->bindVars($query, ':stock_id:', $stock_id, 'integer');
 		$result = $db->execute($query);
 	}
