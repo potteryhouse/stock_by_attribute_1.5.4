@@ -156,9 +156,9 @@ $o = 0;
       $combinations = array();
       $selected_combination = 0;
       $this->_build_attributes_combinations($attributes, true, 'None', $combinations, $selected_combination); // Used to identify all possible combinations as provided in SBA.
-      $_SESSION['combinations'] = $combinations;
+
       $this->_build_attributes_combinations($attributes, false,'None', $combinations2, $selected_combination); // This is used to identify what is out of stock by comparison with the above.
-      $_SESSION['comb2'] = $combinations2;
+
       $out.="<tr><td>&nbsp;</td><td><span id=\"oosmsg\" class=\"errorBox\"></span>\n";
       $out.="<tr><td colspan=\"2\">&nbsp;\n";
       
