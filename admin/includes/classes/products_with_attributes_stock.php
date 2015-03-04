@@ -206,9 +206,6 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
 		   	$SearchRange = "limit 0";//hides all records
 		}
 
-    $html = zen_draw_form('stock_update', FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK . '_ajax', 'save=1&amp;pid='.$ReturnedProductID, 'post');
-    $html .= zen_image_submit('button_save.gif', IMAGE_SAVE) . ' Hint: To quickly edit click in the "Quantity in Stock" field.';
-       $html .= '<br/>';
         $retArr = array();
 /*        $query_products =    'select distinct pa.products_id, d.products_name, p.products_quantity, 
 						p.products_model, p.products_image, p.products_type, p.master_categories_id
@@ -231,7 +228,7 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
         $products = $db->Execute($query_products);
 
 //        $html .= '<br/>';
-        
+        $html = '';
         if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button']) && !isset($_GET['updateReturnedPID'])) {
         $html .= '<table border="0" width="100%" cellspacing="0" cellpadding="2" class="pageResults">';
         $html .= '<tr>';
@@ -244,6 +241,9 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
         $html .= '</tr>';
         $html .= '</table>';
         }
+    $html .= zen_draw_form('stock_update', FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK . '_ajax', 'save=1&amp;pid='.$ReturnedProductID, 'post');
+    $html .= zen_image_submit('button_save.gif', IMAGE_SAVE) . ' Hint: To quickly edit click in the "Quantity in Stock" field.';
+       $html .= '<br/>';
         $html .= '
                   <table id="mainProductTable"> 
                   <tr>
@@ -345,6 +345,8 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
           $products->MoveNext();   
       }
       $html .= '</table>';
+      $html .= zen_image_submit('button_save.gif', IMAGE_SAVE);
+      $html .= '</form>'."\n";
         if (!isset($_GET['seachPID']) && !isset($_GET['pwas-search-button']) && !isset($_GET['updateReturnedPID'])) {
       $html .= '<table border="0" width="100%" cellspacing="0" cellpadding="2" class="pageResults">';
       $html .= '<tr>';
@@ -417,7 +419,7 @@ function updateAttribQty($stock_id = null, $quantity = null){
 	if(empty($quantity) || is_null($quantity)){$quantity = 0;}
 	if( is_numeric($stock_id) && is_numeric($quantity) ){
 		$query = 'update `'.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.'` set quantity=:quantity: where stock_id=:stock_id: limit 1';
-    $query = $db->bindVars($query, ':quantity:', $quantity, 'float');
+    $query = $db->bindVars($query, ':quantity:', $quantity, 'passthru');
     $query = $db->bindVars($query, ':stock_id:', $stock_id, 'integer');
 		$result = $db->execute($query);
 	}

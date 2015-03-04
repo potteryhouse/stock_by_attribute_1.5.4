@@ -666,7 +666,8 @@ function insertDynDropdownsConfiguration(){
 	       date_added, use_function, set_function) 
 		
 	       VALUES 
-		    ('Product Info Single Attribute Display Plugin', 'PRODINFO_ATTRIBUTE_PLUGIN_SINGLE', 'multiple_dropdowns', 'The plugin used for displaying attributes on the product information page.', :configuration_id:, 10, now(), NULL, 'zen_cfg_select_option(array(\'single_radioset\', \'single_dropdown\',\'multiple_dropdowns\',\'sequenced_dropdowns\',\'sba_sequenced_dropdowns\'),'),
+		    ('Enable Dynamic Dropdowns', 'PRODINFO_ATTRIBUTE_DYNAMIC_STATUS', '1', 'Selects status of using this portion of the SBA plugin (Dynamic Dropdowns).', :configuration_id:, 4, now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Off\'), array(\'id\'=>\'1\', \'text''=>\'On for All SBA Tracked\'), array(\'id\'=>\'2\', \'text''=>\'On for Multi-Attribute Only\'), array(\'id\'=>\'3\', \'text''=>\'On for Single-Attribute Only\'), ),'),
+        ('Product Info Single Attribute Display Plugin', 'PRODINFO_ATTRIBUTE_PLUGIN_SINGLE', 'multiple_dropdowns', 'The plugin used for displaying attributes on the product information page.', :configuration_id:, 10, now(), NULL, 'zen_cfg_select_option(array(\'single_radioset\', \'single_dropdown\',\'multiple_dropdowns\',\'sequenced_dropdowns\',\'sba_sequenced_dropdowns\'),'),
 	
 	        ('Product Info Multiple Attribute Display Plugin', 'PRODINFO_ATTRIBUTE_PLUGIN_MULTI', 'sba_sequenced_dropdowns', 'The plugin used for displaying attributes on the product information page.', :configuration_id:, 20, now(), NULL, 'zen_cfg_select_option(array(\'single_radioset\', \'single_dropdown\',\'multiple_dropdowns\',\'sequenced_dropdowns\',\'sba_sequenced_dropdowns\'),'),
       ('Show Out of Stock Attributes', 'PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK', 'True', 'Controls the display of out of stock attributes.', :configuration_id:, 10, now(), NULL, 'zen_cfg_select_option(array(\'True\', \'False\'),'),

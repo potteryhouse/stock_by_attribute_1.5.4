@@ -123,7 +123,7 @@ switch($action)
 		break;
 
 	case 'confirm':
-		if(isset($_POST['products_id']) and is_numeric((int)$_POST['products_id']))
+		if(isset($_POST['products_id']) && is_numeric($_POST['products_id']))
 		{
 
 			if(!isset($_POST['quantity']) || !is_numeric($_POST['quantity']))
@@ -643,6 +643,9 @@ switch($action){
 		}
 		elseif( isset($_GET['search']) || isset($_POST['search']) ){
 			$seachBox = (trim($_GET['search']));
+      if (is_numeric($seachBox)) {
+        $seachPID = doubleval(trim($_GET['search']));
+      }
 		}
 		elseif( isset($_GET['seachPID']) ){
 				$seachPID = doubleval(trim($_GET['seachPID']));
