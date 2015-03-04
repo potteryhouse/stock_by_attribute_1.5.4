@@ -140,7 +140,7 @@ switch($action)
 			
 			if(is_numeric($_POST['quantity']))
 			{
-				$quantity = $_POST['quantity'];
+				$quantity = $db->getBindVarValue($_POST['quantity'], 'float');
 			}
 
 			$attributes = $_POST['attributes'];
