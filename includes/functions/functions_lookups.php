@@ -241,11 +241,11 @@
               return 'true';
             }
             return 'false';
-          } elseif ($stockResult > 0) {
+          } elseif ($stock_values->RecordCount() == 1) {
             //return the stock for "attribute combinations"
             return $stockResult;
           } else {
-            //This part is for attributes that are listed separately in the SBA table for the product
+            //This part is for attributes that are all listed separately in the SBA table for the product
 
             $stockResult = null;
             $returnedStock = null;
@@ -263,15 +263,19 @@
               $stockResult = $stock_values->fields['products_quantity'];
 
               //special test to account for qty when all attributes are listed seperetly
-              if (!$returnedStock && $i == 0) {
+              if (!zen_not_null($returnedStock) && $i == 0) {
                 //set initial value
-                $returnedStock = $stockResult;
+                if ($stock_values->EOF) {
+                  $returnedStock = 0;
+                } else {
+                  $returnedStock = $stockResult;
+                }
               } elseif ($returnedStock > $stockResult) {
                 //update for each attribute, if qty is lower than the previous one
                 $returnedStock = $stockResult;
-              }
+              } // end if first stock item of attribute
               $i++;
-            }
+            } // end for each attribute.
 
             return $returnedStock;
           }

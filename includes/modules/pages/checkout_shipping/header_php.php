@@ -8,7 +8,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  *
- * Stock by Attributes 1.5.5
+ * Stock by Attributes 1.5.4
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');

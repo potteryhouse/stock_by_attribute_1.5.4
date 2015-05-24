@@ -359,8 +359,6 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
       $html .= '</tr>';
       $html .= '</table>';
         }
-      $html .= zen_image_submit('button_save.gif', IMAGE_SAVE);
-      $html .= '</form>'."\n";
 
       return $html;
     }
