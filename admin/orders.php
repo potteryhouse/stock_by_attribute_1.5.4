@@ -1,12 +1,12 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 21:04:33 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.5
  */
 
   require('includes/application_top.php');
@@ -54,7 +54,7 @@
     if ($orders->RecordCount() <= 0) {
       $order_exists = false;
       if ($action != '') $messageStack->add_session(ERROR_ORDER_DOES_NOT_EXIST . ' ' . $oID, 'error');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
+      zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
     }
   }
 
@@ -75,7 +75,7 @@
           $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
           WHERE pa.products_attributes_id = pad.products_attributes_id
-          and pad.products_attributes_filename = '" . $chk_products_download->fields['orders_products_filename'] . "'
+          and pad.products_attributes_filename = '" . $db->prepare_input($chk_products_download->fields['orders_products_filename']) . "'
           and pa.products_id = '" . (int)$chk_products_download->fields['products_prid'] . "'";
 
           $chk_products_download_time = $db->Execute($chk_products_download_time_query);
@@ -213,7 +213,7 @@
               $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
                                                     from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                                     WHERE pa.products_attributes_id = pad.products_attributes_id
-                                                    and pad.products_attributes_filename = '" . $chk_downloads->fields['orders_products_filename'] . "'
+                                                    and pad.products_attributes_filename = '" . $db->prepare_input($chk_downloads->fields['orders_products_filename']) . "'
                                                     and pa.products_id = '" . $chk_downloads->fields['products_id'] . "'";
 
               $chk_products_download_time = $db->Execute($chk_products_download_time_query);
@@ -232,6 +232,7 @@
             }
           }
           $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
+          zen_record_admin_activity('Order ' . $oID . ' updated.', 'info');
         } else {
           $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
@@ -274,6 +275,7 @@
             }
           }
         }
+        zen_record_admin_activity('Order ' . $oID . ' refund processed. See order comments for details.', 'info');
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
       case 'doAuth':
@@ -316,6 +318,7 @@
             }
           }
         }
+        zen_record_admin_activity('Order ' . $oID . ' void processed. See order comments for details.', 'info');
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
     }
@@ -576,6 +579,7 @@ function couponpopupWindow(url) {
            '            <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
 
       if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
+  			$attributes = array(); // mc12345678 Moved to within if statement otherwise doesn't apply elsewhere.
         for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
 			// kuroi: SbA //this bit of code does not seem to be used on this page, need to see if it is dead code or used elseware!
           	$option_name_array = explode(":", $order->products[$i]['attributes'][$j]['option']);
@@ -586,19 +590,21 @@ function couponpopupWindow(url) {
 			$customid = null;
 			//test if this is to be displayed
 			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
-  			$attributes = array(); // mc12345678 Moved to within if statement otherwise doesn't apply elsewhere.
 				//create array for use in zen_get_customid
 				$attributes[] = $order->products[$i]['attributes'][$j]['value_id'];
 				//get custom ID
+				sort($attributes);
 				$customid = $stock->zen_get_customid($order->products[$i]['id'],$attributes);
 				//only display custom ID if exists
-				if( !empty($customid) ){
+				if( !empty($customid) && $j == $k-1){
 					//add name prefix (this is set in the admin language file)
 					$customid = PWA_CUSTOMID_NAME . $customid;
+				} else {
+					$customid = '';
 				}
 			}
 		  //"Stock by Attributes" add custom ID to display
-          echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . ' (' . $customid . ') ';
+          echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . (zen_not_null($customid) ? ' (' . $customid . ') ' : '');
 		  // END "Stock by Attributes"
           if ($order->products[$i]['attributes'][$j]['price'] != '0') echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
           if ($order->products[$i]['attributes'][$j]['product_attribute_is_free'] == '1' and $order->products[$i]['product_is_free'] == '1') echo TEXT_INFO_ATTRIBUTE_FREE;
@@ -1005,7 +1011,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
 
       $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
       $order = new order($oInfo->orders_id);
-      $contents[] = array('text' => 'Products Ordered: ' . sizeof($order->products) );
+      $contents[] = array('text' => (defined('TABLE_HEADING_PRODUCTS') ? TABLE_HEADING_PRODUCTS : 'Products Ordered: ' ) . ': ' . sizeof($order->products) );
       for ($i=0; $i<sizeof($order->products); $i++) {
         $contents[] = array('text' => $order->products[$i]['qty'] . '&nbsp;x&nbsp;' . $order->products[$i]['name']);
 

@@ -42,7 +42,6 @@ function cartProductCount($products_id){
   function zen_draw_pull_down_menu_SBAmod($name, $values, $default = '', $parameters = '', $required = false, $disable = null, $options_menu_images = null) {
 		
   	global $template_dir;
-  	require('./includes/configure.php');
   	$tmp_attribID = trim($name, 'id[]');//used to get the select ID reference to be used in jquery
   	$field = /*'<script ' . *//*src="'.DIR_WS_TEMPLATES . $template_dir . '/jscript/jquery-1.10.2.min.js"*//* '></script> */
 			  '<script type="text/javascript">
@@ -111,7 +110,7 @@ function cartProductCount($products_id){
 			$no_attribute_stock_query = 'select products_model 
   										from '.TABLE_PRODUCTS.' 
   										where products_id = :products_id:';
-      $no_attribute_stock_query = $db->Execute($no_attribute_stock_query, ':products_id:', $products_id, 'integer');
+		$no_attribute_stock_query = $db->bindVars($no_attribute_stock_query, ':products_id:', $products_id, 'integer');
   		$customid = $db->Execute($no_attribute_stock_query);
   		return $customid->fields['products_model'];
   	} 

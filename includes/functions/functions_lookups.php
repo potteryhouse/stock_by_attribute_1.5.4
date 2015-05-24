@@ -9,7 +9,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jul 23 19:29:41 2013 -0400 Modified in v1.5.2 $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.5
  */
 
 /**
@@ -241,11 +241,11 @@
               return 'true';
             }
             return 'false';
-          } elseif ($stockResult > 0) {
+          } elseif ($stock_values->RecordCount() == 1) {
             //return the stock for "attribute combinations"
             return $stockResult;
           } else {
-            //This part is for attributes that are listed separately in the SBA table for the product
+            //This part is for attributes that are all listed separately in the SBA table for the product
 
             $stockResult = null;
             $returnedStock = null;
@@ -263,15 +263,19 @@
               $stockResult = $stock_values->fields['products_quantity'];
 
               //special test to account for qty when all attributes are listed seperetly
-              if (!$returnedStock && $i == 0) {
+              if (!zen_not_null($returnedStock) && $i == 0) {
                 //set initial value
-                $returnedStock = $stockResult;
+                if ($stock_values->EOF) {
+                  $returnedStock = 0;
+                } else {
+                  $returnedStock = $stockResult;
+                }
               } elseif ($returnedStock > $stockResult) {
                 //update for each attribute, if qty is lower than the previous one
                 $returnedStock = $stockResult;
-              }
+              } // end if first stock item of attribute
               $i++;
-            }
+            } // end for each attribute.
 
             return $returnedStock;
           }
@@ -303,16 +307,11 @@
  * @TODO naughty html in a function
 */
 
-// START "Stock by Attributes"
   function zen_check_stock($products_id, $products_quantity, $attributes = null) {
 
-//  	if(zen_not_null($attributes)){
+// START "Stock by Attributes"
     	$stock_left = zen_get_products_stock($products_id, $attributes) - $products_quantity;
-//  	}
-//  	else{
-//  		$stock_left = zen_get_products_stock($products_id) - $products_quantity;
-//  	}
-  	
+// END "Stock by Attributes"
     $out_of_stock = '';
 
     if ($stock_left < 0) {
@@ -321,7 +320,6 @@
 
     return $out_of_stock;
   }
-// END "Stock by Attributes"
 
 /*
  * List manufacturers (returned in an array)

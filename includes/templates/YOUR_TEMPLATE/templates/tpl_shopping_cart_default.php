@@ -11,7 +11,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_shopping_cart_default.php 15881 2010-04-11 16:32:39Z wilt $
  * 
- * Stock by Attributes 1.5.3.1
+ * Updated for Stock by Attributes 1.5.3
  */
 ?>
 <div class="centerColumn" id="shoppingCartDefault">
@@ -128,9 +128,9 @@ if( STOCK_SBA_DISPLAY_CUSTOMID == 'true' && !is_null($product['customid']) ){
   echo '<ul>';
     reset($product['attributes']);
     foreach ($product['attributes'] as $option => $value) {
-        $product_options_name = $value['products_options_name'];
+    /*    $product_options_name = $value['products_options_name'];
         $product_options_name_array = explode(":", $product_options_name);
-        $product_options_name = $product_options_name_array[0];
+        $product_options_name = $product_options_name_array[0];*/ // This code never gets used, so 
 ?>
 
 <li><?php echo $value['products_options_name'] . TEXT_OPTION_DIVIDER . nl2br($value['products_options_values_name']); ?></li>

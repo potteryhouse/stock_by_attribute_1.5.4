@@ -4,9 +4,9 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Mar 4 14:33:25 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  *
-  * Stock by Attributes 1.5.4
+  * Stock by Attributes 1.5.5
  */
   require('includes/application_top.php');
 
@@ -522,8 +522,10 @@ if ($_POST['image_delete'] == 1) {
 
   /* START STOCK BY ATTRIBUTES */
           $stock_ids = zen_get_sba_ids_from_attribute($attribute_id);
-          $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " 
+          if (sizeof($stock_ids) > 0) {
+            $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " 
                       where stock_id in (" . implode(',', $stock_ids) . ")");
+          }
   /* END STOCK BY ATTRIBUTES */
           
         // reset products_price_sorter for searches etc.
@@ -555,8 +557,10 @@ if ($_POST['image_delete'] == 1) {
 
   /* START STOCK BY ATTRIBUTES */
           $stock_ids = zen_get_sba_ids_from_attribute($delete_attributes_options_id->fields['products_attributes_id']);
-          $delete_attributes_stock_options_id_values = $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id='" . $_POST['products_filter'] . "' and stock_id in (" . implode(',', $stock_ids) . ")");
-  /* END STOCK BY ATTRIBUTES */
+          if(sizeof($stock_ids) > 0) {
+            $delete_attributes_stock_options_id_values = $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id='" . $_POST['products_filter'] . "' and stock_id in (" . implode(',', $stock_ids) . ")");
+          }
+/* END STOCK BY ATTRIBUTES */
           
           $delete_attributes_options_id->MoveNext();
         }
@@ -790,12 +794,26 @@ if ($action == 'attributes_preview') {
       <tr>
         <td colspan="2"><table border="1" cellspacing="2" cellpadding="4" align="left">
           <tr>
-            <td colspan="7" class="main" align="center">
+            <td colspan="8" class="main" align="center">
               <?php echo TEXT_PRODUCTS_LISTING . TEXT_PRODUCTS_ID . $products_filter .  TEXT_PRODUCT_IN_CATEGORY_NAME . zen_get_category_name(zen_get_products_category_id($products_filter), (int)$_SESSION['languages_id']) . '<br />' . zen_get_products_name($products_filter); ?>
             </td>
           </tr>
           <tr>
             <td class="smallText" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>'; ?></td>
+            <td class="smallText" align="center">
+            <?php 
+            $sba_query = 'select distinct products_id FROM ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . ' where products_id = :products_id:';
+            $sba_query = $db->bindVars($sba_query, ':products_id:', $products_filter, 'integer');
+            $sba = $db->Execute($sba_query);
+            if ($sba->RecordCount() > 0 ) {
+              ?>
+<?php                  echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'seachPID=' . $products_filter) . '">' . zen_image_button('button_sba_link.gif', IMAGE_OPTION_SBA) . '<br />' . TEXT_SBA_EDIT . '</a>';
+?>            <?php
+            } else {
+              echo TEXT_NO_SBA_EDIT;
+            }
+            ?>
+            </td>
             <td class="smallText" align="center">
               <?php
                 if ($zc_products->get_allow_add_to_cart($products_filter) == "Y") {
@@ -822,7 +840,7 @@ if ($action == 'attributes_preview') {
 ?>
           </tr>
           <tr>
-            <td class="smallText" align="center" colspan="7"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . IMAGE_PRODUCTS_TO_CATEGORIES . '</a>'; ?></td>
+            <td class="smallText" align="center" colspan="8"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . IMAGE_PRODUCTS_TO_CATEGORIES . '</a>'; ?></td>
           </tr>
         </table></td>
       </form></tr>

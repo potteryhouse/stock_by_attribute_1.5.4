@@ -14,7 +14,7 @@
 **/
 
 $SBAversion = 'SBA Version 1.5.4';
-$ZCversion = 'Zen Cart Version 1.5.3';
+$ZCversion = 'Zen Cart Version 1.5.4';
 
 $version_check_index=true;//used in admin/includes/header.php
 require('includes/application_top.php');//Provides most of the page display admin menu
@@ -109,6 +109,100 @@ function checkSBAobsoleteFiles(){
 
 	return;
 }
+
+function removeDynDropdownsConfiguration() {
+  global $db, $resultMmessage;
+
+	/*
+	DELETE FROM configuration  WHERE  configuration_key = 'PRODINFO_ATTRIBUTE_PLUGIN_SINGLE';
+	DELETE FROM configuration  WHERE  configuration_key = 'PRODINFO_ATTRIBUTE_PLUGIN_MULTI';
+	DELETE FROM configuration  WHERE  configuration_key = 'PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK';
+	DELETE FROM configuration  WHERE  configuration_key = 'PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK';
+	DELETE FROM configuration  WHERE  configuration_key = 'PRODINFO_ATTRIBUTE_OUT_OF_STOCK_MSGLINE';
+	DELETE FROM configuration  WHERE  configuration_key = 'PRODINFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK';
+	DELETE FROM configuration  WHERE  configuration_key = 'STOCK_SET_SBA_NUMRECORDS';//Not yet used
+	*/
+	$msg = null;
+	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing from configuration: ');
+
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODINFO_ATTRIBUTE_PLUGIN_SINGLE'";
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted PRODINFO_ATTRIBUTE_PLUGIN_SINGLE  ' . $msg);
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODINFO_ATTRIBUTE_PLUGIN_MULTI'";
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted PRODINFO_ATTRIBUTE_PLUGIN_MULTI  ' . $msg);
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK'";
+	$db->Execute($sql);
+	if($db->error){	
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK  ' . $msg);
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK'";
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK  ' . $msg);
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODINFO_ATTRIBUTE_OUT_OF_STOCK_MSGLINE'";
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted PRODINFO_ATTRIBUTE_OUT_OF_STOCK_MSGLINE  ' . $msg);
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODINFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK'";
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted PRODiNFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK  ' . $msg);
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'STOCK_SET_SBA_NUMRECORDS'";
+	$db->Execute($sql);
+	if($db->error){	
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted STOCK_SET_SBA_NUMRECORDS  ' . $msg);
+	
+/*	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'SBA_SHOW_IMAGE_ON_PRODUCT_INFO'";
+	$db->Execute($sql);
+	if($db->error){	
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted SBA_SHOW_IMAGE_ON_PRODUCT_INFO  ' . $msg);
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODUCTS_OPTIONS_TYPE_SELECT_SBA'";
+	$db->Execute($sql);
+	if($db->error){		
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted PRODUCTS_OPTIONS_TYPE_SELECT_SBA  ' . $msg);
+	
+	//DELETE FROM `products_options_types` 
+	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing from products_options_types: ');
+	
+	$sql = "DELETE IGNORE FROM `".TABLE_PRODUCTS_OPTIONS_TYPES."` WHERE `products_options_types_name` = 'SBA Select List (Dropdown) Basic'";
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted products_options_types_name  ' . $msg);
+	*/
+  
+	return;
+  
+}
+
 
 //Clean-up remove existing entries prior to adding new
 function removeSBAconfiguration(){
@@ -212,6 +306,34 @@ function removeSBAconfiguration(){
 	return;
 }
 
+function removeDynDropdownsAdminPages(){
+	global $db, $resultMmessage;
+
+	$msg = null;
+	array_push($resultMmessage, '<br /><b>Clean-Up</b>, Removing Dynamic Dropdowns from admin_pages: ');
+
+  $sql = "DELETE FROM `".TABLE_ADMIN_PAGES."` WHERE page_key = 'configDynamicDropdownSBA'";
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted configDynamicDropdownSBA ' . $msg);
+
+	/*
+	 DELETE FROM admin_pages  WHERE  page_key = 'productsWithAttributesStockSetup';
+	*/
+  $sql = "DELETE FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_title='Dynamic Drop Downs'";
+  
+	$db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Deleted Dynamic Drop Downs from configuration_group ' . $msg);
+
+	  
+}
+
+
 //Clean-up remove existing entries prior to adding new
 function removeSBAadminPages(){
 	global $db, $resultMmessage;
@@ -306,6 +428,57 @@ function insertSBAconfigurationMenu(){
 	return;
 }
 
+function insertDynDropdownsConfigurationMenu(){
+	global $db, $resultMmessage;
+	
+	array_push($resultMmessage, '<br /><b>Adding</b> to admin_pages: ');
+	
+	//get current max sort number used, then add 1 to it.
+	//this will place the new entry 'productsWithAttributesStock' at the bottom of the list
+  $sql = "SELECT configuration_group_id, MAX(configuration_group_id) as last_configuration_group_id FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_title='Dynamic Drop Downs' LIMIT 1";
+  $result = $db->Execute($sql);
+  $configuration_id = $result->fields['configuration_group_id'];
+  if($configuration_id=='' || $configuration_id == '0') {
+    $sql = "SELECT `AUTO_INCREMENT`
+FROM  INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = '". DB_DATABASE . "'
+AND   TABLE_NAME   = '".TABLE_CONFIGURATION_GROUP."'";
+    $configuration_id = $db->Execute($sql);
+    $configuration_id = $configuration_id->fields['AUTO_INCREMENT'];
+    //$configuration_id++;
+    //$configuration_id = $result->fields['last_configuration_group_id'] + 1;
+
+    $sql = "INSERT INTO `".TABLE_CONFIGURATION_GROUP."` (configuration_group_id, configuration_group_title, configuration_group_description, sort_order, visible) 
+			VALUES 
+			(:configuration_group_id:, 'Dynamic Drop Downs', 'Dynamic Drop Downs configuration options', 8, 1)";
+    $sql = $db->bindVars($sql, ':configuration_group_id:', $configuration_id, 'integer');
+    $result = $db->Execute($sql);
+  	if($db->error){
+    	$msg = ' Error Message: ' . $db->error;
+    }
+  	array_push($resultMmessage, '&bull; Inserted into configuration_group Dynamic Drop Downs. ' . $msg);
+  }
+  
+/*  $sql = "SELECT ap.sort_order
+			FROM ".TABLE_ADMIN_PAGES." ap
+			WHERE ap.menu_key = 'configuration'
+			order by ap.sort_order desc limit 1";
+	$result = $db->Execute($sql);
+	$result = $result->fields['sort_order'] + 1;*/
+	
+	$sql = "INSERT INTO `".TABLE_ADMIN_PAGES."` (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) 
+			VALUES 
+			('configDynamicDropdownSBA', 'BOX_CONFIGURATION_DYNAMIC_DROPDOWNS', 'FILENAME_CONFIGURATION', 'gID=:configuration_id:', 'configuration', 'Y', 8)";
+  $sql = $db->bindVars($sql, ':configuration_id:', $configuration_id, 'integer');
+  $db->Execute($sql);
+	if($db->error){
+		$msg = ' Error Message: ' . $db->error;
+	}
+	array_push($resultMmessage, '&bull; Inserted into admin_pages configDynamicDropdownSBA. ' . $msg);
+	
+	return;
+}
+
 //Add required entry into the admin_pages table
 function insertSBAadminPages(){
 	global $db, $resultMmessage;
@@ -332,6 +505,7 @@ function insertSBAadminPages(){
 
 	return;
 }
+
 
 //Add required entries into the products_options_types table
 function insertSBAproductsOptionsTypes(){
@@ -465,6 +639,65 @@ function insertSBAconfiguration(){
 	return;
 }
 
+
+function insertDynDropdownsConfiguration(){
+	global $db, $resultMmessage, $failed;
+
+	array_push($resultMmessage, '<br /><b>Adding</b> to configuration (Dynamic Dropdowns option switches): ');
+
+	//get current max sort number used, then add 1 to it.
+	//this will place the new entries at the bottom of the list
+
+  $sql = "SELECT configuration_group_id FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_title='Dynamic Drop Downs' LIMIT 1";
+  $result = $db->Execute($sql);
+  $configuration_id = $result->fields['configuration_group_id'];
+  
+  
+  $sql ="SELECT c.sort_order
+			FROM ".TABLE_CONFIGURATION." c
+			WHERE c.configuration_group_id = :configuration_id:
+			order by c.sort_order desc limit 1";
+  $sql = $db->bindVars($sql, ':configuration_id:', $configuration_id, 'integer');
+	$result = $db->Execute($sql);
+	$result = $result->fields['sort_order'] + 1;
+
+	$sql = "INSERT INTO `".TABLE_CONFIGURATION."` (configuration_title, configuration_key, configuration_value, 
+	       configuration_description, configuration_group_id, sort_order, 
+	       date_added, use_function, set_function) 
+		
+	       VALUES 
+		    ('Enable Dynamic Dropdowns', 'PRODINFO_ATTRIBUTE_DYNAMIC_STATUS', '2', 'Selects status of using this portion of the SBA plugin (Dynamic Dropdowns).', :configuration_id:, 4, now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Off\'), array(\'id\'=>\'1\', \'text''=>\'On for All SBA Tracked\'), array(\'id\'=>\'2\', \'text''=>\'On for Multi-Attribute Only\'), array(\'id\'=>\'3\', \'text''=>\'On for Single-Attribute Only\'), ),'),
+        ('Product Info Single Attribute Display Plugin', 'PRODINFO_ATTRIBUTE_PLUGIN_SINGLE', 'multiple_dropdowns', 'The plugin used for displaying attributes on the product information page.', :configuration_id:, 10, now(), NULL, 'zen_cfg_select_option(array(\'single_radioset\', \'single_dropdown\',\'multiple_dropdowns\',\'sequenced_dropdowns\',\'sba_sequenced_dropdowns\'),'),
+	
+	        ('Product Info Multiple Attribute Display Plugin', 'PRODINFO_ATTRIBUTE_PLUGIN_MULTI', 'sba_sequenced_dropdowns', 'The plugin used for displaying attributes on the product information page.', :configuration_id:, 20, now(), NULL, 'zen_cfg_select_option(array(\'single_radioset\', \'single_dropdown\',\'multiple_dropdowns\',\'sequenced_dropdowns\',\'sba_sequenced_dropdowns\'),'),
+      ('Show Out of Stock Attributes', 'PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK', 'True', 'Controls the display of out of stock attributes.', :configuration_id:, 10, now(), NULL, 'zen_cfg_select_option(array(\'True\', \'False\'),'),
+      ('Mark Out of Stock Attributes', 'PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK', 'Right', 'Controls how out of stock attributes are marked as out of stock.', :configuration_id:, 30, now(), NULL, 'zen_cfg_select_option(array(\'None\', \'Right\', \'Left\'),'),
+      ('Display Out of Stock Message Line', 'PRODINFO_ATTRIBUTE_OUT_OF_STOCK_MSGLINE', 'True', 'Controls the display of a message line indicating an out of stock attributes is selected.', :configuration_id:, 40, now(), NULL, 'zen_cfg_select_option(array(\'True\', \'False\'),'),
+			('Prevent Adding Out of Stock to Cart', 'PRODINFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK', 'True', 'Prevents adding an out of stock attribute combination to the cart.', :configuration_id:, 50, now(), NULL, 'zen_cfg_select_option(array(\'True\', \'False\'),'),
+      ('SBA Number of Records to Displayed', 'STOCK_SET_SBA_NUMRECORDS', '25', 
+				'Number of records to show on page:',
+				:configuration_id:, 60, now(), NULL, NULL);";
+  $sql = $db->bindVars($sql, ':configuration_id:', $configuration_id, 'integer');
+  $db->Execute($sql);
+
+		if($db->error){		
+			$msg = ' Error Message: ' . $db->error;
+			$failed = true;
+		}
+		else{
+			$list = '&bull; PRODINFO_ATTRIBUTE_PLUGIN_SINGLE<br />
+              &bull; PRODINFO_ATTRIBUTE_PLUGIN_MULTI<br />
+              &bull; PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK<br />
+              &bull; PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK<br />
+              &bull; PRODINFO_ATTRIBUTE_OUT_OF_STOCK_MSGLINE<br />
+              &bull; PRODINFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK<br /> 
+              &bull; STOCK_SET_SBA_NUMRECORDS';
+			array_push($resultMmessage, 'Inserted into configuration: <br />' . $list);
+		}
+  
+  
+}
+
 //Add new table products_with_attributes_stock
 function addSBAtable(){
 	global $db, $resultMmessage, $failed;
@@ -526,6 +759,7 @@ function addSBAtable(){
 		alterSBAtableUniqueIndex();//Call function to Alter table products_with_attributes_stock UNIQUE INDEX
 		alterSBAtableTitle();//call function to add new table field title
 		alterSBAtableUniqueCombo();//call function to add new table field product_attribute_combo
+
 		
 		//TODO: New Fields, needs addition planning
 		//alterSBAtableParentid();//call function to add new table field parentid
@@ -533,6 +767,12 @@ function addSBAtable(){
 		//alterSBAtableChildid();//call function to add new table field childid
 	}
 
+  if (!checkSBAtable(TABLE_PRODUCTS_OPTIONS,'products_options_track_stock')) {
+    alterProductOptions();
+  }
+  
+
+  
   /*
    * CREATE TABLE orders_products_attributes_stock ( 
    * orders_products_attributes_stock_id int(11) NOT NULL auto_increment, 
@@ -541,6 +781,7 @@ function addSBAtable(){
    * orders_products_id int(11) NOT NULL default '0', 
    * stock_id int(11) NOT NULL default '0', 
    * stock_attribute VARCHAR(255) NULL DEFAULT NULL, 
+   * customid varchar(255) DEFAULT NULL,
    * products_prid tinytext NOT NULL, 
    * PRIMARY KEY (orders_products_attributes_stock_id), 
    * KEY idx_orders_id_prod_id_zen (orders_id,orders_products_id), 
@@ -555,6 +796,7 @@ function addSBAtable(){
     `orders_products_id` INT(11) NOT NULL default '0', 
     `stock_id` INT(11) NOT NULL default '0', 
     `stock_attribute` VARCHAR(255) NULL DEFAULT NULL, 
+    `customid` varchar(255) DEFAULT NULL, 
     `products_prid` TINYTEXT NOT NULL, 
 		PRIMARY KEY (`orders_products_attributes_stock_id`), 
     KEY idx_orders_id_prod_id_zen (`orders_id`,`orders_products_id`), 
@@ -568,7 +810,7 @@ function addSBAtable(){
 		array_push($resultMmessage, '<br />Added Table orders_products_with_attributes_stock: ' . $msg);
 	}
 	else{
-		//Alter / upgrade existing database table
+		//Alter / upgrade existing database table THIS NEEDS TO BE DEVELOPED
 //		alterSBAtabeSort();//Call function to Alter table products_with_attributes_stock sort field
 //		alterSBAtableCustomid();//Call function to Alter table products_with_attributes_stock to add customid
 //		alterSBAtableUniqueIndex();//Call function to Alter table products_with_attributes_stock UNIQUE INDEX
@@ -810,6 +1052,63 @@ function alterSBAtableUniqueIndex(){
 	}
 	
 	return;
+}
+
+function alterProductOptions(){
+  
+  
+/*  ALTER TABLE products_options
+  ADD products_options_track_stock tinyint(4) default '1' not null
+  AFTER products_options_name;*/
+	global $db, $resultMmessage, $failed;	
+	
+	$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+					WHERE TABLE_SCHEMA = '".DB_DATABASE."'
+						AND TABLE_NAME = '". TABLE_PRODUCTS_OPTIONS . "'
+						AND COLUMN_NAME = 'products_options_track_stock';";
+	$result = $db->Execute($sql);
+	
+ 	$num_rows = null;
+ 	while (!$result->EOF) {
+ 		if( $result->fields['COLUMN_NAME'] ){
+ 			$num_rows = 1;
+ 			break;			
+ 		}
+ 		$result->MoveNext();
+ 	}
+
+	if(empty($num_rows)){
+		$sql = "ALTER TABLE " . TABLE_PRODUCTS_OPTIONS." ADD products_options_track_stock tinyint(4) DEFAULT '1' NOT NULL AFTER `products_options_name`";
+		$db->Execute($sql);
+		if($db->error){	
+			$msg = ' Error Message: ' . $db->error;
+			$failed = true;
+		}
+		array_push($resultMmessage, '<b>Altered Table</b> products_options to add products_options_track_stock. ' . $msg);
+	}
+	else{
+		$sql = "SELECT column_default 
+				FROM INFORMATION_SCHEMA.COLUMNS 
+				WHERE TABLE_SCHEMA = '".DB_DATABASE."'
+					AND TABLE_NAME = '".TABLE_PRODUCTS_OPTIONS."'
+					AND COLUMN_NAME = 'products_optinos_track_stock'";
+		$result = $db->Execute($sql);
+		$result = $result->fields['column_default'];
+		
+		if( $result === null ){
+			$sql = "ALTER TABLE " . TABLE_PRODUCTS_OPTIONS." CHANGE COLUMN `products_options_track_stock` `products_options_track_stock` tinyINT(4) NOT NULL DEFAULT '1' AFTER `products_options_name`;";
+			$db->Execute($sql);
+			
+			if($db->error){				
+				$msg = ' Error Message: ' . $db->error;
+				$failed = true;
+			}
+		
+			array_push($resultMmessage, '<br /><b>Altered Table</b> products_options to add DEFAULT value of 1. ' . $msg);
+		}
+	}
+	return;
+
 }
 
 //Test that the table is already present, and that it does not already have "sort INT NOT NULL"
@@ -1860,10 +2159,14 @@ echo '<div id="" style="background-color: green; padding: 2px 10px;"></div>
 		checkSBAobsoleteFiles();//check for obsolete files and report them to user
 		removeSBAconfiguration();//Call function to Remove configuration entries
 		removeSBAadminPages();//Call function to Remove Admin Pages entry
-		//Add new database entries
+    removeDynDropdownsConfiguration();
+    removeDynDropdownsAdminPages();
+    //Add new database entries
 		insertSBAadminPages();//Call function to Add New Admin Pages entry
 		insertSBAconfiguration();//Call function to Add New configuration entries
-		addSBAtable();//Call function to Add New table products_with_attributes_stock
+    insertDynDropdownsConfigurationMenu();
+    insertDynDropdownsConfiguration();
+    addSBAtable();//Call function to Add New table products_with_attributes_stock
 		insertSBAconfigurationMenu();//add install script to configuration menu
 		insertSBAproductsOptionsTypes();//Call function to Add New entries	
 		//Test for proper New file placement
@@ -1874,7 +2177,10 @@ echo '<div id="" style="background-color: green; padding: 2px 10px;"></div>
 		//Clean-up functions to remove database entries
 		removeSBAconfiguration();//Call function to Remove configuration entries
 		removeSBAadminPages();//Call function to Remove Admin Pages entry
+    removeDynDropdownsConfiguration();
+    removeDynDropdownsAdminPages();
 		dropSBATable();//Call function to remove SBA table
+//		dropSBAOrdersTable(); // Not sure this should be performed, as it will remove historical data.
 		echo removeSBAfiles();//show instructions for file removal/reversion to previous state
 		echo showScriptResult('Remove All');//show results of table modifications
 	}

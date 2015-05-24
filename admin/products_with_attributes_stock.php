@@ -123,7 +123,7 @@ switch($action)
 		break;
 
 	case 'confirm':
-		if(isset($_POST['products_id']) and is_numeric((int)$_POST['products_id']))
+		if(isset($_POST['products_id']) && is_numeric($_POST['products_id']))
 		{
 
 			if(!isset($_POST['quantity']) || !is_numeric($_POST['quantity']))
@@ -140,7 +140,7 @@ switch($action)
 			
 			if(is_numeric($_POST['quantity']))
 			{
-				$quantity = $_POST['quantity'];
+				$quantity = $db->getBindVarValue($_POST['quantity'], 'float');
 			}
 
 			$attributes = $_POST['attributes'];
@@ -355,7 +355,8 @@ switch($action)
 				//add each one to the database
 				for ($i = 0;$i < sizeof($arrNew);$i++) {
 					//used to add multi attribute combinations at one time
-					$strAttributes = implode(",", $arrNew[$i]);
+          sort($arrNew[$i]); // Ensures that values are in order prior to imploding
+          $strAttributes = implode(",", $arrNew[$i]);
 					$productAttributeCombo = $products_id . '-' . str_replace(',', '-', $strAttributes);
 					$saveResult = $stock->insertNewAttribQty($products_id, $productAttributeCombo, $strAttributes, $quantity);//can not include the $customid since it must be unique
 				}
@@ -476,8 +477,12 @@ global $template_dir;
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
 <link rel="stylesheet" type="text/css" href="includes/products_with_attributes_stock_ajax.css">
-<script src="<?php echo DIR_WS_CATALOG_TEMPLATE . $template_dir; /*mc12345678 Still not sure that trying to call the store template is the best way to incorporate the javascript instead of it being in the admin panel on it's own.  Yes two places to store, but... */ ?>/jscript/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="<?php echo DIR_WS_CATALOG_TEMPLATE . $template_dir; ?>/jscript/jquery.form.js"></script>
+<?php if (file_exists(DIR_FS_CATALOG_TEMPLATES . 'template_default/jscript/jquery.min.js')) { ?>
+<script type="text/javascript" src="<?php echo ($page_type == 'NONSSL' ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : ( ENABLE_SSL_ADMIN == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG ) ) . DIR_WS_TEMPLATES . 'template_default'; ?>/jscript/jquery.min.js"></script>
+<?php } else { ?>
+<script type="text/javascript" src="<?php echo ($page_type == 'NONSSL' ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : ( ENABLE_SSL_ADMIN == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG ) ) . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery-1.10.2.min.js"></script>
+<?php } ?>
+<script type="text/javascript" src="<?php echo ($page_type == 'NONSSL' ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : ( ENABLE_SSL_ADMIN == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG ) ) . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery.form.js"></script>
 <script type="text/javascript" src="products_with_attributes_stock_ajax.js"></script>
 <script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript" src="includes/general.js"></script>
@@ -638,6 +643,9 @@ switch($action){
 		}
 		elseif( isset($_GET['search']) || isset($_POST['search']) ){
 			$seachBox = (trim($_GET['search']));
+      if (is_numeric($seachBox)) {
+        $seachPID = doubleval(trim($_GET['search']));
+      }
 		}
 		elseif( isset($_GET['seachPID']) ){
 				$seachPID = doubleval(trim($_GET['seachPID']));
@@ -679,16 +687,18 @@ switch($action){
 		echo '<a class="forward" style="float:right;" href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=resync_all", $request_type).'"><strong>Sync All Quantities</strong></a><br class="clearBoth" /><hr />';
 		echo '<div id="pwa-table">';
     	echo $stock->displayFilteredRows(STOCK_SET_SBA_SEARCHBOX,null,$seachPID);
-		echo '</div>';
+
+      echo '</div>';
 		break;
 }
 ?>
+</div>
 <!-- body_eof //-->
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
 <br />
-</div>
+
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

@@ -51,7 +51,9 @@ class products_with_attributes_stock extends base {
         $attributeList[] = $attributes['value_id'];
       }
       $customid = zen_get_customid($this->_productI['id'],$attributeList);
-      $productI['model'] = (zen_not_null($customid) ? $customid : $productI['model']);
+      $productI['customid'] = $customid;
+      $this->_productI['customid'] = $customid;
+//      $productI['model'] = (zen_not_null($customid) ? $customid : $productI['model']);
       $this->_productI['model'] = $productI['model'];
     }
     // END "Stock by Attributes"
@@ -101,7 +103,7 @@ class products_with_attributes_stock extends base {
     //paramsArray is $i at time of development.
     if ($callingClass->email_low_stock == '' && $callingClass->doStockDecrement && $this->_stock_values->RecordCount() > 0 && $this->_attribute_stock_left <= STOCK_REORDER_LEVEL) {
       // kuroi: trigger and details for attribute low stock email
-      $callingClass->email_low_stock .=  'ID# ' . zen_get_prid($this->_productI['id']) . ', ' . $this->_productI['model'] . ', ' . $this->_productI['name'] . ', ';
+      $callingClass->email_low_stock .=  'ID# ' . zen_get_prid($this->_productI['id']) . ', model# ' . $this->_productI['model'] . ', customid ' . $this->_productI['customid'] . ', name ' . $this->_productI['name'] . ', ';
 			foreach($this->_productI['attributes'] as $attributes){
 				$callingClass->email_low_stock .= $attributes['option'] . ': ' . $attributes['value'] . ', ';
 			}
@@ -133,6 +135,7 @@ class products_with_attributes_stock extends base {
                             'orders_products_id' =>$paramsArray['orders_products_id'], 
                             'stock_id' => $this->_stock_info['stock_id'], 
                             'stock_attribute' => $this->_stock_info['stock_attribute'], 
+                            'customid' => $this->_productI['customid'],
                             'products_prid' =>$paramsArray['products_prid']);
     zen_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK, $sql_data_array); //inserts data into the TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK table.
 
