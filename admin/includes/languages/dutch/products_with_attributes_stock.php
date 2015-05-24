@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_with_attributes_stock.php  $
  * 
- * Updated for Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4
  */
  
 define('PWA_DELETE_VARIANT_CONFIRMATION', 'Are you sure you want to delete this product variant?');

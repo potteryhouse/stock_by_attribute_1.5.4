@@ -3,12 +3,12 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 16:20:00 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  *
- * Updated for Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
@@ -48,25 +48,25 @@
 		// Added to allow individual stock of different attributes
 	    unset($attributes);
 	    if(is_array($products[$i]['attributes'])){
-        $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
-        $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
+	        $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
+    	    $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
         
-        $inSBA_result = $db->Execute($inSBA_query);
+        	$inSBA_result = $db->Execute($inSBA_query);
 
-        if (sizeof($inSBA_result) > 0 && zen_not_null($inSBA_result)) {
+	        if (sizeof($inSBA_result) > 0 && zen_not_null($inSBA_result)) {
     			$attributes = $products[$i]['attributes'];
-        } else {
+        	} else {
 		      $attributes = null; //Force normal operation if the product is not monitored by SBA.
-        }
+	        }
 	    } else {
-        $attributes = null;
+        	  $attributes = null;
 	    }
 	
-		  if(!empty($attributes)){
+		  if(zen_not_null($attributes)){ // Called if the product is only in the SBA table, not just has attributes.
 	    	if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'], $attributes)) {
 	    		zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
 	    		break;
-	    	}
+	    	} // Currently seems to Ignore possibility of mixed product/ mixed YES otherwise, change below to reference zen_get_products_stock($products[$i]['id'], $attributes)
 	    } else {
         if (zen_check_stock($products[$i]['id'], $products[$i]['quantity']) ) {
 	      	zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
@@ -82,6 +82,7 @@
     }   
 	// END "Stock by Attributes"
   }
+
 // if no shipping destination address was selected, use the customers own address as default
   if (!$_SESSION['sendto']) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
@@ -118,6 +119,7 @@ if (isset($_SESSION['cart']->cartID)) {
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
+    $_SESSION['shipping'] = array();
     $_SESSION['shipping']['id'] = 'free_free';
     $_SESSION['shipping']['title'] = 'free_free';
     $_SESSION['sendto'] = false;
@@ -253,6 +255,9 @@ if (isset($_SESSION['cart']->cartID)) {
       $displayAddressEdit = true;
     }
   }
+
+  require(DIR_WS_CLASSES . 'payment.php');
+  $payment_modules = new payment;
 
   $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);

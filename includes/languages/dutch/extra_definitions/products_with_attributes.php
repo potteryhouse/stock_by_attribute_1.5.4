@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_with_attributes.php 389 2008-11-14 16:02:14Z hugo13 $
- * Updated for Stock by Attributes 1.5.3
+ * Stock by Attributes 1.5.3
  */
 define('PWA_STOCK_AVAILABLE', ' verkrijgbaar Stock: ');
 define('PWA_OUT_OF_STOCK', ' Out of Stock: ');

@@ -50,7 +50,7 @@
 				for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j++) {
 					$attributes[] = $order->products[$i]['attributes'][$j]['value_id'];//value_id option_id
 				}
-				$customid = '<br />(';
+        $customid = '<br />(';
 				//get custom ID
 				for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j++) {
 					if( $tmpCheck != $order->products[$i]['id'] ){
