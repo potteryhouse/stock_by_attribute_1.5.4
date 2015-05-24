@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: packingslip.php 15788 2010-04-02 10:44:40Z drbyte $
  * 
- * Updated for Stock by Attributes 1.5.3.1
+ * Stock by Attributes 1.5.4
 */
 
   require('includes/application_top.php');
@@ -157,7 +157,6 @@
 	// END "Stock by Attributes"
 
     for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-
       echo '      <tr class="dataTableRow">' . "\n" .
            '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
            '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
@@ -167,9 +166,9 @@
 
 			//"Stock by Attributes" add custom ID to display
 			$customid = null;
-			$attributes = null;
 			//test if this is to be displayed
 			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
+  			$attributes = array(); // mc12345678 moved into if statement otherwise doesn't apply in code.
 				//create array for use in zen_get_customid
 				$attributes[] = $order->products[$i]['attributes'][$j]['value_id'];
 				//get custom ID

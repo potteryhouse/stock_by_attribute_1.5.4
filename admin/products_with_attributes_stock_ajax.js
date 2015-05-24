@@ -1,5 +1,5 @@
 // $Id: products_with_attributes_stock_ajax.js 389 2008-11-14 16:02:14Z hugo13 $
-//Updated for Stock by Attributes 1.5.4 (supports jquery-1.10.2.min.js)
+//Stock by Attributes 1.5.4 (supports jquery-1.10.2.min.js)
 
 $(document).ready(function() { 
     // bind form using ajaxForm 

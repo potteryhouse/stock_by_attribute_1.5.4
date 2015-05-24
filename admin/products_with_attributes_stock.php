@@ -10,7 +10,7 @@
  */
 
 $SBAversion = 'Version 1.5.4';
-//add required refernced files
+//add required referenced files
 require('includes/application_top.php');
 require(DIR_WS_CLASSES . 'currencies.php');
 require(DIR_WS_CLASSES . 'products_with_attributes_stock.php');
@@ -21,8 +21,7 @@ $stock = new products_with_attributes_stock;
 //set language
 if( isset($_SESSION['languages_id']) ){
 	$language_id = $_SESSION['languages_id'];
-}
-else{
+} else {
 	
 	$languages = zen_get_languages();
 	$languages_array = array();
@@ -38,10 +37,9 @@ else{
 }
 
 //action
-if( isset($_GET['action']) ){
+if( isset($_GET['action']) && $_GET['action']){
 	$action = addslashes(trim($_GET['action']));
-}
-else{
+} else {
 	$action = null;
 }
 
@@ -71,7 +69,7 @@ switch($action)
 			}
 			else
 			{
-				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), 'NONSSL'));
+				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), $request_type));
 			}
 		}
 		else
@@ -120,18 +118,18 @@ switch($action)
 		}
 		else
 		{
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), $request_type));
 		}
 		break;
 
 	case 'confirm':
-		if(isset($_POST['products_id']) and is_numeric((int)$_POST['products_id']))
+		if(isset($_POST['products_id']) && is_numeric($_POST['products_id']))
 		{
 
 			if(!isset($_POST['quantity']) || !is_numeric($_POST['quantity']))
 			{
 				$messageStack->add_session("Missing Quantity!", 'failure');
-				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_POST['products_id'], 'NONSSL'));
+				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_POST['products_id'], $request_type));
 			}
 			
 			$products_id = $_POST['products_id'];
@@ -142,7 +140,7 @@ switch($action)
 			
 			if(is_numeric($_POST['quantity']))
 			{
-				$quantity = $_POST['quantity'];
+				$quantity = $db->getBindVarValue($_POST['quantity'], 'float');
 			}
 
 			$attributes = $_POST['attributes'];
@@ -160,15 +158,9 @@ switch($action)
 			$s_mack_noconfirm .= "customid=" . $customid . "&"; //s_mack:noconfirm
 			$s_mack_noconfirm .= "skuTitle=" . $skuTitle . "&"; //s_mack:noconfirm
 			
-			if(sizeof($attributes) > 1)
-			{
-				sort($attributes);
-				$stock_attributes = implode(',',$attributes);
-			}
-			else
-			{
-				$stock_attributes = $attributes[0];
-			}
+  		sort($attributes);
+			$stock_attributes = implode(',',$attributes);
+
 			$s_mack_noconfirm .='attributes=' . $stock_attributes . '&'; //kuroi: to pass string not array
 
 			$query = 'select * 
@@ -194,9 +186,9 @@ switch($action)
 		}
 		else
 		{
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), $request_type));
 		}
-		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, $s_mack_noconfirm . "action=execute", 'NONSSL')); //s_mack:noconfirm
+		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, $s_mack_noconfirm . "action=execute", $request_type)); //s_mack:noconfirm
 		break;
 		
 	case 'execute':
@@ -208,26 +200,26 @@ switch($action)
 		if ($_GET['products_id']) { $products_id = doubleval($_GET['products_id']); } //s_mack:noconfirm
 
 		$customid = addslashes(trim($_POST['customid']));
-		if ($_GET['customid']) {$customid = addslashes(trim($_GET['customid'])); } //s_mack:noconfirm
+		if (isset($_GET['customid']) && $_GET['customid']) {$customid = addslashes(trim($_GET['customid'])); } //s_mack:noconfirm
 
 		$skuTitle = addslashes(trim($_POST['skuTitle']));
 		if ($_GET['skuTitle']) { $skuTitle = addslashes(trim($_GET['skuTitle'])); }
 	
 		//$quantity = $_GET['quantity']; //s_mack:noconfirm
-		if ($_GET['quantity']) { $quantity = doubleval($_GET['quantity']); } //s_mack:noconfirm
+		if (isset($_GET['quantity']) && $_GET['quantity']) { $quantity = doubleval($_GET['quantity']); } //s_mack:noconfirm
 		
 		//if invalid entry return to product
 		if( !is_numeric((int)$products_id) || is_null($products_id) ){
 			$messageStack->add_session("Missing or bad products_id!", 'failure');
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, $request_type));
 		}
 		elseif( !is_numeric((int)$quantity) || is_null($quantity) && $quantity != 0 ){
 			$messageStack->add_session("Missing or bad Quantity!", 'failure');
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, $request_type));
 		}
 		elseif( is_null($attributes) || str_replace(',', null, $attributes) == null ){
 			$messageStack->add_session("Missing Attribute Selection!", 'failure');
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, $request_type));
 		}
 		
 		/*
@@ -303,7 +295,10 @@ switch($action)
 				}
 				$intVars = sizeof($arrMain);
 				$arrNew = array();
-			
+
+        $arrNew = return_attribute_combinations($arrMain, $intVars);
+
+        /*        
 				if ($intVars >= 1) {
 					//adds attribute combinations
 					// there are X variables / attributes
@@ -325,7 +320,13 @@ switch($action)
 													for ($m = 0;$m < sizeof($arrMain[4]);$m++) {
 														if ($intVars >= 6) {
 															for ($n = 0;$n < sizeof($arrMain[5]);$n++) {
-																$arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m], $arrMain[5][$n]);
+                                if ($intVars >= 7){
+                                  for ($o = 0; $o < sizeof($arrMain[6]); $o++) {
+                                  $arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m], $arrMain[5][$n], $arrMain[6][$o]);
+                                  }
+                                } else {
+                                  $arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m], $arrMain[5][$n]);
+                                }
 															}
 														} else {
 															$arrNew[] = array($arrMain[0][$i], $arrMain[1][$j], $arrMain[2][$k], $arrMain[3][$l], $arrMain[4][$m]);
@@ -348,14 +349,15 @@ switch($action)
 						}
 					}
 					
-					}
+				}*/
 					
 				//loop through the list of variables / attributes
 				//add each one to the database
 				for ($i = 0;$i < sizeof($arrNew);$i++) {
 					//used to add multi attribute combinations at one time
-					$strAttributes = implode(",", $arrNew[$i]);
-					$productAttributeCombo = $products_id . '-' . str_replace(',', '-', $strAttributes);;
+          sort($arrNew[$i]); // Ensures that values are in order prior to imploding
+          $strAttributes = implode(",", $arrNew[$i]);
+					$productAttributeCombo = $products_id . '-' . str_replace(',', '-', $strAttributes);
 					$saveResult = $stock->insertNewAttribQty($products_id, $productAttributeCombo, $strAttributes, $quantity);//can not include the $customid since it must be unique
 				}
 				
@@ -375,7 +377,7 @@ switch($action)
 			if ($_GET['stock_id']) { $stock_id = $_GET['stock_id']; } //s_mack:noconfirm
 			if(!is_numeric((int)$stock_id)) //s_mack:noconfirm
 			{
-				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), 'NONSSL'));
+				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, zen_get_all_get_params(array('action')), $request_type));
 			}
 			//update existing records
 			$saveResult = $stock->updateAttribQty($stock_id, $quantity);
@@ -398,7 +400,7 @@ switch($action)
 			$messageStack->add_session("Product $products_id update failed: $saveResult", 'failure');
 		}
 		
-		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, 'NONSSL'));
+		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $products_id, $request_type));
 		
 		break;
 		
@@ -411,9 +413,9 @@ switch($action)
 				//Use the button 'Sync Quantities' when needed, or uncomment the line below if you want it done automatically.
 				//$stock->update_parent_products_stock((int)$_POST['products_id']);//keep this line as option, but I think this should not be done automatically.
 				$messageStack->add_session('Product Variant was deleted', 'failure');
-				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_POST['products_id'], 'NONSSL'));
+				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_POST['products_id'], $request_type));
 			} else {
-				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_POST['products_id'], 'NONSSL'));
+				zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_POST['products_id'], $request_type));
 			}
 		}
 		break;
@@ -423,22 +425,22 @@ switch($action)
 
 			$stock->update_parent_products_stock((int)$_GET['products_id']);
 			$messageStack->add_session('Parent Product Quantity Updated', 'success');
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_GET['products_id'], 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_GET['products_id'], $request_type));
 		} else {
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', $request_type));
 		}
 		break;
 		
 	case 'resync_all':
 		$stock->update_all_parent_products_stock();
 		$messageStack->add_session('Parent Product Quantities Updated', 'success');
-		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL'));
+		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', $request_type));
 		break;
 	  
 	case 'auto_sort':
 		// get all attributes
 		$sql = $db->Execute("SELECT stock_id, stock_attributes FROM " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " ORDER BY stock_id ASC;");
-		$count = 0;
+		$count = 0; // mc12345678 why not use $sql->RecordCount()? If doesn't return correct value, then above SQL needs to be called to include a cache "reset".
 		while (!$sql->EOF) {
 		  // get main attribute only for sort
 		  $attributes = explode(',', $sql->fields['stock_attributes']);
@@ -457,7 +459,7 @@ switch($action)
 		  $sql->MoveNext();
 		}
 		$messageStack->add_session($count . ' stock attributes updated for sort by primary attribute sort order', 'success');
-		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL'));
+		zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', $request_type));
 		break;
 	  
 	default:
@@ -472,14 +474,18 @@ global $template_dir;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="./includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="./includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<link rel="stylesheet" type="text/css" href="./includes/products_with_attributes_stock_ajax.css" media="all" id="hoverJS">
-<script src="<?php echo HTTPS_CATALOG_SERVER . '/' . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="<?php echo HTTPS_CATALOG_SERVER . '/' . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery.form.js"></script>
-<script type="text/javascript" src="./products_with_attributes_stock_ajax.js"></script>
-<script type="text/javascript" src="./includes/menu.js"></script>
-<script type="text/javascript" src="./includes/general.js"></script>
+<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="includes/products_with_attributes_stock_ajax.css">
+<?php if (file_exists(DIR_FS_CATALOG_TEMPLATES . 'template_default/jscript/jquery.min.js')) { ?>
+<script type="text/javascript" src="<?php echo ($page_type == 'NONSSL' ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : ( ENABLE_SSL_ADMIN == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG ) ) . DIR_WS_TEMPLATES . 'template_default'; ?>/jscript/jquery.min.js"></script>
+<?php } else { ?>
+<script type="text/javascript" src="<?php echo ($page_type == 'NONSSL' ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : ( ENABLE_SSL_ADMIN == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG ) ) . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery-1.10.2.min.js"></script>
+<?php } ?>
+<script type="text/javascript" src="<?php echo ($page_type == 'NONSSL' ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : ( ENABLE_SSL_ADMIN == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG ) ) . DIR_WS_TEMPLATES . $template_dir; ?>/jscript/jquery.form.js"></script>
+<script type="text/javascript" src="products_with_attributes_stock_ajax.js"></script>
+<script type="text/javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/general.js"></script>
 <script type="text/javascript">
 <!--
 function init()
@@ -627,7 +633,7 @@ switch($action){
 	default:
 		//return to page (previous edit) data
 		echo '<h4>Stock By Attribute (SBA) Stock Page '.$SBAversion.'</h4>';
-		echo '<h4><a title="Shortcut to the Stock By Attributtes setup page" href="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK_SETUP, '', 'NONSSL') . '">SBA Setup Link</a></h4>';		
+		echo '<h4><a title="Shortcut to the Stock By Attributtes setup page" href="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK_SETUP, '', $request_type) . '">SBA Setup Link</a></h4>';		
 		
 		$seachPID = null;
 		$seachBox = null;
@@ -637,6 +643,9 @@ switch($action){
 		}
 		elseif( isset($_GET['search']) || isset($_POST['search']) ){
 			$seachBox = (trim($_GET['search']));
+      if (is_numeric($seachBox)) {
+        $seachPID = doubleval(trim($_GET['search']));
+      }
 		}
 		elseif( isset($_GET['seachPID']) ){
 				$seachPID = doubleval(trim($_GET['seachPID']));
@@ -665,29 +674,31 @@ switch($action){
 								WHERE d.language_id = '.$language_id.'
 								order by products_model';//order by may be changed to: products_id, products_model, products_name
 			
-			echo '<form method="get" action="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL') . '" name="pwas-search">Product Selection List:';
+			echo '<form method="get" action="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', $request_type) . '" name="pwas-search">Product Selection List:';
 			echo	$searchList = $stock->selectItemID(TABLE_PRODUCTS_ATTRIBUTES,'pa.products_id',$seachPID,$searchList,'seachPID','seachPID','selectSBAlist');
 			echo '<input type="submit" value="Search" name="pwas-search-button"/></form>';
 		}
 
 		echo '<div id="hugo1" style="background-color: green; padding: 2px 10px;"></div>';    
-		echo '<form method="get" action="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL') . '" id="pwas-search" name="pwas-search">Search:  <input id="pwas-filter" type="text" name="search" value="'.$seachBox.'" /><input type="submit" value="Search" id="pwas-search-button" name="pwas-search-button"/></form><span style="margin-right:10px;">&nbsp;</span>';
-		echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL') . '">Reset</a><span style="margin-right:10px;">&nbsp;</span><a title="Sets sort value for all attributes to match value in the Option Values Manager" href="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'action=auto_sort', 'NONSSL') . '">Sort</a>';
+		echo '<form method="get" action="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', $request_type) . '" id="pwas-search" name="pwas-search">Search:  <input id="pwas-filter" type="text" name="search" value="'.$seachBox.'" /><input type="submit" value="Search" id="pwas-search-button" name="pwas-search-button"/></form><span style="margin-right:10px;">&nbsp;</span>';
+		echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', $request_type) . '">Reset</a><span style="margin-right:10px;">&nbsp;</span><a title="Sets sort value for all attributes to match value in the Option Values Manager" href="' . zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'action=auto_sort', $request_type) . '">Sort</a>';
 		echo '<span style="margin-right:20px;color:red;">&nbsp;&nbsp;&nbsp;&nbsp;'.$SBAsearchbox.'</span>';//set a option in configuration table
 		echo '<span id="loading" style="display: none;"><img src="./images/loading.gif" alt="" /> Loading...</span><hr />';
-		echo '<a class="forward" style="float:right;" href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=resync_all", 'NONSSL').'"><strong>Sync All Quantities</strong></a><br class="clearBoth" /><hr />';
+		echo '<a class="forward" style="float:right;" href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=resync_all", $request_type).'"><strong>Sync All Quantities</strong></a><br class="clearBoth" /><hr />';
 		echo '<div id="pwa-table">';
     	echo $stock->displayFilteredRows(STOCK_SET_SBA_SEARCHBOX,null,$seachPID);
-		echo '</div>';
+
+      echo '</div>';
 		break;
 }
 ?>
+</div>
 <!-- body_eof //-->
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
 <br />
-</div>
+
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: invoice.php 19136 2011-07-18 16:56:18Z wilt $
  * 
- * Updated for Stock by Attributes 1.5.3.1
+ * Stock by Attributes 1.5.4
 */
 
   require('includes/application_top.php');
@@ -166,7 +166,6 @@ function couponpopupWindow(url) {
 
     $decimals = $currencies->get_decimal_places($order->info['currency']);
     for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
-	
       if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true')
       {
         $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']),$decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
@@ -176,16 +175,16 @@ function couponpopupWindow(url) {
       }
       echo '      <tr class="dataTableRow">' . "\n" .
            '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
-      	   '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
+           '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
 
       if (isset($order->products[$i]['attributes']) && (($k = sizeof($order->products[$i]['attributes'])) > 0)) {
         for ($j = 0; $j < $k; $j++) {
 
 			//"Stock by Attributes" add custom ID to display
 			$customid = null;
-			$attributes = null;
 			//test if this is to be displayed
 			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
+  			$attributes = array();
 				//create array for use in zen_get_customid
 				$attributes[] = $order->products[$i]['attributes'][$j]['value_id'];//value_id option_id
 				//get custom ID

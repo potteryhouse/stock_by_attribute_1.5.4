@@ -4,9 +4,9 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Sat Apr 19 10:20:14 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
  * 
- * Updated for Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.5
  */
 
 ////
@@ -48,6 +48,27 @@
     }
   }
 
+  /* START STOCK BY ATTRIBUTES */ //This can be placed outside of the general.php file and should be...
+function return_attribute_combinations($arrMain, $intVars, $currentLoop = array(), $currentIntVar = 0) {
+  $arrNew = array();
+
+  for ($currentLoop[$currentIntVar] = 0; $currentLoop[$currentIntVar] < sizeof($arrMain[$currentIntVar]); $currentLoop[$currentIntVar]++) {
+    if ($intVars == $currentIntVar + 1) {
+      $arrNew2 = array();
+      for ($i = 0; $i<$intVars;$i++) {
+        $arrNew2[] = $arrMain[$i][$currentLoop[$i]];  // This is a place where an evaluation could be made to do something unique with a single attribute that is to be assigned to a sba variant as this assigment is for one of the attributes to be combined for one record. If the goal would be not to add anything having this one attribute, then could call continue 2 to escape this for loop and move on to the next outer for loop.  If just want to not add the one attribute to the combination then place the above assignment so that it is bypassed when not to be added. 
+      }
+      if (zen_not_null($arrNew2) && sizeof($arrNew2) > 0) { // This is a place where an evaluation could be made to do something unique with a sba variant as this assigment is one of all attributes combined for one record.  //Still something about this test doesn't seem quite right, but it's the concept that is important, as long as there is something to evaluate/assign that is not nothing, then do the assignment.
+        $arrNew[] = $arrNew2;
+      }
+    } else {
+      $arrNew = array_merge($arrNew, return_attribute_combinations($arrMain, $intVars, $currentLoop, $currentIntVar + 1));
+    }
+  }
+
+  return $arrNew;
+}
+  /* END STOCK BY ATTRIBUTES */
 
   function zen_output_string_protected($string) {
     return zen_output_string($string, false, true);
@@ -1415,11 +1436,13 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
                   where category_id = '" . (int)$category_id . "'");
 
-
+    zen_record_admin_activity('Deleted category ' . (int)$category_id . ' from database via admin console.', 'warning');
   }
 
   function zen_remove_product($product_id, $ptc = 'true') {
-    global $db;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_PRODUCT', array(), $product_id, $ptc);    
+    
     $product_image = $db->Execute("select products_image
                                    from " . TABLE_PRODUCTS . "
                                    where products_id = '" . (int)$product_id . "'");
@@ -1497,6 +1520,11 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
                   where product_id = '" . (int)$product_id . "'");
 
+  /* START STOCK BY ATTRIBUTES */
+//    $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "
+//                  where products_id = '" . (int)$product_id . "'");
+  /* END STOCK BY ATTRIBUTES */
+    zen_record_admin_activity('Deleted product ' . (int)$product_id . ' from database via admin console.', 'warning');
   }
 
   function zen_products_attributes_download_delete($product_id) {
@@ -1509,35 +1537,15 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
+/* BEGIN STOCK BY ATTRIBUTES
   function zen_remove_order($order_id, $restock = false) {
-    /* START STOCK BY ATTRIBUTES */
-    global $db, $order;
+    global $db;
     if ($restock == 'on') {
       $order = $db->Execute("select products_id, products_quantity
                              from " . TABLE_ORDERS_PRODUCTS . "
                              where orders_id = '" . (int)$order_id . "'");
 
       while (!$order->EOF) {
-        //restored db
-        $restored_attributes = $db->Execute("select pa.products_attributes_id    
-                                              from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa, ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                              where opa.orders_id='".(int)$order_id."'
-                                              and opa.products_options_id = pa.options_id
-                                              and pa.options_values_id = opa.products_options_values_id
-                                              and pa.products_id='".(int)$order->fields['products_id']."'
-                                              ORDER BY pa.products_attributes_id ASC
-                                            ");
-        while(!$restored_attributes->EOF) {
-          $attr_array[] = $restored_attributes->fields['products_attributes_id'];
-          $restored_attributes->MoveNext();
-        }
-        //echo implode(',', $attr_array);die;
-        $db->Execute("update ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." 
-                        set quantity = quantity + " . $order->fields['products_quantity'] . " 
-                        where products_id = '" . (int)$order->fields['products_id'] . "'
-                        and stock_attributes = '".implode(',', $attr_array)."'
-                      ");
-		/* END STOCK BY ATTRIBUTES */
         $db->Execute("update " . TABLE_PRODUCTS . "
                       set products_quantity = products_quantity + " . $order->fields['products_quantity'] . ", products_ordered = products_ordered - " . $order->fields['products_quantity'] . " where products_id = '" . (int)$order->fields['products_id'] . "'");
         $order->MoveNext();
@@ -1562,7 +1570,99 @@ while (!$chk_sale_categories_all->EOF) {
 
     $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
                   where order_id = '" . (int)$order_id . "' and release_flag = 'N'");
+  } */
+
+  //This function should be moved to its own file location rather than general.php so that the changes made to this file can be minimized to simply adding notifiers...
+  function zen_get_sba_ids_from_attribute($products_attributes_id = array()){
+    global $db;
+    
+    if (!is_array($products_attributes_id)){
+      $products_attributes_id = array($products_attributes_id);
+    }
+    $products_stock_attributes = $db->Execute("select stock_id, stock_attributes from " . 
+                                              TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK);
+//    while (!$products_stock_attributes->EOF) {
+//      $products_stock_attributes_list[] = $products_stock_attributes->fields['stock_attributes'];
+//    }
+    $stock_id_list = array();
+    /* The below "search" is one reason that the original tables for SBA should be better refined
+     * and not use comma separated items in a field...
+     */
+    while (!$products_stock_attributes->EOF) {
+      //$stock_attrib_list = array();
+      $stock_attrib_list = explode(',', $products_stock_attributes->fields['stock_attributes']);
+
+      foreach($stock_attrib_list as $stock_attrib){
+        if (in_array($stock_attrib, $products_attributes_id)) {
+          $stock_id_list[] = $products_stock_attributes->fields['stock_id'];
+          continue;
+        }
+      }
+      
+      $products_stock_attributes->MoveNext();
+    }
+    return $stock_id_list;
+  }  
+  
+  function zen_remove_order($order_id, $restock = false) {
+    /* START STOCK BY ATTRIBUTES */
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $order_id, $restock);
+    
+    if ($restock == 'on') {
+      $order = $db->Execute("select products_id, products_quantity
+                             from " . TABLE_ORDERS_PRODUCTS . "
+                             where orders_id = '" . (int)$order_id . "'");
+
+      while (!$order->EOF) {
+        // START SBA //restored db //mc12345678 update the SBA quantities based on order delete.
+
+/*
+ * Need to take the data collected above, (products_id to find the matching order record 
+ * (attributes table that is left joined by the sba table and values not equal to null. 
+ * Records that match are ones on which quantities can be affected.
+ */
+
+/*        $db->Execute("update " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "
+                      set quantity = quantity + " . $order->fields['products_quantity'] . "
+                      where products_id = '" . (int)$order->fields['products_id'] . "'
+                      and stock_attributes in (select stock_attribute from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK . " where orders_id = '" . (int)$order_id . "' and products_prid = '" . (int)$order->fields['products_prid'] . "')"
+                );*/
+        // End SBA modification.
+
+        $db->Execute("update " . TABLE_PRODUCTS . "
+                      set products_quantity = products_quantity + " . $order->fields['products_quantity'] . ", products_ordered = products_ordered - " . $order->fields['products_quantity'] . " where products_id = '" . (int)$order->fields['products_id'] . "'");
+        $order->MoveNext();
+      }
+    }
+
+    $db->Execute("delete from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS . "
+                  where orders_id = '" . (int)$order_id . "'");
+
+    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                  where orders_id = '" . (int)$order_id . "'");
+
+    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
+                  where orders_id = '" . (int)$order_id . "'");
+
+/* START STOCK BY ATTRIBUTES 
+    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK . "
+                  where orders_id = '" . (int)$order_id . "'");
+ END STOCK BY ATTRIBUTES */
+    
+    $db->Execute("delete from " . TABLE_ORDERS_STATUS_HISTORY . "
+                  where orders_id = '" . (int)$order_id . "'");
+
+    $db->Execute("delete from " . TABLE_ORDERS_TOTAL . "
+                  where orders_id = '" . (int)$order_id . "'");
+
+    $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
+                  where order_id = '" . (int)$order_id . "' and release_flag = 'N'");
+
+    zen_record_admin_activity('Deleted order ' . (int)$order_id . ' from database via admin console.', 'warning');
   }
+  /* END STOCK BY ATTRIBUTES */
 
   function zen_get_file_permissions($mode) {
 // determine type
@@ -1627,6 +1727,7 @@ while (!$chk_sale_categories_all->EOF) {
 
       if (is_writeable($source)) {
         rmdir($source);
+        zen_record_admin_activity('Removed directory from server: [' . $source . ']', 'notice');
       } else {
         $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
         $zen_remove_error = true;
@@ -1634,6 +1735,7 @@ while (!$chk_sale_categories_all->EOF) {
     } else {
       if (is_writeable($source)) {
         unlink($source);
+        zen_record_admin_activity('Deleted file from server: [' . $source . ']', 'notice');
       } else {
         $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
         $zen_remove_error = true;
@@ -2343,7 +2445,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * Delete all product attributes
  */
   function zen_delete_products_attributes($delete_product_id) {
-    global $db;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_DELETE_PRODUCTS_ATTRIBUTES', array(), $delete_product_id);
+
     // first delete associated downloads
     $products_delete_from = $db->Execute("select pa.products_id, pad.products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad  where pa.products_id='" . (int)$delete_product_id . "' and pad.products_attributes_id= pa.products_attributes_id");
     while (!$products_delete_from->EOF) {
@@ -2352,6 +2456,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     }
 
     $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$delete_product_id . "'");
+  /* START STOCK BY ATTRIBUTES 
+    $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = '" . (int)$delete_product_id . "'");
+   END STOCK BY ATTRIBUTES */
 }
 
 

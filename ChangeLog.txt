@@ -1,4 +1,5 @@
 Updates from 1.5.3 to 1.5.4
+Note, most files have been touched, this is not a comprehensive listing, it is intended for general information.
 
 admin\ajax
 -- Folder removed, files relocated.
@@ -38,7 +39,38 @@ admin\orders.php
 admin\packingslip.php
 -- Custom ID display correction
 
+--New
+admin/attributes_controller.php
+admin/options_name_manager.php
+admin/options_values_manager.php
+
+--Updated
+admin/invoice.php
+admin/orders.php
+admin/packingslip.php
+admin/products_with_attributes_stock.php
+admin/stock_by_attr_install.php
+admin/includes/classes/products_with_attributes_stock.php
+admin/includes/extra_datafiles/products_with_attributes_stock.php
+admin/includes/functions/general.php
+
 ----------------------------------------------
+
+--New
+includes/auto_loaders/config.products_with_attributes_stock.php
+includes/classes/observers/class.products_with_attributes_stock.php
+includes/extra_cart_actions/stock_by_attributes.php
+includes/modules/pages/checkout_success/header_php_sba.php
+
+--Updated
+includes/classes/order.php
+includes/extra_datafiles/products_with_attributes_stock_database_tables.php
+includes/functions/extra_functions/products_with_attributes.php
+includes/functions/functions_lookups.php
+includes/modules/pages/checkout_shipping/header_php.php
+includes/modules/pages/shopping_cart/header_php.php
+includes/modules/YOUR_TEMPLATE/attributes.php
+inludes/templates/YOUR_TEMPLATE/templates/tpl_shopping_cart_default.php
 
 includes\functions\extra_functions\products_with_attributes.php
 -- Added new feature to change image displayed when the selection is changed "in a Select List (drop-down)".
