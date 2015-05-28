@@ -1275,7 +1275,7 @@ function installOptionalSQL1(){
 		array_push($resultMmessage, 'Optional SQL file complete. ' . $msg);
 	}
 	else{
-		array_push($resultMmessage, 'Optional SQL file result: Did NOT run, table does not exit.');
+		array_push($resultMmessage, 'Optional SQL file result: Did NOT run, table does not exist.');
 		$failed = true;
 	}
 	return;

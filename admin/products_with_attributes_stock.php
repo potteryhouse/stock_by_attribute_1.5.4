@@ -123,7 +123,7 @@ switch($action)
 		break;
 
 	case 'confirm':
-		if(isset($_POST['products_id']) && is_numeric($_POST['products_id']))
+		if(isset($_POST['products_id']) and is_numeric((int)$_POST['products_id']))
 		{
 
 			if(!isset($_POST['quantity']) || !is_numeric($_POST['quantity']))
@@ -687,8 +687,7 @@ switch($action){
 		echo '<a class="forward" style="float:right;" href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=resync_all", $request_type).'"><strong>Sync All Quantities</strong></a><br class="clearBoth" /><hr />';
 		echo '<div id="pwa-table">';
     	echo $stock->displayFilteredRows(STOCK_SET_SBA_SEARCHBOX,null,$seachPID);
-
-      echo '</div>';
+		echo '</div>';
 		break;
 }
 ?>

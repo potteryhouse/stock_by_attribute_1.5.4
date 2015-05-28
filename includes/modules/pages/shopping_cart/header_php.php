@@ -100,9 +100,19 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
     // START "Stock by Attributes"
 		// Added to allow individual stock of different attributes
-    $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
-    $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
-    $inSBA_result = $db->Execute($inSBA_query);
+    $inSBA_query = 'SELECT * 
+                    FROM information_schema.tables
+                    WHERE table_schema = :your_db: 
+                    AND table_name = :table_name:
+                    LIMIT 1;';
+    $inSBA_query = $db->bindVars($inSBA_query, ':your_db:', DB_DATABASE, 'string');
+    $inSBA_query = $db->bindVars($inSBA_query, ':table_name:', TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'string');
+	$inSBA_result = $db->Execute($inSBA_query, false, false, 0, true);
+    if (sizeof($inSBA_result) > 0 and !$inSBA_result->EOF) {
+      $inSBA_query = "select stock_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :productsid:";
+      $inSBA_query = $db->bindVars($inSBA_query, ':productsid:', $products[$i]['id'], 'integer');
+      $inSBA_result = $db->Execute($inSBA_query);
+	}
 
     $inSBA = (sizeof($inSBA_result) > 0 && !$inSBA_result->EOF);
     $products_options_type = null;
