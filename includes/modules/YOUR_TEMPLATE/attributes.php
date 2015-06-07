@@ -26,9 +26,9 @@ $show_attributes_qty_prices_description = 'false';
 $sql = "select count(*) as total
           from " . TABLE_PRODUCTS_OPTIONS . " po 
 			left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON (po.products_options_id = pa.options_id)
-          where    pa.products_id='" . (int) $_GET['products_id'] . "'
-            and      po.language_id = '" . (int) $_SESSION['languages_id'] . "'" .
-        " limit 1";
+          where    pa.products_id='" . (int)$_GET['products_id'] . "'
+            and      po.language_id = '" . (int)$_SESSION['languages_id'] . "'" .
+            " limit 1";
 
 $pr_attr = $db->Execute($sql);
 
@@ -51,9 +51,9 @@ if ($pr_attr->fields['total'] > 0) {
                               po.products_options_rows
               from        " . TABLE_PRODUCTS_OPTIONS . " po
               left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON (pa.options_id = po.products_options_id)
-              where           pa.products_id='" . (int) $_GET['products_id'] . "'             
-              and             po.language_id = '" . (int) $_SESSION['languages_id'] . "' " .
-          $options_order_by;
+              where           pa.products_id='" . (int)$_GET['products_id'] . "'             
+              and             po.language_id = '" . (int)$_SESSION['languages_id'] . "' " .
+              $options_order_by;
 
   $products_options_names = $db->Execute($sql);
 $products_options_names_count = $products_options_names->RecordCount();
@@ -125,9 +125,9 @@ $products_options_names_count = $products_options_names->RecordCount();
                 
 		              left join " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pas on 
 		              (p.products_id = pas.products_id and FIND_IN_SET(pa.products_attributes_id, pas.stock_attributes) > 0 )
-		              where pa.products_id = '" . (int) $_GET['products_id'] . "'
-		              and   pa.options_id  = '" . (int) $products_options_names->fields['products_options_id'] . "'
-		              and   pov.language_id = '" . (int) $_SESSION['languages_id'] . "' " .
+              where     pa.products_id = '" . (int)$_GET['products_id'] . "'
+              and       pa.options_id = '" . (int)$products_options_names->fields['products_options_id'] . "'
+              and       pov.language_id = '" . (int)$_SESSION['languages_id'] . "' " .
                 $order_by;
 
     $products_options = $db->Execute($sql);
@@ -156,8 +156,8 @@ $products_options_names_count = $products_options_names->RecordCount();
       $sqlRO = "select pa.attributes_display_only
               			from " . TABLE_PRODUCTS_OPTIONS . " po
               			left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa on (pa.options_id = po.products_options_id)
-              			where pa.products_id='" . (int) $_GET['products_id'] . "'
-               			and pa.products_attributes_id = '" . (int) $products_options->fields["products_attributes_id"] . "' ";
+              			where pa.products_id='" . (int)$_GET['products_id'] . "'
+               			and pa.products_attributes_id = '" . (int)$products_options->fields["products_attributes_id"] . "' ";
       $products_options_READONLY = $db->Execute($sqlRO);
 
       //echo 'ID: ' . $products_options->fields["products_attributes_id"] . ' Stock ID: ' . $products_options->fields['pasid'] . ' QTY: ' . $products_options->fields['pasqty'] . ' Custom ID: ' . $products_options->fields['customid'] . '<br />';//debug line

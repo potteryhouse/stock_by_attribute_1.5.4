@@ -84,8 +84,7 @@
 ?>
        </td>
        <td class="cartProductDisplay">
-<a href="<?php echo $product['linkProductsName']; ?>"><span id="cartImage" class="back"><?php echo $product['productsImage']; ?></span>
-<span id="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
+<a href="<?php echo $product['linkProductsName']; ?>"><span id="cartImage" class="back"><?php echo $product['productsImage']; ?></span><span id="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
 
 <?php 
 	// START "Stock by Attributes"
@@ -110,6 +109,7 @@
 	// END "Stock by Attributes"
 ?>
 <br class="clearBoth" />
+
 
 <?php
 

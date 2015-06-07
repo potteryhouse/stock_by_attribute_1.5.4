@@ -159,7 +159,7 @@ $o = 0;
 
       $this->_build_attributes_combinations($attributes, false,'None', $combinations2, $selected_combination); // This is used to identify what is out of stock by comparison with the above.
 
-      $out.="<tr><td>&nbsp;</td><td><span id=\"oosmsg\" class=\"errorBox\"></span>\n";
+      $out.="<tr><td>&nbsp;</td><td><span id=\"oosmsg\" class=\"errorBox\"></span></td></tr>\n";
       $out.="<tr><td colspan=\"2\">&nbsp;\n";
       
       $out.="<script type=\"text/javascript\" language=\"javascript\"><!--\n";
@@ -185,7 +185,7 @@ $o = 0;
         $attr=$attributes[$curattr];
         $out.="  function i".$attr['oid']."(frm) {\n";
         if ($curattr < sizeof($attributes)-1) {
-          $out.="    var displayshown = false;\n"; //Allow control of the alert to provide it one time only.
+          $out.="    var displayshown = " . ( PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK == 'False' ? "true" : "false") . ";\n"; //Allow control of the alert to provide it one time only.
           $out.="    var span=document.getElementById(\"oosmsg\");\n";
           $out.="    while (span.childNodes[0]) {\n";
           $out.="      span.removeChild(span.childNodes[0]);\n";
@@ -237,6 +237,7 @@ $o = 0;
             $out.=",opt);\n";
           }
         $out.="        }\n";
+        $out.="        stkmsg(frm);\n";
         $out.="      } else {\n";
           if (PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK == 'True') {
           //  Add the product to the next selectable list item and identify its out-of-stock status as controlled by the admin panel.  
@@ -249,19 +250,26 @@ $o = 0;
               $out.="txt".$attributes[$curattr+1]['oid']."[opt] + '".PWA_OUT_OF_STOCK . "'";
             }
             $out.=",opt);\n";
+        //if ($this->out_of_stock_msgline == 'True') {
+        $out.="        stkmsg(frm);\n";
+		//}
         $out.="        if (displayshown != true) {\n";
         $out.="          alert('All selections of the attributes below this one are Out of Stock. Please select a different option.');\n";
-        $out.="          stkmsg(frm);\n";
+//        $out.="          stkmsg(frm);\n";
         $out.="          displayshown=true;\n";
         $out.="        }\n";
           }
         $out.="      }\n";
         $out.="    }\n";
         } else {
-          $out.="    if (!chkstk(frm)) {\n";
-          $out.="      stkmsg(frm);\n";
+          if ($this->out_of_stock_msgline == 'True') {
+            $out.="      stkmsg(frm);\n";
+          }
+          $out.="    if (!chkstk(frm)" . ( PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK == 'False' ? " && false" : "" ) .") {\n";
+//          $out.="      stkmsg(frm);\n";
       	  $out.="      alert('Your choice is out of stock.');\n";
-          $out.="    }\n";
+          $out.="    } \n"; //elseif (!chkstk(frm)) {\n";
+/*		  $out.="    }\n";*/
         }
         $out.="  }\n";
       }
@@ -304,21 +312,84 @@ $o = 0;
       $out.="    var instk=false;\n";
       
         // build javascript if statement to test level by level for existence  
-//        $out.='    ';
+      // Check if every menu selection is back to the baseline.
+      $out.="    " . str_repeat("  ",0);
+      $out.="if (frm['id[".$attributes[0]['oid']."]'].value == 0";
+      for ($i=1; $i<sizeof($attributes); $i++) {
+	    $out.=" && frm['id[".$attributes[$i]['oid']."]'].value == 0";
+	  }
+      $out.=") {\n";
+      $out.="    " . str_repeat("  ",1);
+	  $out.="instk = true;\n";
+      $out.="    " . str_repeat("  ",0);
+	  $out.="}\n";
+      // Begin the cycle 
+      for ($j=0; $j<sizeof($attributes); $j++) {
+        //Check if the menu selection is the default selection in the menu
+        $out.="    " . str_repeat("  ",$j);
+        $out.="if (frm['id[".$attributes[$j]['oid']."]'].value == 0) {\n";
+	    $out.="    " . str_repeat("  ",$j+1);
+		$out.="return true;\n";
+	    $out.="    " . str_repeat("  ",$j);
+        $out.="}\n";
+        $out.="    " . str_repeat("  ",$j);
+        // Check if the option is defined/has stock.
+        $out.="if (typeof stk3";
+		for ($k=0; $k<=$j; $k++) {
+		  $out.="[frm['id[".$attributes[$k]['oid']."]'].value]";
+		}
+		$out.=" == \"undefined\") {\n";
+	    $out.="    " . str_repeat("  ",$j+1);
+		$out.="return false;\n";
+	    $out.="    " . str_repeat("  ",$j);
+        $out.="}\n";
+        // If the above have not caused a response, then it is safe to move.
+		if ($j==sizeof($attributes)-1) {
+	    $out.="    " . str_repeat("  ",$j+1);
+		$out.="return true;\n";
+		}
+		
+	  }
+/*	  $out.="if (frm['id[".$attributes[0]['oid']."]'] == 0) {\n";
       for ($i=0; $i<sizeof($attributes); $i++) {
         $out.="    " . str_repeat("  ",$i);
+//Starts the checks of stock quantity.
+//        $out.='if (stk3';
+
+
         $out.='if (stk3';
         for ($j=0; $j<=$i; $j++) {
           $out.="[frm['id[".$attributes[$j]['oid']."]'].value]";
         }
         $out.=") {\n";
+        $out.="     " . str_repeat("  ",sizeof($attributes)) . "if(frm['id[".$attributes[$j-1]['oid']."]'].value != 0" . /*" && frm['id[".$attributes[sizeof($attributes)-1]['oid']."]'].value != 0" .*//* ") {\n";
+		$out.="     " . str_repeat("  ",sizeof($attributes)+1) . "instk=true;\n";
+		$out.="     " . str_repeat("  ",sizeof($attributes)) . "}\n";
       }
-      $out.="    " . str_repeat("  ",sizeof($attributes)) . "instk=true;\n";
+//      $out.="    " . str_repeat("  ",sizeof($attributes)) . "instk=true;\n";
       for ($i=sizeof($attributes)-1; $i>0; $i--) {
         $out.="    " . str_repeat("  ",$i) . "}\n";
       }
       $out.="    }\n";
-      $out.="    return instk;\n";
+      $out.="}\n";
+        for ($j=sizeof($attributes)-1; $j>=0; $j--) {
+          $out.="    " . str_repeat("  ",0);
+          $out.='if (';
+          $out.="frm['id[".$attributes[$j]['oid']."]'].value == 0 && !instk";
+		  for ($i=$j-1; $i>=0; $i--) {
+		    $out.=" && frm['id[".$attributes[$i]['oid']."]'].value != 0";
+			//$out.=" && chkstk()";
+		  }
+		  $out.=") {\n";
+          $out.="    " . str_repeat("  ",1);
+		  $out.="return true;\n";
+          $out.="    " . str_repeat("  ",0);
+          $out.="}\n";
+		}*/
+/*	  $out.="    if (" . ( instk = false && true ? "" : "") . ") {\n";
+	  $out.="      \n";
+	  $out.="    }\n";*/
+//      $out.="    return instk;\n";
       $out.="  }\n";
 
       if ($this->out_of_stock_msgline == 'True') {
@@ -339,7 +410,7 @@ $o = 0;
 //          $out.="  stkmsg(document.cart_quantity);\n";
       }
       $out.="//--></script>\n";
-      $out.="\n</td></tr></td></tr>\n";
+      $out.="\n</td></tr>\n"; // Removed extra: </td></tr>
       
       return $out;
     }

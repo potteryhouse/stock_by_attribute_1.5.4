@@ -164,9 +164,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
 	$stock_id = $db->Execute($query, false, false, 0, true);
 	if ($stock_id->RecordCount() > 0) {
       
-    $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK .  ' where products_id = :products_id:';
-    $query = $db->bindVars($query, ':products_id:',  $_POST['products_id'], 'integer');
-    $stock_id = $db->Execute($query, false, false, 0, true);
+      $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK .  ' where products_id = :products_id:';
+      $query = $db->bindVars($query, ':products_id:',  $_POST['products_id'], 'integer');
+      $stock_id = $db->Execute($query, false, false, 0, true);
 //  $_SESSION['stock_idquery'] = $stock_id->RecordCount();
 //Check if item is an SBA tracked item, if so, then perform analysis of whether to add or not.
     }

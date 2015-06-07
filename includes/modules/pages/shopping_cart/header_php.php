@@ -153,20 +153,8 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $attrArray[$option]['products_options_values_name'] = $attr_value;
       $attrArray[$option]['options_values_price'] = $attributes_values->fields['options_values_price'];
       $attrArray[$option]['price_prefix'] = $attributes_values->fields['price_prefix'];
-
-      //Test to exclude specified attributes from the checks that follow
-      if( $attributes_values->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_SELECT_SBA ){  
-        // remove the elements who's values are equal to PRODUCTS_OPTIONS_TYPE_SELECT_SBA
-    // Figured out why these are being removed.  The thought was that, the SBA Product Option 
-    // Type select is only used to capture an SBA variant and that all SBA variants use this 
-    // option type; however, neither is always true.  Instead the only real tell of a product 
-    // being tracked by SBA is for the the SBA data to be inspected.  Therefore this area is not
-    // the right place/method to evaluate that aspect and other action should be taken to prevent
-    // incorrectly using the below new code against non-SBA variants.
-//      	$products[$i]['attributes'] = array_diff( $products[$i]['attributes'], array($value) );
-      }
-    } 
-  }//end foreach [attributes]
+    }
+  } //end foreach [attributes]
   	
 	    //Clear variables for each loop
 		$flagStockCheck = null;   

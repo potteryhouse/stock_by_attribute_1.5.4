@@ -41,7 +41,7 @@ class products_with_attributes_stock extends base {
     $this->_i = $i;
     $this->_productI = $productI;
 
-    $this->_stock_info = zen_get_sba_stock_attribute_info(zen_get_prid($this->_productI['id']), $this->_productI['attributes']);
+    $this->_stock_info = zen_get_sba_stock_attribute_info(zen_get_prid($this->_productI['id']), $this->_productI['attributes']); // Sorted comma separated list of the attribute_id.
 
     // START "Stock by Attributes"
     $attributeList = null;
@@ -50,7 +50,7 @@ class products_with_attributes_stock extends base {
       foreach($this->_productI['attributes'] as $attributes){
         $attributeList[] = $attributes['value_id'];
       }
-      $customid = zen_get_customid($this->_productI['id'],$attributeList);
+      $customid = zen_get_customid($this->_productI['id'],$attributeList); // Expects that customid would be from a combination product, not individual attributes on a single product.  Should return an array if the values are individual or a single value if all attributes equal a single product.
       $productI['customid'] = $customid;
       $this->_productI['customid'] = $customid;
 //      $productI['model'] = (zen_not_null($customid) ? $customid : $productI['model']);

@@ -243,11 +243,11 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
     $html .= zen_draw_form('stock_update', FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK . '_ajax', 'save=1&amp;pid='.$ReturnedProductID.'&amp;page='.$_GET['page'], 'post');
     $html .= zen_image_submit('button_save.gif', IMAGE_SAVE) . ' Hint: To quickly edit click in the "Quantity in Stock" field.';
        $html .= '<br/>';
-        $html .= '
-                  <table id="mainProductTable"> 
-                  <tr>
-                    <th class="thProdId">'.PWA_PRODUCT_ID.'</th>
-                    <th class="thProdName">'.PWA_PRODUCT_NAME.'</th>';
+    $html .= '
+    <table id="mainProductTable"> 
+    <tr>
+      <th class="thProdId">'.PWA_PRODUCT_ID.'</th>
+      <th class="thProdName">'.PWA_PRODUCT_NAME.'</th>';
     
     if (STOCK_SHOW_IMAGE == 'true') {$html .= '<th class="thProdImage">'.PWA_PRODUCT_IMAGE.'</th>';}   
 
@@ -261,7 +261,7 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
 			    $html .= '<tr>'."\n";
 			    $html .= '<td colspan="7">'."\n";
 			    $html .= '<div class="productGroup">'."\n";
-			    $html .= '<table>'."\n";
+			    $html .= '<table>'. "\n";
 		        $html .= '<tr class="productRow">'."\n";
 		        $html .= '<td class="tdProdId">'.$products->fields['products_id'].'</td>';
 		        $html .= '<td class="tdProdName">'.$products->fields['products_name'].'</td>';
@@ -331,7 +331,6 @@ function displayFilteredRows($SearchBoxOnly = null, $NumberRecordsShown = null, 
                   $html .= '</td>'."\n";
                   $html .= '<td class="stockAttributesCellDelete">'."\n";
                   $html .= '<a href="'.zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, "action=delete&amp;products_id=".$products->fields['products_id'].'&amp;attributes='.$attribute_products->fields['stock_attributes'], 'NONSSL').'">'.PWA_DELETE_VARIANT.'</a>';
-                  /*$html .= '</div>';*/
                   $html .= '</td>'."\n";
                   $html .= '</tr>'."\n";
                  
@@ -441,7 +440,7 @@ function insertNewAttribQty($products_id = null, $productAttributeCombo = null, 
 		$quantity = 0;
 	}
 	
-	if( is_numeric($products_id) && isset($strAttributes) ){
+	if( is_numeric($products_id) && isset($strAttributes) && is_numeric($quantity) ){
  		$query = "insert into ". TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK ." (`products_id`, `product_attribute_combo`, `stock_attributes`, `quantity`, `customid`, `title`) 
  					values ($products_id, $productAttributeCombo, $strAttributes, $quantity, $customid, $skuTitle)
  							ON DUPLICATE KEY UPDATE 
@@ -709,16 +708,19 @@ function nullDataEntry($fieldtoNULL){
   	$products_id = zen_get_prid($products_id);
   
   	// check if there are attributes for this product
- 	$stock_has_attributes = $db->Execute('select products_attributes_id 
+ 	  $stock_has_attributes_query = 'select products_attributes_id 
   											from '.TABLE_PRODUCTS_ATTRIBUTES.' 
-  											where products_id = ' . (int)$products_id . '');
+  											where products_id = :products_id:';
+    $stock_has_attributes_query = $db->bindVars($stock_has_attributes_query, ':products_id:', $products_id, 'integer');
+    $stock_has_attributes = $db->Execute($stock_has_attributes_query);
 
   	if ( $stock_has_attributes->RecordCount() < 1 ) {
   		
   			//if no attributes return products_model
 			$no_attribute_stock_query = 'select products_model 
   										from '.TABLE_PRODUCTS.' 
-  										where products_id = '. (int)$products_id . ';';
+  										where products_id = :products_id:';
+      $no_attribute_stock_query = $db->bindVars($no_attribute_stock_query, ':products_id:', $products_id, 'integer');
   		$customid = $db->Execute($no_attribute_stock_query);
   		return $customid->fields['products_model'];
   	} 
@@ -748,7 +750,7 @@ function nullDataEntry($fieldtoNULL){
   					$attributes_new->MoveNext();
   				}
 
- 					$stock_attributes = implode(',',$stock_attributes);
+				$stock_attributes_comb = implode(',',$stock_attributes);
   			}
   			
   			//Get product model
@@ -759,11 +761,23 @@ function nullDataEntry($fieldtoNULL){
   			//Get custom id as products_model
   			$customid_query = 'select customid as products_model
 		  							from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' 
-		  							where products_id = '.(int)$products_id.' 
-		  							and stock_attributes in ("'.$stock_attributes.'");';  
+		  							where products_id = :products_id: 
+		  							and stock_attributes in ( ":stock_attributes:");'; 
+        $customid_query = $db->bindVars($customid_query, ':products_id:', $products_id, 'integer');
+        $customid_query = $db->bindVars($customid_query, ':stock_attributes:', $stock_attributes_comb, 'passthru');
+  		$customid = $db->Execute($customid_query); //moved to inside this loop as for some reason it has made
+        if (!$customid->RecordCount()){
+  			  $customid_query = 'select customid as products_model
+		  							from '.TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.' 
+		  							where products_id = :products_id: 
+		  							and stock_attributes = :stock_attributes:'; 
+          $customid_query = $db->bindVars($customid_query, ':products_id:', $products_id, 'integer');
+          $customid_query = $db->bindVars($customid_query, ':stock_attributes:', $stock_attributes, 'string');
+  		    $customid = $db->Execute($customid_query); //moved to inside this loop as for some reason it has made
+        }
   		}
   		
-  		$customid = $db->Execute($customid_query);
+//  		$customid = $db->Execute($customid_query);
   		if($customid->fields['products_model']){
   		
 	  		//Test to see if a custom ID exists
@@ -785,7 +799,8 @@ function nullDataEntry($fieldtoNULL){
   			//Get product model
   			$customid_model_query = 'select products_model
 						  					from '.TABLE_PRODUCTS.'
-						  					where products_id = '. (int)$products_id . ';';
+						  					where products_id = :products_id:';
+			$customid_model_query = $db->bindVars($customid_model_query, ':products_id:', $products_id, 'integer');								
   			$customid = $db->Execute($customid_model_query);
   			//return result for display
   			return $customid->fields['products_model'];

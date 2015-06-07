@@ -48,27 +48,6 @@
     }
   }
 
-  /* START STOCK BY ATTRIBUTES */ //This can be placed outside of the general.php file and should be...
-function return_attribute_combinations($arrMain, $intVars, $currentLoop = array(), $currentIntVar = 0) {
-  $arrNew = array();
-
-  for ($currentLoop[$currentIntVar] = 0; $currentLoop[$currentIntVar] < sizeof($arrMain[$currentIntVar]); $currentLoop[$currentIntVar]++) {
-    if ($intVars == $currentIntVar + 1) {
-      $arrNew2 = array();
-      for ($i = 0; $i<$intVars;$i++) {
-        $arrNew2[] = $arrMain[$i][$currentLoop[$i]];  // This is a place where an evaluation could be made to do something unique with a single attribute that is to be assigned to a sba variant as this assigment is for one of the attributes to be combined for one record. If the goal would be not to add anything having this one attribute, then could call continue 2 to escape this for loop and move on to the next outer for loop.  If just want to not add the one attribute to the combination then place the above assignment so that it is bypassed when not to be added. 
-      }
-      if (zen_not_null($arrNew2) && sizeof($arrNew2) > 0) { // This is a place where an evaluation could be made to do something unique with a sba variant as this assigment is one of all attributes combined for one record.  //Still something about this test doesn't seem quite right, but it's the concept that is important, as long as there is something to evaluate/assign that is not nothing, then do the assignment.
-        $arrNew[] = $arrNew2;
-      }
-    } else {
-      $arrNew = array_merge($arrNew, return_attribute_combinations($arrMain, $intVars, $currentLoop, $currentIntVar + 1));
-    }
-  }
-
-  return $arrNew;
-}
-  /* END STOCK BY ATTRIBUTES */
 
   function zen_output_string_protected($string) {
     return zen_output_string($string, false, true);
@@ -1520,10 +1499,6 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
                   where product_id = '" . (int)$product_id . "'");
 
-  /* START STOCK BY ATTRIBUTES */
-//    $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "
-//                  where products_id = '" . (int)$product_id . "'");
-  /* END STOCK BY ATTRIBUTES */
     zen_record_admin_activity('Deleted product ' . (int)$product_id . ' from database via admin console.', 'warning');
   }
 
@@ -1572,37 +1547,6 @@ while (!$chk_sale_categories_all->EOF) {
                   where order_id = '" . (int)$order_id . "' and release_flag = 'N'");
   } */
 
-  //This function should be moved to its own file location rather than general.php so that the changes made to this file can be minimized to simply adding notifiers...
-  function zen_get_sba_ids_from_attribute($products_attributes_id = array()){
-    global $db;
-    
-    if (!is_array($products_attributes_id)){
-      $products_attributes_id = array($products_attributes_id);
-    }
-    $products_stock_attributes = $db->Execute("select stock_id, stock_attributes from " . 
-                                              TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK);
-//    while (!$products_stock_attributes->EOF) {
-//      $products_stock_attributes_list[] = $products_stock_attributes->fields['stock_attributes'];
-//    }
-    $stock_id_list = array();
-    /* The below "search" is one reason that the original tables for SBA should be better refined
-     * and not use comma separated items in a field...
-     */
-    while (!$products_stock_attributes->EOF) {
-      //$stock_attrib_list = array();
-      $stock_attrib_list = explode(',', $products_stock_attributes->fields['stock_attributes']);
-
-      foreach($stock_attrib_list as $stock_attrib){
-        if (in_array($stock_attrib, $products_attributes_id)) {
-          $stock_id_list[] = $products_stock_attributes->fields['stock_id'];
-          continue;
-        }
-      }
-      
-      $products_stock_attributes->MoveNext();
-    }
-    return $stock_id_list;
-  }  
   
   function zen_remove_order($order_id, $restock = false) {
     /* START STOCK BY ATTRIBUTES */
@@ -1615,21 +1559,6 @@ while (!$chk_sale_categories_all->EOF) {
                              where orders_id = '" . (int)$order_id . "'");
 
       while (!$order->EOF) {
-        // START SBA //restored db //mc12345678 update the SBA quantities based on order delete.
-
-/*
- * Need to take the data collected above, (products_id to find the matching order record 
- * (attributes table that is left joined by the sba table and values not equal to null. 
- * Records that match are ones on which quantities can be affected.
- */
-
-/*        $db->Execute("update " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . "
-                      set quantity = quantity + " . $order->fields['products_quantity'] . "
-                      where products_id = '" . (int)$order->fields['products_id'] . "'
-                      and stock_attributes in (select stock_attribute from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK . " where orders_id = '" . (int)$order_id . "' and products_prid = '" . (int)$order->fields['products_prid'] . "')"
-                );*/
-        // End SBA modification.
-
         $db->Execute("update " . TABLE_PRODUCTS . "
                       set products_quantity = products_quantity + " . $order->fields['products_quantity'] . ", products_ordered = products_ordered - " . $order->fields['products_quantity'] . " where products_id = '" . (int)$order->fields['products_id'] . "'");
         $order->MoveNext();
@@ -1646,11 +1575,6 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                   where orders_id = '" . (int)$order_id . "'");
 
-/* START STOCK BY ATTRIBUTES 
-    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES_STOCK . "
-                  where orders_id = '" . (int)$order_id . "'");
- END STOCK BY ATTRIBUTES */
-    
     $db->Execute("delete from " . TABLE_ORDERS_STATUS_HISTORY . "
                   where orders_id = '" . (int)$order_id . "'");
 
@@ -2456,9 +2380,6 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     }
 
     $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$delete_product_id . "'");
-  /* START STOCK BY ATTRIBUTES 
-    $db->Execute("delete from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = '" . (int)$delete_product_id . "'");
-   END STOCK BY ATTRIBUTES */
 }
 
 

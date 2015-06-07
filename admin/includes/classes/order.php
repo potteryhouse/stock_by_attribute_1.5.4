@@ -168,7 +168,7 @@
             $this->products[$index]['attributes'][$subindex] = array('option' => $attributes->fields['products_options'],
                                                                      'value' => $attributes->fields['products_options_values'],
                                                                      'value_id' => $attributes->fields['products_options_values_id'],
-            														 'prefix' => $attributes->fields['price_prefix'],
+                                                                     'prefix' => $attributes->fields['price_prefix'],
                                                                      'price' => $attributes->fields['options_values_price'],
                                                                      'product_attribute_is_free' =>$attributes->fields['product_attribute_is_free']);
             // END "Stock by Attributes"

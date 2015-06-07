@@ -153,15 +153,15 @@ switch($action)
 			$hidden_form .= zen_draw_hidden_field('products_id',$products_id)."\n";
 			$hidden_form .= zen_draw_hidden_field('quantity',$quantity)."\n";
 			//These are used in the GET thus it must match the same name used in the $_GET[''] calls
-			$s_mack_noconfirm .= "products_id=" . $products_id . "&"; //s_mack:noconfirm
-			$s_mack_noconfirm .= "quantity=" . $quantity . "&"; //s_mack:noconfirm
-			$s_mack_noconfirm .= "customid=" . $customid . "&"; //s_mack:noconfirm
-			$s_mack_noconfirm .= "skuTitle=" . $skuTitle . "&"; //s_mack:noconfirm
+			$s_mack_noconfirm .= "products_id=" . $products_id . "&amp;"; //s_mack:noconfirm
+			$s_mack_noconfirm .= "quantity=" . $quantity . "&amp;"; //s_mack:noconfirm
+			$s_mack_noconfirm .= "customid=" . $customid . "&amp;"; //s_mack:noconfirm
+			$s_mack_noconfirm .= "skuTitle=" . $skuTitle . "&amp;"; //s_mack:noconfirm
 			
   		sort($attributes);
 			$stock_attributes = implode(',',$attributes);
 
-			$s_mack_noconfirm .='attributes=' . $stock_attributes . '&'; //kuroi: to pass string not array
+			$s_mack_noconfirm .='attributes=' . $stock_attributes . '&amp;'; //kuroi: to pass string not array
 
 			$query = 'select * 
 					  from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . ' 
@@ -173,14 +173,14 @@ switch($action)
 			{
 				$hidden_form .= zen_draw_hidden_field('add_edit','edit');
 				$hidden_form .= zen_draw_hidden_field('stock_id',$stock_check->fields['stock_id']);
-				$s_mack_noconfirm .="stock_id=" . $stock_check->fields['stock_id'] . "&"; //s_mack:noconfirm
-				$s_mack_noconfirm .="add_edit=edit&"; //s_mack:noconfirm
+				$s_mack_noconfirm .="stock_id=" . $stock_check->fields['stock_id'] . "&amp;"; //s_mack:noconfirm
+				$s_mack_noconfirm .="add_edit=edit&amp;"; //s_mack:noconfirm
 				$add_edit = 'edit';
 			}
 			else
 			{
 				$hidden_form .= zen_draw_hidden_field('add_edit','add')."\n";
-				$s_mack_noconfirm .="add_edit=add&"; //s_mack:noconfirm
+				$s_mack_noconfirm .="add_edit=add&amp;"; //s_mack:noconfirm
 			}
 
 		}

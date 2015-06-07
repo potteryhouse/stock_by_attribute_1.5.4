@@ -56,12 +56,10 @@
          $inSBA = new queryFactoryResult;
          $inSBA->EOF = true;
          ?>
-         <h3 id="attribsOptionsText"><?php echo TEXT_PRODUCT_OPTIONS; ?>
-         </h3>
-         <?php
-       } // END NON-SBA SPECIFIC: show please select unless all are readonly  
-       ?>
-       <?php
+         <h3 id="attribsOptionsText"><?php echo TEXT_PRODUCT_OPTIONS; ?>         </h3>
+<?php } // END NON-SBA SPECIFIC: show please select unless all are readonly ?>
+
+<?php
      } // End display info 
      ?>
      <?php
@@ -71,15 +69,13 @@
          <?php
          if ($options_comment[$I] != '' and $options_comment_position[$I] == '0') {
            ?>
-           <h3 class="attributesComments"><?php echo $options_comment[$I];
-      ?></h3>
+           <h3 class="attributesComments"><?php echo $options_comment[$I]; ?></h3>
                 <?php
          } // END h3_option_comment
          ?>
 
          <div class="wrapperAttribsOptions">
-              <h4 class="optionName back"><?php echo $options_name[$I]; ?>
-              </h4>
+              <h4 class="optionName back"><?php echo $options_name[$I]; ?></h4>
               <div class="back"><?php echo "\n" . $options_menu[$I]; ?></div>
               <br class="clearBoth" />
          </div>
@@ -90,8 +86,8 @@
                  $options_comment_position[$I] == '1') {
            ?>
            <div class="ProductInfoComments"><?php echo $options_comment[$I]; ?></div>
-         <?php 
-         } // END if Div_options_Comment    ?>
+<?php } // END if Div_options_Comment    
+?>
          <?php
        } // End FOR options_name 
        ?>

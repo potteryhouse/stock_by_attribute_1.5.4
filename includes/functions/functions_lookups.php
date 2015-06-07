@@ -167,7 +167,7 @@
     if ($products_id && (!is_array($attributes) && sizeof($attributes) <= 0)) {
       //For products without associated attributes, get product level stock quantity
       $stock_query = "select products_quantity 
-	                  from " . TABLE_PRODUCTS . " 
+                      from " . TABLE_PRODUCTS . " 
                       where products_id = :products_id:";
       $stock_query = $db->bindVars($stock_query, ':products_id:', $products_id, 'integer');
       $stock_values = $db->Execute($stock_query);

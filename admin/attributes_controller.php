@@ -794,13 +794,13 @@ if ($action == 'attributes_preview') {
       <tr>
         <td colspan="2"><table border="1" cellspacing="2" cellpadding="4" align="left">
           <tr>
-            <td colspan="8" class="main" align="center">
+            <!-- Start SBA --><td colspan="8" class="main" align="center"><!-- End SBA -->
               <?php echo TEXT_PRODUCTS_LISTING . TEXT_PRODUCTS_ID . $products_filter .  TEXT_PRODUCT_IN_CATEGORY_NAME . zen_get_category_name(zen_get_products_category_id($products_filter), (int)$_SESSION['languages_id']) . '<br />' . zen_get_products_name($products_filter); ?>
             </td>
           </tr>
           <tr>
             <td class="smallText" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>'; ?></td>
-            <td class="smallText" align="center">
+            <!-- Start SBA --><td class="smallText" align="center">
             <?php 
             $sba_query = 'select distinct products_id FROM ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . ' where products_id = :products_id:';
             $sba_query = $db->bindVars($sba_query, ':products_id:', $products_filter, 'integer');
@@ -813,7 +813,7 @@ if ($action == 'attributes_preview') {
               echo TEXT_NO_SBA_EDIT;
             }
             ?>
-            </td>
+            </td><!-- End SBA -->
             <td class="smallText" align="center">
               <?php
                 if ($zc_products->get_allow_add_to_cart($products_filter) == "Y") {
