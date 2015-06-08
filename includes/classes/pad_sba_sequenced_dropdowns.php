@@ -118,14 +118,30 @@ $o = 0;
         //  NEEDS TO BE DONE IN THAT CONDITION. 
       }
       // Draw first option dropdown with all values
+      // Need to consider if the option name is read only ('products_options_type' == PRODUCTS_OPTIONS_TYPE_READONLY ).  If it is, then simply display it and do not make it "selectable"
+      // May want something similar for display only attributes, where the information is displayed but not selectable (grayed out)
+      //   See the example for single attributes using the SBA dropdown list for consistent formatting.
+      //  Also could consider applying other option name choosing styles here, but need to modify the follow on selectors so that
+      //   it is clear what action(s) need to be taken to select the applicable product.  Ideally, this will be something modified
+      //   after other functionality is confirmed considering the above "issues".  Perhaps to do this, would want to incorporate things
+      //   into attributes.php file or other html drawing to minimize the additional logic and changes.  That said, if incorporated
+      //   into base logic, then users are more forced to use this method over alternative methods/have to incorporate all the ons and offs
+      //   for this method throughout.
+      //  May need to modify the array for the attributes in order to accomodate identification.
+      //  Need to add the display of other information such as the comment associated with an option name for display.
+      // Need to move "First select " and "Next select " into language defines.
       $out.='<tr><td align="right" class="main"><b>'.$attributes[0]['oname'].":</b></td><td class=\"main\">".zen_draw_pull_down_menu('id['.$attributes[0]['oid'].']',array_merge(array(array('id'=>0, 'text'=>'First select '.$attributes[0]['oname'])), $attributes[0]['ovals']),$attributes[0]['default'], "onchange=\"i".$attributes[0]['oid']."(this.form);\"")."</td></tr>\n";
 
       // Draw second to next to last option dropdowns - no values, with onchange
       for($o=1; $o<sizeof($attributes)-1; $o++) {
+        // Need to consider if the option name is read only.  If it is, then simply display it and do not make it "selectable"
+        //  May need to modify the array for the attributes in order to accomodate identification.
         $out.='<tr><td align="right" class="main"><b>'.$attributes[$o]['oname'].":</b></td><td class=\"main\">".zen_draw_pull_down_menu('id['.$attributes[$o]['oid'].']',array(array('id'=>0, 'text'=>'Next select '.$attributes[$o]['oname'])), '', "onchange=\"i".$attributes[$o]['oid']."(this.form);\"")."</td></tr>\n";
       } // end for $o       
 
       // Draw last option dropdown - no values, no onchange      
+      // Need to consider if the option name is read only.  If it is, then simply display it and do not make it "selectable"
+      //  May need to modify the array for the attributes in order to accomodate identification.
       $out.='<tr><td align="right" class="main"><b>'.$attributes[$o]['oname'].":</b></td><td class=\"main\">".zen_draw_pull_down_menu('id['.$attributes[$o]['oid'].']',array(array('id'=>0, 'text'=>'Next select '.$attributes[$o]['oname'])), '', "onchange=\"i".$attributes[$o]['oid']."(this.form);\"")."</td></tr>\n";
       
 //      $out.=$this->_draw_out_of_stock_message_js($attributes);
@@ -167,6 +183,10 @@ $o = 0;
       // {optval1:{optval2:{optval3:1,optval3:1}, optval2:{optval3:1}}, optval1:{optval2:{optval3:1}}};
       $out.="  var stk=".$this->_draw_js_stock_array($combinations).";\n";
       $out.="  var stk2=".$this->_draw_js_stock_array($combinations2).";\n";
+      // Going to want to add a third stk tracking quantity to account for the availability of entered variants.
+      //   Ie. if a variant doesn't exist in the SBA table, then values associated with the sub-selection should not be displayed.
+      //      or if displayed should be selectable to display.
+      
       // js arrays of possible option values/text for dropdowns
       // do all but the first attribute (its dropdown never changes)
       for ($curattr=1; $curattr<sizeof($attributes); $curattr++) {
@@ -254,6 +274,7 @@ $o = 0;
         $out.="        stkmsg(frm);\n";
 		//}
         $out.="        if (displayshown != true) {\n";
+        // Need to move this alert statement into a language define.
         $out.="          alert('All selections of the attributes below this one are Out of Stock. Please select a different option.');\n";
 //        $out.="          stkmsg(frm);\n";
         $out.="          displayshown=true;\n";
@@ -267,6 +288,7 @@ $o = 0;
           }
           $out.="    if (!chkstk(frm)" . ( PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK == 'False' ? " && false" : "" ) .") {\n";
 //          $out.="      stkmsg(frm);\n";
+          // Need to move the below alert into a language define.
       	  $out.="      alert('Your choice is out of stock.');\n";
           $out.="    } \n"; //elseif (!chkstk(frm)) {\n";
 /*		  $out.="    }\n";*/
