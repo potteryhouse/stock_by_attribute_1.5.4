@@ -16,12 +16,17 @@ include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/products_with_attributes_st
 $stock = new products_with_attributes_stock;
 
     if( $_GET['save'] == 1 ){
+		if (isset($_GET['page']) && $_GET['page']) {
+		  $parameters = 'page=' . $_GET['page'];
+		} else {
+		  $parameters = '';
+		}
         $x = $stock->saveAttrib();//This does not seem to have a purpose, need to look closer.
 		if( is_numeric($_GET['pid']) && $_GET['pid'] > 0 ){
-			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_GET['pid'], 'NONSSL'));
+			zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'updateReturnedPID=' . $_GET['pid'] . '&amp;' . $parameters, 'NONSSL'));
 		}
 		else{
-			 zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, '', 'NONSSL'));
+			 zen_redirect(zen_href_link(FILENAME_PRODUCTS_WITH_ATTRIBUTES_STOCK, $parameters, 'NONSSL'));
 		}
     } else {
         $x = $stock->displayFilteredRows();

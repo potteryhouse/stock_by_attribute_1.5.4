@@ -1216,7 +1216,7 @@ function updateProductAttributeCombo(){
 
 //Install Optional SQL 
 // Default version.
-// This will only add the product attributes that are NOT read-only AND are NOT the new "SBA" selections
+// This will only add the product attributes that are NOT display-only AND are NOT the new "SBA" selections
 function installOptionalSQL1(){
 	/*		 		
 	INSERT INTO products_with_attributes_stock (products_id, stock_attributes, quantity) 
@@ -1341,7 +1341,7 @@ function installOptionalSQL2(){
 }
 	
 //Install Optional SQL
-//This will add only the read-only product attributes
+//This will add only the display-only product attributes
 function installOptionalSQL3(){
 	/*
 	INSERT INTO products_with_attributes_stock (products_id, stock_attributes, quantity)
@@ -1400,7 +1400,7 @@ function installOptionalSQL3(){
 }
 
 //Install Optional SQL
-// This will only add the product attributes that are NOT read-only
+// This will only add the product attributes that are NOT display-only
 function installOptionalSQL4(){
 	/*
 	INSERT INTO products_with_attributes_stock (products_id, stock_attributes, quantity)
@@ -1461,7 +1461,6 @@ function installOptionalSQL4(){
 // This will remove readonly product attributes from applicable products 
 function installOptionalSQL5(){
 	/*
-	INSERT INTO products_with_attributes_stock (products_id, stock_attributes, quantity)
 	
 	SELECT p.products_id, pa.products_attributes_id, p.products_quantity
 	FROM products p
@@ -1472,8 +1471,6 @@ function installOptionalSQL5(){
 		AND pa.attributes_display_only = 1
 	ORDER BY p.products_id, pa.products_attributes_id
 	
-	ON DUPLICATE KEY UPDATE
-	`products_id` = products_with_attributes_stock.products_id;
 	*/
 	
 	global $db, $resultMmessage, $failed;
@@ -1484,42 +1481,18 @@ function installOptionalSQL5(){
 
 	//check if the required table is present
 	if(checkSBAtable(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, null, false)) {
-		
-		$sql = "INSERT INTO ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." (products_id, stock_attributes, quantity)
-
-		SELECT p.products_id, pa.products_attributes_id, $insertQtyValue
+		$sql = 	"SELECT p.products_id, pa.products_attributes_id
 
 		FROM ".TABLE_PRODUCTS." p
 				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
 				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
+        LEFT JOIN ".TABLE_PRODUCTS_OPTIONS." po ON (po.products_options_id = pa.options_id)
 			
 			WHERE pa.products_attributes_id is not null
 				AND pa.options_values_id > 0
-				AND pa.attributes_display_only = 1
-
-			ORDER BY p.products_id, pa.products_attributes_id
-				
-			ON DUPLICATE KEY UPDATE
-				`products_id` = ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".products_id;";
-
-		$sql = /*"INSERT INTO ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK." (products_id, stock_attributes, quantity) "*/
-
-		"SELECT p.products_id, pa.products_attributes_id
-
-		FROM ".TABLE_PRODUCTS." p
-				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
-				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
-			
-			WHERE pa.products_attributes_id is not null
-				AND pa.options_values_id > 0
-				AND pa.attributes_display_only = 1
+				AND po.products_options_type = 5
 
 			ORDER BY p.products_id, pa.products_attributes_id";
-/*				
-			"ON DUPLICATE KEY UPDATE
-				`products_id` = ".TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK.".products_id;";*/
-    
-    
     
     $prods_readonly_result = $db->Execute($sql);
   
@@ -1529,57 +1502,6 @@ function installOptionalSQL5(){
   
     while(!$prods_readonly_result->EOF) {
       $attribute_stock_query = "select pwas.stock_id, pwas.stock_attributes from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pwas where pwas.products_id = :products_id: AND pwas.stock_attributes like (:products_attributes_id:) OR pwas.stock_attributes like CONCAT(:products_attributes_id:,',%') or pwas.stock_attributes like CONCAT('%,',:products_attributes_id:,',%') or pwas.stock_attributes like CONCAT('%,',:products_attributes_id:)";
-/*      $attribute_stock_query = "select pwas.stock_id, pwas.stock_attributes from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pwas where pwas.products_id IN (SELECT p.products_id
-
-		FROM ".TABLE_PRODUCTS." p
-				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
-				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
-			
-			WHERE pa.products_attributes_id is not null
-				AND pa.options_values_id > 0
-				AND pa.attributes_display_only = 1
-
-			ORDER BY p.products_id, pa.products_attributes_id) AND pwas.stock_attributes like (SELECT pa.products_attributes_id
-
-		FROM ".TABLE_PRODUCTS." p
-				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
-				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
-			
-			WHERE pa.products_attributes_id is not null
-				AND pa.options_values_id > 0
-				AND pa.attributes_display_only = 1
-
-			ORDER BY p.products_id, pa.products_attributes_id) OR pwas.stock_attributes like CONCAT(SELECT pa.products_attributes_id
-
-		FROM ".TABLE_PRODUCTS." p
-				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
-				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
-			
-			WHERE pa.products_attributes_id is not null
-				AND pa.options_values_id > 0
-				AND pa.attributes_display_only = 1
-
-			ORDER BY p.products_id, pa.products_attributes_id,',%') or pwas.stock_attributes like CONCAT('%,',SELECT pa.products_attributes_id
-
-		FROM ".TABLE_PRODUCTS." p
-				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
-				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
-			
-			WHERE pa.products_attributes_id is not null
-				AND pa.options_values_id > 0
-				AND pa.attributes_display_only = 1
-
-			ORDER BY p.products_id, pa.products_attributes_id,',%') or pwas.stock_attributes like CONCAT('%,',SELECT pa.products_attributes_id
-
-		FROM ".TABLE_PRODUCTS." p
-				LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON (p.products_id = pa.products_id)
-				LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pv ON (pa.options_values_id = pv.products_options_values_id)
-			
-			WHERE pa.products_attributes_id is not null
-				AND pa.options_values_id > 0
-				AND pa.attributes_display_only = 1
-
-			ORDER BY p.products_id, pa.products_attributes_id)";*/
 
       $attribute_stock_query = $db->bindVars($attribute_stock_query, ':products_id:', $prods_readonly_result->fields['products_id'], 'integer');
       $attribute_stock_query = $db->bindVars($attribute_stock_query, ':products_attributes_id:', $prods_readonly_result->fields['products_attributes_id'], 'integer');
@@ -1590,17 +1512,24 @@ function installOptionalSQL5(){
         $attributes_id = explode(',', $attribute_stock->fields['stock_attributes']);
         foreach ($attributes_id as $loc => $sing_attribute) {
           if ($sing_attribute == $prods_readonly_result->fields['products_attributes_id']) {
-            $_SESSION['attribs_id_b4'] = $attributes_id;
             unset($attributes_id[$loc]);
-            $_SESSION['attribs_id_aft'] = $attributes_id;
           }
         }
         if (sizeof($attributes_id)) {
-          //Update record with new imploded array.
-          $attrib_group = implode(',',$attributes_id);
-          $sql = "UPDATE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " SET stock_attributes = :stock_attributes: where stock_id = :stock_id:";
+
+          $sql = "SELECT pwas.stock_id FROM " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pwas where products_id = :products_id: and stock_attributes = :stock_attributes:";
           $sql = $db->bindVars($sql, ':stock_attributes:', implode(',',$attributes_id), 'string');
+          $sql = $db->bindVars($sql, ':products_id:', $prods_readonly_result->fields['products_id'], 'integer');
+          $sql_result = $db->Execute($sql);
+
+          if ($sql_result->RecordCount()) {
+            $sql = "DELETE FROM " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " WHERE stock_id = :stock_id: and stock_attributes = :stock_attributes:";
+          } else {
+            $sql = "UPDATE " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " SET stock_attributes = :stock_attributes: where stock_id = :stock_id:";
+          }
+
           $sql = $db->bindVars($sql, ':stock_id:', $attribute_stock->fields['stock_id'], 'integer');
+          $sql = $db->bindVars($sql, ':stock_attributes:', implode(',',$attributes_id), 'string');
 
           $db->Execute($sql);
         } else {
@@ -1624,7 +1553,7 @@ function installOptionalSQL5(){
 		array_push($resultMmessage, 'Optional SQL file complete. ' . $msg);
 	}
 	else{
-		array_push($resultMmessage, 'Optional SQL file result: Did NOT run, table does not exit.');
+		array_push($resultMmessage, 'Optional SQL file result: Did NOT run, table does not exist.');
 		$failed = true;
 		}
 		return;
@@ -2297,10 +2226,10 @@ echo '<div id="" style="background-color: green; padding: 2px 10px;"></div>
 	 		<option value="removeAll">Remove All from DB</option>
 			
 			<optgroup label="Optional SQL Scripts">
-	 		<option value="runOptionalSQL1" title="Only add the product attributes that are NOT read-only AND are NOT the new SBA selections">Default SQL</option>
+	 		<option value="runOptionalSQL1" title="Only add the product attributes that are NOT display-only AND are NOT the new SBA selections">Default SQL</option>
 			<option value="runOptionalSQL2" title="Add all the products attributes">Add all Product Attributes</option>
-			<option value="runOptionalSQL3" title="Add only the read-only product attributes">Add read-only product attributes</option>
-			<option value="runOptionalSQL4" title="Only add the product attributes that are NOT read-only">Add product attributes that are NOT read-only</option>
+			<option value="runOptionalSQL3" title="Add only the display-only product attributes">Add display-only product attributes</option>
+			<option value="runOptionalSQL4" title="Only add the product attributes that are NOT display-only">Add product attributes that are NOT display-only</option>
 			<option value="runOptionalSQL5" title="Remove the product attributes that are ONLY read-only">Remove product attributes that are ONLY read-only</option>
 			<option value="updatePASfieldPAC" title="Update Unique Combo field">Update Unique Combo field</option>
 			<option value="truncatePAStable" title="WARNING: This will COMPLETLY EMPTY the Product with Attribute Stock Table!">Remove ALL entries from the PAS Table</option>
@@ -2361,7 +2290,7 @@ echo '<div id="" style="background-color: green; padding: 2px 10px;"></div>
 	}
 	elseif($action == 'runOptionalSQL1'){
 		//Default version used in script.
-		//This will only add the product attributes that are NOT read-only AND are NOT the new "SBA" selections
+		//This will only add the product attributes that are NOT display-only AND are NOT the new "SBA" selections
 		installOptionalSQL1();
 		echo showScriptResult('Optional SQL 1');//show script result
 	}
@@ -2371,12 +2300,12 @@ echo '<div id="" style="background-color: green; padding: 2px 10px;"></div>
 		echo showScriptResult('Optional SQL 2');//show script result
 	}
 	elseif($action == 'runOptionalSQL3'){
-		//This will add only the read-only product attributes
+		//This will add only the display-only product attributes
 		installOptionalSQL3();
 		echo showScriptResult('Optional SQL 3');//show script result
 	}
 	elseif($action == 'runOptionalSQL4'){
-		//This will only add the product attributes that are NOT read-only
+		//This will only add the product attributes that are NOT display-only
 		installOptionalSQL4();
 		echo showScriptResult('Optional SQL 4');//show script result
 	}
