@@ -87,14 +87,6 @@
         
         $out.="<tr>\n";
         $out.='  <td align="right" class="main"><b>'.$combname."</b></td>\n  <td class=\"main\">";
-        for ($i = 0; $i<sizeof($combinations); $i++) {
-		  if (isset($_GET['products_id']) && $_SESSION['cart']->contents[$_GET['products_id']]) {
-		      if ( $combinations[$i]['comb'] == $_SESSION['cart']->contents[$_GET['products_id']]['attributes']) {
-                $selected_combination = $i;
-			  }
-		  }
-		}
-		  
         $out.=zen_draw_pull_down_menu('attrcomb', $combinations, $combinations[$selected_combination]['id']);
         $out.="</td>\n";
         $out.="</tr>\n";

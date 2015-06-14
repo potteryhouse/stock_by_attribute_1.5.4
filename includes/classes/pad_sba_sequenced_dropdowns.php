@@ -202,6 +202,13 @@ $o = 0;
       // js functions to set next dropdown options when a dropdown selection is made
       // do all but last attribute (nothing needs to happen when it changes except additional validation action to improve the customer experience)
       for ($curattr=0; $curattr<sizeof($attributes); $curattr++) {
+        for ($nextattr = $curattr+1; $nextattr < sizeof($attributes); $nextattr++) {
+          if ($attributes[$nextattr]['otype'] != PRODUCTS_OPTIONS_TYPE_READONLY) {
+            
+            break 1;
+          }
+        }
+        
         $attr=$attributes[$curattr];
         $out.="  function i".$attr['oid']."(frm) {\n";
         if ($curattr < sizeof($attributes)-1) {
@@ -234,7 +241,7 @@ $o = 0;
           $out.=$outArray;
           $out.="[opt] != \"undefined\") {\n";
           //  Add the product to the next selectable list item as it is in stock.
-        $out.="          frm['id[".$attributes[$curattr+1]['oid']."]'].options[frm['id[".$attributes[$curattr+1]['oid']."]'].length]=new Option(txt".$attributes[$curattr+1]['oid']."[opt]";
+        $out.="          frm['id[".$attributes[$nextattr]['oid']."]'].options[frm['id[".$attributes[$nextattr]['oid']."]'].length]=new Option(txt".$attributes[$nextattr]['oid']."[opt]";
           if ($curattr==sizeof($attributes)-2) {
             if (STOCK_SHOW_ATTRIB_LEVEL_STOCK == 'true') {
               $out.=" + '" . PWA_STOCK_QTY . "' + stk2";
@@ -246,13 +253,13 @@ $o = 0;
         $out.="        } else {\n";
           if (PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK == 'True') {
           //  Add the product to the next selectable list item and identify its out-of-stock status as controlled by the admin panel.  
-        $out.="          frm['id[".$attributes[$curattr+1]['oid']."]'].options[frm['id[".$attributes[$curattr+1]['oid']."]'].length]=new Option(";
+        $out.="          frm['id[".$attributes[$nextattr]['oid']."]'].options[frm['id[".$attributes[$nextattr]['oid']."]'].length]=new Option(";
             if (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'None') {
-              $out.="txt".$attributes[$curattr+1]['oid']."[opt]"; 
+              $out.="txt".$attributes[$nextattr]['oid']."[opt]"; 
             } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Left') {
-              $out.="'".PWA_OUT_OF_STOCK ."' + txt".$attributes[$curattr+1]['oid']."[opt]"; 
+              $out.="'".PWA_OUT_OF_STOCK ."' + txt".$attributes[$nextattr]['oid']."[opt]"; 
             } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Right') {
-              $out.="txt".$attributes[$curattr+1]['oid']."[opt] + '".PWA_OUT_OF_STOCK . "'";          
+              $out.="txt".$attributes[$nextattr]['oid']."[opt] + '".PWA_OUT_OF_STOCK . "'";          
             }
             $out.=",opt);\n";
           }
@@ -261,13 +268,13 @@ $o = 0;
         $out.="      } else {\n";
           if (PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK == 'True') {
           //  Add the product to the next selectable list item and identify its out-of-stock status as controlled by the admin panel.  
-        $out.="        frm['id[".$attributes[$curattr+1]['oid']."]'].options[frm['id[".$attributes[$curattr+1]['oid']."]'].length]=new Option(";
+        $out.="        frm['id[".$attributes[$nextattr]['oid']."]'].options[frm['id[".$attributes[$nextattr]['oid']."]'].length]=new Option(";
             if (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'None') {
-              $out.="txt".$attributes[$curattr+1]['oid']."[opt]"; 
+              $out.="txt".$attributes[$nextattr]['oid']."[opt]"; 
             } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Left') {
-              $out.="'".PWA_OUT_OF_STOCK ."' + txt".$attributes[$curattr+1]['oid']."[opt]"; 
+              $out.="'".PWA_OUT_OF_STOCK ."' + txt".$attributes[$nextattr]['oid']."[opt]"; 
             } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Right') {
-              $out.="txt".$attributes[$curattr+1]['oid']."[opt] + '".PWA_OUT_OF_STOCK . "'";
+              $out.="txt".$attributes[$nextattr]['oid']."[opt] + '".PWA_OUT_OF_STOCK . "'";
             }
             $out.=",opt);\n";
         //if ($this->out_of_stock_msgline == 'True') {

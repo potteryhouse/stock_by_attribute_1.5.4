@@ -23,10 +23,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
     if ( in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array())) or $_POST['cart_quantity'][$i]==0) {
       $_SESSION['cart']->remove($_POST['products_id'][$i]);
     } else {
+      if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        /* Breakdown the attributes into individual attributes to then be able to 
+         * feed them into the applicable section(s).
+         * 
+         */
+      }
       $add_max = zen_get_products_quantity_order_max($_POST['products_id'][$i]); // maximum allowed
       $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK .  ' where products_id = :products_id:';
       $query = $db->bindVars($query, ':products_id:', zen_get_prid($_POST['products_id'][$i]), 'integer');
       $stock_id = $db->Execute($query, false, false, 0, true);
+
+      if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        /* Breakdown the attributes into individual attributes to then be able to 
+         * feed them into the applicable section(s).
+         * 
+         */
+      }
       $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : null;
       if ($stock_id->RecordCount()) {
         $productIsSBA[$i] = true;
@@ -34,22 +47,52 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
         $productIsSBA[$i] = false;
       }
       if (!$productIsSBA[$i]) {
+        if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        /* Breakdown the attributes into individual attributes to then be able to 
+         * feed them into the applicable section(s).
+         * 
+         */
+        }
         $cart_qty = $_SESSION['cart']->in_cart_mixed($_POST['products_id'][$i]); // total currently in cart
       } else {
-// Mine        $cart_qty = $_SESSION['cart']->get_quantity($product_id);
+        if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+        }
         $cart_qty = $_SESSION['cart']->in_cart_mixed($_POST['products_id'][$i]);
       }
       if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' cart_qty: ' . $cart_qty . ' <br>', 'caution');
       $new_qty = $_POST['cart_quantity'][$i]; // new quantity
       $current_qty = $_SESSION['cart']->get_quantity($_POST['products_id'][$i]); // how many currently in cart for attribute
+        if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+        }
+// how many currently in cart for attribute
       $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
 
+        if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+        }
       $new_qty = $_SESSION['cart']->adjust_quantity($new_qty, $_POST['products_id'][$i], 'shopping_cart');
 // bof: adjust new quantity to be same as current in stock
 // Mine          $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i]);
 //          if (!$productIsSBA[$i]) {
 //            $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i]);
 //          } else {
+        if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+        }
           $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i], $attributes);
 //          }
 //          $_SESSION['qty_chk_current_qty'] = $chk_current_qty;
@@ -58,6 +101,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
             $messageStack->add_session('shopping_cart', ($_SESSION['cart']->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
         }
 
+        if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+        }
       $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
 
 // eof: adjust new quantity to be same as current in stock
@@ -97,6 +146,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
         default:
           $adjust_max= 'false';
         }
+        if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+        }
         $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
         $_SESSION['cart']->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
       } else {
@@ -132,6 +187,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
     $the_list = '';
     $adjust_max= 'false';
     if (isset($_POST['id'])) {
+      if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+      }
       foreach ($_POST['id'] as $key => $value) {
         $check = zen_get_attributes_valid($_POST['products_id'], $key, $value);
         if ($check == false) {
@@ -145,7 +206,22 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
       $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity']), 'caution');
       $_POST['cart_quantity'] = 0;
     }
-
+    $attr_list = array();
+    $attr_dash = array();
+    $attr_id = array();
+    $attr_val = array();
+    if(PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2')) {
+	  /*single dropdown as multiple*/
+	  $attr_list = explode(',',$_POST['attrcomb']);
+      foreach ($attr_list as $attr_item) {
+        list($attr_id, $attr_val) = explode('-',$attr_item);
+		$_POST['id'][$attr_id] = $attr_val;
+	  }
+          /* Breakdown the attributes into individual attributes to then be able to 
+           * feed them into the applicable section(s).
+           * 
+           */
+    }
     $attributes = (isset($_POST['id']) && zen_not_null($_POST['id'])  ? $_POST['id']  : null );
     $product_id = zen_get_uprid($_POST['products_id'], $attributes);
 

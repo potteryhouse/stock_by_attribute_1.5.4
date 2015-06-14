@@ -312,7 +312,7 @@ $this->products_original_price = $tax_class_array->fields['products_price']; /* 
         $stocked_where="and popt.products_options_track_stock = 0";
       }
       
-      $products_options_name_query = "select distinct popt.products_options_id, popt.products_options_name, popt.products_options_track_stock, popt.products_options_images_style from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id = :products_id: and popt.products_options_id = patrib.options_id and popt.language_id = :languages_id: :stocked_where: order by popt.products_options_sort_order";
+      $products_options_name_query = "select distinct popt.products_options_id, popt.products_options_name, popt.products_options_track_stock, popt.products_options_images_style, popt.products_options_type from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id = :products_id: and popt.products_options_id = patrib.options_id and popt.language_id = :languages_id: :stocked_where: order by popt.products_options_sort_order";
 
       $products_options_name_query = $db->bindVars($products_options_name_query, ':products_id:', $this->products_id, 'integer');
       $products_options_name_query = $db->bindVars($products_options_name_query, ':languages_id:', $_SESSION['languages_id'], 'integer');
@@ -379,6 +379,7 @@ $this->products_original_price = $tax_class_array->fields['products_price']; /* 
                             'oname'=>$products_options_name->fields['products_options_name'],
 							'oimgstyle'=>$products_options_name->fields['products_options_images_style'], // rcloke
                             'ovals'=>$products_options_array,
+                            'otype'=>$products_options_name->fields['products_options_type'],
                             'default'=>$selected);
         $products_options_name->MoveNext();
       }
