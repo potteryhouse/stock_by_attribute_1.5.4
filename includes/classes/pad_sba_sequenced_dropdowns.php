@@ -264,7 +264,9 @@ $o = 0;
             $out.=",opt);\n";
           }
         $out.="        }\n";
-        $out.="        stkmsg(frm);\n";
+          if ($this->out_of_stock_msgline == 'True') {
+          	$out.="        stkmsg(frm);\n";
+          }
         $out.="      } else {\n";
           if (PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK == 'True') {
           //  Add the product to the next selectable list item and identify its out-of-stock status as controlled by the admin panel.  
@@ -277,9 +279,9 @@ $o = 0;
               $out.="txt".$attributes[$nextattr]['oid']."[opt] + '".PWA_OUT_OF_STOCK . "'";
             }
             $out.=",opt);\n";
-        //if ($this->out_of_stock_msgline == 'True') {
+        if ($this->out_of_stock_msgline == 'True') {
         $out.="        stkmsg(frm);\n";
-		//}
+		}
         $out.="        if (displayshown != true) {\n";
         // Need to move this alert statement into a language define.
         $out.="          alert('All selections of the attributes below this one are Out of Stock. Please select a different option.');\n";
