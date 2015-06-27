@@ -186,7 +186,7 @@ function cartProductCount($products_id){
 			$customid_model_query = $db->bindVars($customid_model_query, ':products_id:', $products_id, 'integer');								
   			$customid = $db->Execute($customid_model_query);
   			//return result for display
-        return $customid->fields['products_model'];
+            return $customid->fields['products_model'];
   		}
   		return;//nothing to return, should never reach this return
   	}
