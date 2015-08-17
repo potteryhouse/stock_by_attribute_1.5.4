@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_with_attributes_stock.php  $
  *
- * Updated for Stock by Attributes SBA 1.5.4 mc12345678 15-08-16
+ * Updated for Stock by Attributes SBA 1.5.4 mc12345678 15-08-17
  */
 $SBAversion = 'Version 1.5.4';
 //add required referenced files
@@ -468,8 +468,6 @@ switch ($action) {
             $t[$num_elem][] = $val;
             $num_elem++;
           }
-		  unset($key);
-		  unset($val);
           $name[] = $sorter['stock_id'];
         }
 		unset($sorter);
