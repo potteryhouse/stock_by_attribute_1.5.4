@@ -177,5 +177,5 @@
       return $out;
     }
 
-  }
+  } // end pad_single_dropdown
 ?>

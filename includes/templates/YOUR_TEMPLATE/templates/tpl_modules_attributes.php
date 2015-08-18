@@ -11,12 +11,15 @@
  * @version $Id: tpl_modules_attributes.php 3208 2006-03-19 16:48:57Z birdbrain $
  * Modified to support products with attributes that are not tracked by SBA.
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4 : mc12345678 15-08-17
  */
 ?>
 <div id="productAttributes">
      <?php
     if (defined('TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK') && PRODINFO_ATTRIBUTE_DYNAMIC_STATUS != '0') {
+      if (!defined('SBA_ZC_DEFAULT')) {
+        define('SBA_ZC_DEFAULT','true'); // sets to use the ZC method of HTML tags around attributes.
+      }
       $inSBA_query = "select products_id from " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " where products_id = :products_id:";
       $inSBA_query = $db->bindVars($inSBA_query, ':products_id:', $_GET['products_id'], 'integer');
 

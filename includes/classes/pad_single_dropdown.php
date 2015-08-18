@@ -71,6 +71,7 @@
     function _draw_stocked_attributes() {
       global $languages_id;
       
+      $z = array();
       $out='';
       
       $attributes = $this->_build_attributes_array(true, false);
@@ -87,14 +88,17 @@
         
         $out.="<tr>\n";
         $out.='  <td align="right" class="main"><b>'.$combname."</b></td>\n  <td class=\"main\">";
+        $z['comb'] = false;
+        $z['text'] = 'Please select from below';
+        $z['id'] = '0' ;
+        array_unshift($combinations, $z);
         for ($i = 0; $i<sizeof($combinations); $i++) {
-		  if (isset($_GET['products_id']) && $_SESSION['cart']->contents[$_GET['products_id']]) {
-		      if ( $combinations[$i]['comb'] == $_SESSION['cart']->contents[$_GET['products_id']]['attributes']) {
-                $selected_combination = $i;
-			  }
-		  }
-		}
-		  
+          if (isset($_GET['products_id']) && $_SESSION['cart']->contents[$_GET['products_id']]) {
+            if ( $combinations[$i]['comb'] == $_SESSION['cart']->contents[$_GET['products_id']]['attributes']) {
+                    $selected_combination = $i;
+            }
+          }
+        }
         $out.=zen_draw_pull_down_menu('attrcomb', $combinations, $combinations[$selected_combination]['id']);
         $out.="</td>\n";
         $out.="</tr>\n";

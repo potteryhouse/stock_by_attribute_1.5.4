@@ -1,5 +1,4 @@
 <?php
-
 /**
  * attributes module
  *
@@ -12,7 +11,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4 : mc12345678 15-08-17
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -25,7 +24,7 @@ $show_attributes_qty_prices_description = 'false';
 //gets the number of associated attributes
 $sql = "select count(*) as total
           from " . TABLE_PRODUCTS_OPTIONS . " po 
-			left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON (po.products_options_id = pa.options_id)
+      left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON (po.products_options_id = pa.options_id)
           where    pa.products_id='" . (int)$_GET['products_id'] . "'
             and      po.language_id = '" . (int)$_SESSION['languages_id'] . "'" .
             " limit 1";
@@ -84,7 +83,7 @@ $products_options_names_count = $products_options_names->RecordCount();
      */
 
     /* Original query
-      $sql = "select	pov.products_options_values_id,
+      $sql = "select  pov.products_options_values_id,
       pov.products_options_values_name,
       pa.*, p.products_quantity
 
@@ -98,7 +97,7 @@ $products_options_names_count = $products_options_names->RecordCount();
       $order_by;
      */
     /*
-      $sql = "select	pov.products_options_values_id,
+      $sql = "select  pov.products_options_values_id,
       pov.products_options_values_name,
       pa.*, p.products_quantity, pas.stock_id as pasid, pas.quantity as pasqty, pas.customid
 
@@ -114,17 +113,17 @@ $products_options_names_count = $products_options_names->RecordCount();
       and   pov.language_id = '" . (int)$_SESSION['languages_id'] . "' " .
       $order_by;
      */
-    $sql = "select distinct	pov.products_options_values_id,
-			                    pov.products_options_values_name,
-			                    pa.*, p.products_quantity, 
-                				" . ($products_options_names_count <= 1 ? " pas.stock_id as pasid, pas.quantity as pasqty, pas.sort,  pas.customid, pas.title, pas.product_attribute_combo, pas.stock_attributes, " : "") . " pas.products_id 
+    $sql = "select distinct  pov.products_options_values_id,
+                          pov.products_options_values_name,
+                          pa.*, p.products_quantity, 
+                        " . ($products_options_names_count <= 1 ? " pas.stock_id as pasid, pas.quantity as pasqty, pas.sort,  pas.customid, pas.title, pas.product_attribute_combo, pas.stock_attributes, " : "") . " pas.products_id 
 
-		              from      " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-		              left join " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov on (pa.options_values_id = pov.products_options_values_id)
-		              left join " . TABLE_PRODUCTS . " p on (pa.products_id = p.products_id)
+                  from      " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                  left join " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov on (pa.options_values_id = pov.products_options_values_id)
+                  left join " . TABLE_PRODUCTS . " p on (pa.products_id = p.products_id)
                 
-		              left join " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pas on 
-		              (p.products_id = pas.products_id and FIND_IN_SET(pa.products_attributes_id, pas.stock_attributes) > 0 )
+                  left join " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK . " pas on 
+                  (p.products_id = pas.products_id and FIND_IN_SET(pa.products_attributes_id, pas.stock_attributes) > 0 )
               where     pa.products_id = '" . (int)$_GET['products_id'] . "'
               and       pa.options_id = '" . (int)$products_options_names->fields['products_options_id'] . "'
               and       pov.language_id = '" . (int)$_SESSION['languages_id'] . "' " .
@@ -154,10 +153,10 @@ $products_options_names_count = $products_options_names->RecordCount();
       // START "Stock by Attributes"  
       //used to find if an attribute is read-only
       $sqlRO = "select pa.attributes_display_only
-              			from " . TABLE_PRODUCTS_OPTIONS . " po
-              			left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa on (pa.options_id = po.products_options_id)
-              			where pa.products_id='" . (int)$_GET['products_id'] . "'
-               			and pa.products_attributes_id = '" . (int)$products_options->fields["products_attributes_id"] . "' ";
+                    from " . TABLE_PRODUCTS_OPTIONS . " po
+                    left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa on (pa.options_id = po.products_options_id)
+                    where pa.products_id='" . (int)$_GET['products_id'] . "'
+                     and pa.products_attributes_id = '" . (int)$products_options->fields["products_attributes_id"] . "' ";
       $products_options_READONLY = $db->Execute($sqlRO);
 
       //echo 'ID: ' . $products_options->fields["products_attributes_id"] . ' Stock ID: ' . $products_options->fields['pasid'] . ' QTY: ' . $products_options->fields['pasqty'] . ' Custom ID: ' . $products_options->fields['customid'] . '<br />';//debug line
@@ -175,7 +174,7 @@ $products_options_names_count = $products_options_names->RecordCount();
       //Exclude the following:
       //PRODUCTS_OPTIONS_TYPE_TEXT PRODUCTS_OPTIONS_TYPE_FILE PRODUCTS_OPTIONS_TYPE_READONLY
       //PRODUCTS_OPTIONS_TYPE_SELECT_SBA
-      $PWA_STOCK_QTY = null; //initialize variable	
+      $PWA_STOCK_QTY = null; //initialize variable  
       if ($products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT) {
         if ($products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) {
           if ($products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_READONLY) {
@@ -383,7 +382,7 @@ $products_options_names_count = $products_options_names->RecordCount();
         $disablebackorder = null;
         //disable radio and disable default selected
         if ((STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['pasqty'] == 0 && !empty($products_options->fields['pasid']) ) 
-		|| ( STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['products_quantity'] <= 0 && empty($products_options->fields['pasid']) )
+    || ( STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['products_quantity'] <= 0 && empty($products_options->fields['pasid']) )
         ) {//|| $products_options_READONLY->fields['attributes_display_only'] == 1
           if ($selected_attribute == true) {
             $selected_attribute = false;
@@ -498,7 +497,7 @@ $products_options_names_count = $products_options_names->RecordCount();
         $disablebackorder = null;
         //disable radio and disable default selected
         if ((STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['pasqty'] == 0 && !empty($products_options->fields['pasid']) ) 
-		|| ( STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['products_quantity'] <= 0 && empty($products_options->fields['pasid']) )
+    || ( STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['products_quantity'] <= 0 && empty($products_options->fields['pasid']) )
         ) {//|| $products_options_READONLY->fields['attributes_display_only'] == 1
           if ($selected_attribute == true) {
             $selected_attribute = false;
@@ -789,7 +788,7 @@ $products_options_names_count = $products_options_names->RecordCount();
         $disablebackorder = null;
         //disable default selected if out of stock
         if ((STOCK_ALLOW_CHECKOUT == 'false') 
-		|| (STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['products_quantity'] <= 0)) {
+    || (STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['products_quantity'] <= 0)) {
           $disablebackorder = 'disabled="disabled"';
         }
         //var_dump($products_options_array);//Debug Line

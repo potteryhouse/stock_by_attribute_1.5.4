@@ -30,7 +30,15 @@ class products_with_attributes_stock extends base {
    */
   function products_with_attributes_stock() {
 		global $zco_notifier;
-		$zco_notifier->attach($this, array('NOTIFY_ORDER_DURING_CREATE_ADDED_PRODUCT_LINE_ITEM', 'NOTIFY_ORDER_DURING_CREATE_ADDED_ATTRIBUTE_LINE_ITEM','NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_INIT','NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN','NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END')); 
+    
+    $attachNotifier = array();
+    $attachNotifier[] = 'NOTIFY_ORDER_DURING_CREATE_ADDED_PRODUCT_LINE_ITEM';
+    $attachNotifier[] = 'NOTIFY_ORDER_DURING_CREATE_ADDED_ATTRIBUTE_LINE_ITEM';
+    $attachNotifier[] = 'NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_INIT';
+    $attachNotifier[] = 'NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN';
+    $attachNotifier[] = 'NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END';
+    
+		$zco_notifier->attach($this, $attachNotifier); 
 	}	
 
   /*

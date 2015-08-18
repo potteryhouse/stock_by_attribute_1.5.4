@@ -4,6 +4,8 @@
 class products_with_attributes_stock_admin extends base {
 
   //
+  private $_customid = array();
+  private $_productI;  
 /*  private $_productI;
   
   private $_i;
@@ -19,7 +21,13 @@ class products_with_attributes_stock_admin extends base {
    */
   function products_with_attributes_stock_admin() {
 		global $zco_notifier;
-		$zco_notifier->attach($this, array('NOTIFIER_ADMIN_ZEN_REMOVE_PRODUCT', 'NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', 'NOTIFIER_ADMIN_ZEN_DELETE_PRODUCTS_ATTRIBUTES')); 
+    
+    $attachNotifier = array();
+    $attachNotifier[] = 'NOTIFIER_ADMIN_ZEN_REMOVE_PRODUCT';
+    $attachNotifier[] = 'NOTIFIER_ADMIN_ZEN_REMOVE_ORDER';
+    $attachNotifier[] = 'NOTIFIER_ADMIN_ZEN_DELETE_PRODUCTS_ATTRIBUTES';
+
+    $zco_notifier->attach($this, $attachNotifier); 
 	}	
 
   /*

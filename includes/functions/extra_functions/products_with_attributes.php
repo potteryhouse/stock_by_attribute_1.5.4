@@ -9,10 +9,11 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4 : mc12345678 15-08-17
  */
 
 //test for multiple entry of same product in customer's shopping cart
+//This does not yet account for multiple quantity of the same product (2 of a specific attribute type, but instead 2 different types of attributes.)
 function cartProductCount($products_id){
 	
 	global $db;
@@ -186,7 +187,7 @@ function cartProductCount($products_id){
 			$customid_model_query = $db->bindVars($customid_model_query, ':products_id:', $products_id, 'integer');								
   			$customid = $db->Execute($customid_model_query);
   			//return result for display
-        return $customid->fields['products_model'];
+            return $customid->fields['products_model'];
   		}
   		return;//nothing to return, should never reach this return
   	}
