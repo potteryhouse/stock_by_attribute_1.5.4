@@ -160,13 +160,14 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       $out.='<tr><td class="attributesComments">' . /* '<h3 class="attributesComments">' . */ $options_comment[0] . '</td></tr>' /* . '</h3>' */;
       $out2.='<h3 class="attributesComments">' . $options_comment[0] . '</h3>';
     }
-    $out2.='<div class="wrapperAttribsOptions">';
     if ($attributes[0]['otype'] == PRODUCTS_OPTIONS_TYPE_READONLY) {
       // Need to load all readonly option values for this option name that are 
       //  associated with this product.
       $out.='<tr><td align="right" class="main"><b>' . $attributes[0]['oname'] . ":</b></td><td class=\"main\"><input type = \"hidden\" name = \"id[" . $attributes[0]['oid'] . "]\"" . " value=\"" . stripslashes($attributes[0]['ovals'][0]['id']) . "\" />" . $attributes[0]['ovals'][0]['text'] . "</td></tr>\n";
+      $out2.='<div class="wrapperAttribsOptions">';
     } else {
       $out.='<tr><td align="right" class="main"><b>' . $attributes[0]['oname'] . ":</b></td><td class=\"main\">" . zen_draw_pull_down_menu('id[' . $attributes[0]['oid'] . ']', array_merge(array(array('id' => 0, 'text' => TEXT_SEQUENCED_FIRST . $attributes[0]['oname'])), $attributes[0]['ovals']), $attributes[0]['default'], "onchange=\"i" . $attributes[0]['oid'] . "(this.form);\"") . "</td></tr>\n";
+      $out2.='<div class="wrapperAttribsOptions">';
       $out2.='<h4 class="optionName back">';
       $out2.= $options_name[0];
       $out2.='</h4>';
@@ -203,8 +204,10 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
         // Need to load all readonly option values for this option name that are 
         //  associated with this product.
         $out.='<tr><td align="right" class="main"><b>' . $attributes[$o]['oname'] . ":</b></td><td class=\"main\"><input type = \"hidden\" name = \"id[" . $attributes[$o]['oid'] . "]\"" . " value=\"" . stripslashes($attributes[$o]['ovals'][0]['id']) . "\" />" . $attributes[$o]['ovals'][0]['text'] . "</td></tr>\n";
+        $out2.='<div class="wrapperAttribsOptions">';
       } else {
         $out.='<tr><td align="right" class="main"><b>' . $attributes[$o]['oname'] . ":</b></td><td class=\"main\">" . zen_draw_pull_down_menu('id[' . $attributes[$o]['oid'] . ']', array(array('id' => 0, 'text' => TEXT_SEQUENCED_NEXT . $attributes[$o]['oname'])), '', "onchange=\"i" . $attributes[$o]['oid'] . "(this.form);\"") . "</td></tr>\n";
+        $out2.='<div class="wrapperAttribsOptions">';
         $out2.='<h4 class="optionName back">';
         $out2.= $options_name[$o];
         $out2.='</h4>';
@@ -239,8 +242,10 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       // Need to load all readonly option values for this option name that are 
       //  associated with this product.
       $out.='<tr><td align="right" class="main"><b>' . $attributes[$o]['oname'] . ":</b></td><td class=\"main\"><input type = \"hidden\" name = \"id[" . $attributes[$o]['oid'] . "]\"" . " value=\"" . stripslashes($attributes[$o]['ovals'][0]['id']) . "\" />" . $attributes[$o]['ovals'][0]['text'] . "</td></tr>\n";
+      $out2.='<div class="wrapperAttribsOptions">';
     } else {
       $out.='<tr><td align="right" class="main"><b>' . $attributes[$o]['oname'] . ":</b></td><td class=\"main\">" . zen_draw_pull_down_menu('id[' . $attributes[$o]['oid'] . ']', array(array('id' => 0, 'text' => TEXT_SEQUENCED_NEXT . $attributes[$o]['oname'])), '', "onchange=\"i" . $attributes[$o]['oid'] . "(this.form);\"") . "</td></tr>\n";
+      $out2.='<div class="wrapperAttribsOptions">';
       $out2.='<h4 class="optionName back">';
       $out2.= $options_name[$o];
       $out2.='</h4>';
@@ -760,7 +765,6 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       $out ='           <h3 id="attribsOptionsText">';
       $out.='            ';
       $out.='             <b>' . TEXT_PRODUCT_OPTIONS . '</b></h3>';
-      $out.='            <div class="wrapperAttribsOptions">';
       return $out;
     }
     
@@ -780,7 +784,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
   
 */
     function _draw_attributes_end() {
-      return '           '; //</div>';
+      return '           </div>';
     }
 
 /*
