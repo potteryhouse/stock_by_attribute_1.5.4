@@ -10,7 +10,7 @@
  *  -- Use at your own risk!
  *  -- Backup the databases prior to using this MOD or making any changes.
  * 
- *  Created for Stock by Attributes Current version: mc12345678 15-09-16
+ *  Created for Stock by Attributes Current version: mc12345678 15-09-18
 **/
 
 $SBAversion = 'SBA Version 1.5.4';
@@ -179,21 +179,21 @@ function removeDynDropdownsConfiguration() {
         if($db->error){
           $msg = ' Error Message: ' . $db->error;
         }
-        array_push($resultMessage, '&bull; Deleted PRODINFO_ATTRIBUTE_DYNAMIC_STATUS ' . $msg);
+        array_push($resultMmessage, '&bull; Deleted PRODINFO_ATTRIBUTE_DYNAMIC_STATUS ' . $msg);
         
         $sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'SBA_ZC_DEFAULT'";
         $db->Execute($sql);
         if($db->error){
           $msg = ' Error Message: ' . $db->error;
         }
-        array_push($resultMessage, '&bull; Deleted SBA_ZC_DEFAULT ' . $msg);
+        array_push($resultMmessage, '&bull; Deleted SBA_ZC_DEFAULT ' . $msg);
         
         $sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK'";
         $db->Execute($sql);
         if($db->error){
           $msg = ' Error Message: ' . $db->error;
         }
-        array_push($resultMessage, '&bull; Deleted PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK ' . $msg);
+        array_push($resultMmessage, '&bull; Deleted PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK ' . $msg);
 /*	$sql = "DELETE IGNORE FROM `".TABLE_CONFIGURATION."` WHERE `configuration_key` = 'SBA_SHOW_IMAGE_ON_PRODUCT_INFO'";
 	$db->Execute($sql);
 	if($db->error){	
