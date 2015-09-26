@@ -82,6 +82,14 @@
         }
         $combname=substr($combname,2).':';
         
+        for ($i = 0; $i<sizeof($combinations); $i++) {
+          if (isset($_GET['products_id']) && $_SESSION['cart']->contents[$_GET['products_id']]) {
+            if ($combinations[$i]['comb'] == $_SESSION['cart']->contents[$_GET['products_id']]['attributes']) {
+              $selected_combination = $i;
+              break;
+            }
+          }
+        }
         foreach ($combinations as $combindex => $comb) {
           $out.="<tr>\n";
           $out.='  <td align="right" class=main><b>'.$combname."</b></td>\n  <td class=main>";
