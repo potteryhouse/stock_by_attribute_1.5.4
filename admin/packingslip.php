@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: packingslip.php 15788 2010-04-02 10:44:40Z drbyte $
  * 
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4 15-11-14 mc12345678
 */
 
   require('includes/application_top.php');
@@ -148,39 +148,44 @@
       </tr>
 <?php
 
-	// START "Stock by Attributes"
-	//include language file
-	include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'products_with_attributes_stock.php');
-	//new object from class
-	require_once(DIR_WS_CLASSES . 'products_with_attributes_stock.php');
-	$stock = new products_with_attributes_stock;
-	// END "Stock by Attributes"
+  // START "Stock by Attributes"
+  //include language file
+    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'products_with_attributes_stock.php');
+  //new object from class
+    require_once(DIR_WS_CLASSES . 'products_with_attributes_stock.php');
+    $stock = new products_with_attributes_stock;
+  // END "Stock by Attributes"
 
     for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+      $zco_notifier->notify('NOTIFY_PACKINGSLIP_INLOOP', array('i'=>$i, 'prod_img'=>$prod_img), $prod_img);
+
       echo '      <tr class="dataTableRow">' . "\n" .
-           '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
+           '        <td class="dataTableContent" valign="top" align="right">' . (zen_not_null($prod_img) ? '<img src="' . DIR_WS_CATALOG . DIR_WS_IMAGES . $prod_img .'" align="left" width="' . IMAGE_ON_INVOICE_IMAGE_WIDTH . '" height="' . IMAGE_ON_INVOICE_IMAGE_HEIGHT . '" />' : '') . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
            '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
 
       if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
         for ($j=0, $k=sizeof($order->products[$i]['attributes']); $j<$k; $j++) {
+          $zco_notifier->notify('NOTIFY_PACKINGSLIP_IN_ATTRIB_LOOP', array('i'=>$i, 'j'=>$j, 'prod_img'=>$prod_img), $prod_img);
 
-			//"Stock by Attributes" add custom ID to display
-			$customid = null;
-			//test if this is to be displayed
-			if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
-  			$attributes = array(); // mc12345678 moved into if statement otherwise doesn't apply in code.
-				//create array for use in zen_get_customid
-				$attributes[] = $order->products[$i]['attributes'][$j]['value_id'];
-				//get custom ID
-				$customid = $stock->zen_get_customid($order->products[$i]['id'],$attributes);
-				//only display custom ID if exists
-				if( !empty($customid) ){
-					//add name prefix (this is set in the admin language file)
-					$customid = PWA_CUSTOMID_NAME . $customid;
-				}
-			}
-		  //"Stock by Attributes" add custom ID to display
-          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . ' (' . $customid . ') ';
+          //"Stock by Attributes" add custom ID to display
+		/*	$customid = null;
+          //test if this is to be displayed
+          if( STOCK_SBA_DISPLAY_CUSTOMID == 'true'){
+            $attributes = array(); // mc12345678 moved into if statement otherwise doesn't apply in code.
+            //create array for use in zen_get_customid
+            $attributes[] = $order->products[$i]['attributes'][$j]['value_id'];
+            //get custom ID
+            $customid = $stock->zen_get_customid($order->products[$i]['id'],$attributes);
+            //only display custom ID if exists
+            if( !empty($customid) ){
+              //add name prefix (this is set in the admin language file)
+              $customid = PWA_CUSTOMID_NAME . $customid;
+            }
+			}*/
+          // END "Stock by Attributes"
+          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+          //"Stock by Attributes" add custom ID to display
+          echo ( zen_not_null($customid) ? ' (' . $customid . ') ' : '');
           // END "Stock by Attributes"
           echo '</i></small></nobr>';
         }

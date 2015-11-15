@@ -8,6 +8,7 @@
  *
  * Updated for Stock by Attributes SBA 1.5.4 mc12345678 15-08-17
  */
+
 $SBAversion = 'Version 1.5.4';
 //add required referenced files
 require('includes/application_top.php');

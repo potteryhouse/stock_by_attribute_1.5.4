@@ -1,6 +1,6 @@
 <?php
 /*
- * Stock by Attributes 1.5.4
+ * Stock by Attributes 1.5.4 15-11-14 mc12345678
  */
 
 //What about: 'multiple_products_add_product' (Needs to be addressed though don't see at the moment why since generally unable to select multiple products each with attributes, perhaps something to consider for later, but let's get serious here at the moment as there are more routine actions to be handled properly first.), 'update_product' (Needs to be addressed), or 'cart' (does a notify action, so may need to address?)actions?
@@ -66,7 +66,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
       if ($_SESSION['cart']->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' cart_qty: ' . $cart_qty . ' <br>', 'caution');
       $new_qty = $_POST['cart_quantity'][$i]; // new quantity
       $current_qty = $_SESSION['cart']->get_quantity($_POST['products_id'][$i]); // how many currently in cart for attribute
-        if((PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        if($productIsSBA[$i] && (PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
           /* Breakdown the attributes into individual attributes to then be able to 
            * feed them into the applicable section(s).
            * 
@@ -75,7 +75,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
 // how many currently in cart for attribute
       $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
 
-        if((PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        if($productIsSBA[$i] && (PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
           /* Breakdown the attributes into individual attributes to then be able to 
            * feed them into the applicable section(s).
            * 
@@ -87,7 +87,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
 //          if (!$productIsSBA[$i]) {
 //            $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i]);
 //          } else {
-        if((PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        if($productIsSBA[$i] && (PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
           /* Breakdown the attributes into individual attributes to then be able to 
            * feed them into the applicable section(s).
            * 
@@ -101,7 +101,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
             $messageStack->add_session('shopping_cart', ($_SESSION['cart']->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
         }
 
-        if((PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        if($productIsSBA[$i] && (PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
           /* Breakdown the attributes into individual attributes to then be able to 
            * feed them into the applicable section(s).
            * 
@@ -146,7 +146,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_product') {
         default:
           $adjust_max= 'false';
         }
-        if((PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+        if($productIsSBA[$i] && (PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
           /* Breakdown the attributes into individual attributes to then be able to 
            * feed them into the applicable section(s).
            * 
@@ -187,7 +187,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
     $the_list = '';
     $adjust_max= 'false';
     if (isset($_POST['id'])) {
-      if((PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
+      if($productIsSBA[$i] && (PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2') /*single dropdown as multiple*/) {
           /* Breakdown the attributes into individual attributes to then be able to 
            * feed them into the applicable section(s).
            * 
@@ -211,12 +211,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
     $attr_id = array();
     $attr_val = array();
     if((PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_dropdown' || PRODINFO_ATTRIBUTE_PLUGIN_MULTI == 'single_radioset') && (PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '1' || PRODINFO_ATTRIBUTE_DYNAMIC_STATUS == '2')) {
-	  /*single dropdown as multiple*/
-	  $attr_list = explode(',',$_POST['attrcomb']);
+      /*single dropdown as multiple*/
+    $attr_list = explode(',',$_POST['attrcomb']);
       foreach ($attr_list as $attr_item) {
         list($attr_id, $attr_val) = explode('-',$attr_item);
-		$_POST['id'][$attr_id] = $attr_val;
-	  }
+        if (zen_not_null($attr_id) && zen_not_null($attr_val)) {
+          $_POST['id'][$attr_id] = $attr_val;
+        }
+      }
           /* Breakdown the attributes into individual attributes to then be able to 
            * feed them into the applicable section(s).
            * 
@@ -237,8 +239,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
                     LIMIT 1;';
     $query = $db->bindVars($query, ':your_db:', DB_DATABASE, 'string');
     $query = $db->bindVars($query, ':table_name:', TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK, 'string');
-	$stock_id = $db->Execute($query, false, false, 0, true);
-	if ($stock_id->RecordCount() > 0) {
+  $stock_id = $db->Execute($query, false, false, 0, true);
+  if ($stock_id->RecordCount() > 0) {
       
       $query = 'select stock_id from ' . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK .  ' where products_id = :products_id:';
       $query = $db->bindVars($query, ':products_id:',  $_POST['products_id'], 'integer');
@@ -255,6 +257,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_product') {
 // bof: adjust new quantity to be same as current in stock
       $chk_current_qty = zen_get_products_stock($product_id, $attributes);
       $_SESSION['cart']->flag_duplicate_msgs_set = FALSE;
+      
+      $productAttrAreSBA = zen_get_sba_stock_attribute_id($product_id, $attributes, 'products');
+      if (!zen_not_null($productAttrAreSBA)) {
+        $the_list .= PWA_COMBO_OUT_OF_STOCK . "<br />";
+        foreach ($_POST['id'] as $key2 => $value2) {
+          $the_list .= TEXT_ERROR_OPTION_FOR . '<span class="alertBlack">' . zen_options_name($key2) . '</span>' . TEXT_INVALID_SELECTION . '<span class="alertBlack">' . ($value == (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID ? TEXT_INVALID_USER_INPUT : zen_values_name($value2)) . '</span>' . '<br />';
+        }
+      }
       
       if (STOCK_ALLOW_CHECKOUT == 'false' && ($cart_qty + $new_qty > $chk_current_qty)) {
           $new_qty = $chk_current_qty;

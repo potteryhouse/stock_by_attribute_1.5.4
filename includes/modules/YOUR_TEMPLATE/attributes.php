@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $show_onetime_charges_description = 'false';
 $show_attributes_qty_prices_description = 'false';
 
-//limit to 1 for performance when processing larger tables
+// limit to 1 for performance when processing larger tables
 //gets the number of associated attributes
 $sql = "select count(*) as total
           from " . TABLE_PRODUCTS_OPTIONS . " popt
@@ -80,9 +80,11 @@ $sql = "select count(*) as total
                 $products_options_array = array();
 
                 /*
+                pov.products_options_values_id, pov.products_options_values_name,
                 pa.options_values_price, pa.price_prefix,
                 pa.products_options_sort_order, pa.product_attribute_is_free, pa.products_attributes_weight, pa.products_attributes_weight_prefix,
                 pa.attributes_default, pa.attributes_discounted, pa.attributes_image
+				p.products_quantity
                 */
 
                 $sql = "select    pov.products_options_values_id,
@@ -97,11 +99,9 @@ $sql = "select count(*) as total
 
                 // Start "Stock By Attributes" SBA
                 $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_OPTIONS_SQL');
+//                echo ($_isSBA ? 'true' : 'false') . "\n";
                 // End "Stock By Attributes" SBA
-
-                $sql = $db->bindVars($sql, ':products_id:', $_GET['products_id'], 'integer');
-                $sql = $db->bindVars($sql, ':options_id:', $products_options_names->fields['products_options_id'], 'integer');
-                $sql = $db->bindVars($sql, ':languages_id:', $_SESSION['languages_id'], 'integer');
+                
                 $products_options = $db->Execute($sql);
 
                 $products_options_value_id = '';
@@ -671,4 +671,3 @@ $sql = "select count(*) as total
               //      zen_draw_hidden_field('number_of_uploads', $_GET['number_of_uploads']);
               zen_draw_hidden_field('number_of_uploads', $number_of_uploads);
             }
-

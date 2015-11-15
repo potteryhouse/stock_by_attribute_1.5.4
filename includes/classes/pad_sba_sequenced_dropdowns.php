@@ -1,82 +1,143 @@
 <?php
 
 /*
-  QT Pro Version 4.1
-
-  pad_sequenced_dropdowns.php
-
-  Contribution extension to:
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2004, 2005 Ralph Day
-  Released under the GNU General Public License
-
-  Based on prior works released under the GNU General Public License:
-  QT Pro prior versions
-  Ralph Day, October 2004
-  Tom Wojcik aka TomThumb 2004/07/03 based on work by Michael Coffman aka coffman
-  FREEZEHELL - 08/11/2003 freezehell@hotmail.com Copyright (c) 2003 IBWO
-  Joseph Shain, January 2003
-  osCommerce MS2
-  Copyright (c) 2003 osCommerce
-
-  Modifications made:
-  11/2004 - Created
-  12/2004 - Fix _draw_dropdown_sequence_js to prevent js error when all attribute combinations
-  are out of stock
-  03/2005 - Remove '&' for pass by reference from parameters to call of
-  _build_attributes_combinations.  Only needed on method definition and causes
-  error messages on some php versions/configurations
+      QT Pro Version 4.1
+  
+      pad_sequenced_dropdowns.php
+  
+      Contribution extension to:
+        osCommerce, Open Source E-Commerce Solutions
+        http://www.oscommerce.com
+     
+      Copyright (c) 2004, 2005 Ralph Day
+      Released under the GNU General Public License
+  
+      Based on prior works released under the GNU General Public License:
+        QT Pro prior versions
+          Ralph Day, October 2004
+          Tom Wojcik aka TomThumb 2004/07/03 based on work by Michael Coffman aka coffman
+          FREEZEHELL - 08/11/2003 freezehell@hotmail.com Copyright (c) 2003 IBWO
+          Joseph Shain, January 2003
+        osCommerce MS2
+          Copyright (c) 2003 osCommerce
+          
+      Modifications made:
+          11/2004 - Created
+          12/2004 - Fix _draw_dropdown_sequence_js to prevent js error when all attribute combinations
+                    are out of stock
+          03/2005 - Remove '&' for pass by reference from parameters to call of
+                    _build_attributes_combinations.  Only needed on method definition and causes
+                    error messages on some php versions/configurations
   08/17/2015 - mc12345678: Remade to offer ZC tags around the attributes.
- * 
- * ******************************************************************************************
-
-  QT Pro Product Attributes Display Plugin
-
-  pad_sequenced_dropdowns.php - Display stocked product attributes first as one dropdown for each attribute
-  with Javascript to force user to select attributes in sequence so only
-  in-stock combinations are seen.
-
-  Class Name: pad_sba_sequenced_dropdowns
-
-  This class generates the HTML to display product attributes.  First, product attributes that
-  stock is tracked for are displayed, each attribute in its own dropdown list with Javascript to
-  force user to select attributes in sequence so only in-stock combinations are seen.  Then
-  attributes that stock is not tracked for are displayed, each attribute in its own dropdown list.
-
-  Methods overidden or added:
-
-  _draw_stocked_attributes            draw attributes that stock is tracked for
-  _draw_dropdown_sequence_js          draw Javascript to force the attributes to be selected in
-  sequence
-  _SetConfigurationProperties         set local properties
-
- */
+  11/14/2015   mc12345678 Reworked output of javascript to attempt to force sorted order.
+*******************************************************************************************
+  
+      QT Pro Product Attributes Display Plugin
+  
+      pad_sequenced_dropdowns.php - Display stocked product attributes first as one dropdown for each attribute
+                                    with Javascript to force user to select attributes in sequence so only
+                                    in-stock combinations are seen.
+  
+      Class Name: pad_sba_sequenced_dropdowns
+  
+      This class generates the HTML to display product attributes.  First, product attributes that
+      stock is tracked for are displayed, each attribute in its own dropdown list with Javascript to
+      force user to select attributes in sequence so only in-stock combinations are seen.  Then
+      attributes that stock is not tracked for are displayed, each attribute in its own dropdown list.
+  
+      Methods overidden or added:
+  
+        _draw_stocked_attributes            draw attributes that stock is tracked for
+        _draw_dropdown_sequence_js          draw Javascript to force the attributes to be selected in
+                                            sequence
+        _SetConfigurationProperties         set local properties
+                                            
+*/
 require_once(DIR_WS_CLASSES . 'pad_multiple_dropdowns.php');
 
 class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
-  /*
-    Method: _draw_stocked_attributes
 
+
+/*
+    Method: _draw_stocked_attributes
+  
     draw dropdown lists for attributes that stock is tracked for
 
-
+  
     Parameters:
-
-    none
-
+  
+      none
+  
     Returns:
-
-    string:         HTML to display dropdown lists for attributes that stock is tracked for
-
-   */
+  
+      string:         HTML to display dropdown lists for attributes that stock is tracked for
+  
+*/
 
   function _draw_stocked_attributes() {
     global $db, $options_name;
 
     $out = '';
     $out2 = '';
+    $outendecode = '<script type="text/javascript">var htmlEnDeCode = (function() {
+    var charToEntityRegex,
+        entityToCharRegex,
+        charToEntity,
+        entityToChar;
+
+    function resetCharacterEntities() {
+        charToEntity = {};
+        entityToChar = {};
+        // add the default set
+        addCharacterEntities({
+            \'&amp;\'     :   \'&\',
+            \'&gt;\'      :   \'>\',
+            \'&lt;\'      :   \'<\',
+            \'&quot;\'    :   \'"\',
+            \'&#39;\'     :   "\'"
+        });
+    }
+
+    function addCharacterEntities(newEntities) {
+        var charKeys = [],
+            entityKeys = [],
+            key, echar;
+        for (key in newEntities) {
+            echar = newEntities[key];
+            entityToChar[key] = echar;
+            charToEntity[echar] = key;
+            charKeys.push(echar);
+            entityKeys.push(key);
+        }
+        charToEntityRegex = new RegExp(\'(\' + charKeys.join(\'|\') + \')\', \'g\');
+        entityToCharRegex = new RegExp(\'(\' + entityKeys.join(\'|\') + \'|&#[0-9]{1,5};\' + \')\', \'g\');
+    }
+
+    function htmlEncode(value){
+        var htmlEncodeReplaceFn = function(match, capture) {
+            return charToEntity[capture];
+        };
+
+        return (!value) ? value : String(value).replace(charToEntityRegex, htmlEncodeReplaceFn);
+    }
+
+    function htmlDecode(value) {
+        var htmlDecodeReplaceFn = function(match, capture) {
+            return (capture in entityToChar) ? entityToChar[capture] : String.fromCharCode(parseInt(capture.substr(2), 10));
+        };
+
+        return (!value) ? value : String(value).replace(entityToCharRegex, htmlDecodeReplaceFn);
+    }
+
+    resetCharacterEntities();
+
+    return {
+        htmlEncode: htmlEncode,
+        htmlDecode: htmlDecode
+    };
+})();</script>';
+    $out .= "\n" . $outendecode;
+    $out2 .= "\n" . $outendecode;
     $attributes = array();
 
     $attributes = $this->_build_attributes_array(true, true);
@@ -103,9 +164,9 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
         $out_of_stock = (($attribute_stock->fields['quantity']) == 0);  // This looks at all variants indicating 0 or no variant being present.  Need to modify to look at the quantity for each variant... So look at the quantity of each and if that quantity is zero then, that line needs to be modified...
         if ($out_of_stock && ($this->show_out_of_stock == 'True')) {
           switch ($this->mark_out_of_stock) {
-            case 'Left': $attributes[$o]['ovals'][$a]['text'] = TEXT_OUT_OF_STOCK . ' - ' . $attributes[$o]['ovals'][$a]['text'];
+            case 'Left': $attributes[$o]['ovals'][$a]['text'] = TEXT_OUT_OF_STOCK . ' - ' . zen_output_string_protected($attributes[$o]['ovals'][$a]['text']);
               break;
-            case 'Right': $attributes[$o]['ovals'][$a]['text'] .=' - ' . TEXT_OUT_OF_STOCK;
+            case 'Right': $attributes[$o]['ovals'][$a]['text'] =zen_output_string_protected($attributes[$o]['ovals'][$a]['text']) . ' - ' . TEXT_OUT_OF_STOCK;
               break;
           } //end switch
         } //end if
@@ -262,11 +323,12 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       $out2.='<div class="ProductInfoComments">' . $options_comment[$o] . '</div>';
     }
 
+//      $out.=$this->_draw_out_of_stock_message_js($attributes);
     $out.=$this->_draw_dropdown_sequence_js($attributes);
     $out2.=$this->_draw_dropdown_sequence_js($attributes);
 
     return (SBA_ZC_DEFAULT === 'true' ? $out2 : $out);
-  }
+    } // end if size attributes
 
 
 /*
@@ -317,16 +379,15 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
 
 
     Parameters:
-
-    $attributes     array   Array of attributes for the product.  Format is as returned by
-    _build_attributes_array.
-
+  
+      $attributes     array   Array of attributes for the product.  Format is as returned by
+                              _build_attributes_array.
+  
     Returns:
-
-    string:         Javascript to force user to select stocked dropdowns in sequence
-
-   */
-
+  
+      string:         Javascript to force user to select stocked dropdowns in sequence
+  
+*/
   function _draw_dropdown_sequence_js($attributes) {
     $out = '';
     $outArrayList = array();
@@ -360,7 +421,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       $attr = $attributes[$curattr];
       $out.="  var txt" . $attr['oid'] . "={";
       foreach ($attr['ovals'] as $oval) {
-        $out.=$oval['id'] . ":'" . $oval['text'] . "',";
+        $out.="\"_" . $oval['id'] . "\"" . ":\"" . zen_output_string_protected($oval['text']) . "\",";
       }
       $out = substr($out, 0, strlen($out) - 1) . "};";
       $out.="\n";
@@ -415,11 +476,12 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
             $out.="    frm['id[" . $attributes[$i]['oid'] . "]'].length=1;\n";
           }
         }
+//         $out.="    stkmsg(frm);\n";
         //Loop on all selections available if all stock were included.
         $out.="    for (opt in stk";
         $outArray = '';
         for ($i = 0; $i <= $curattr; $i++) {
-          $outArray.="[frm['id[" . $attributes[$i]['oid'] . "]'].value]";
+          $outArray.="['_'+frm['id[" . $attributes[$i]['oid'] . "]'].value]";
         }
         $outArrayList[$curattr] = $outArray;
         $out.=$outArray;
@@ -440,7 +502,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
         $out.=$outArray;
         $out.="[opt] != \"undefined\") {\n";
         //  Add the product to the next selectable list item as it is in stock.
-        $out.="          frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length]=new Option(txt" . $attributes[$nextattr]['oid'] . "[opt]";
+        $out.="          frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length]=new Option(htmlEnDeCode.htmlDecode(txt" . $attributes[$nextattr]['oid'] . "[opt])";
         if ($curattr == sizeof($attributes) - 2) {
           if (STOCK_SHOW_ATTRIB_LEVEL_STOCK == 'true') {
             $out.=" + '" . PWA_STOCK_QTY . "' + stk2";
@@ -448,11 +510,11 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
             $out.="[opt]";
           }
         }
-        $out.=",opt);\n";
+        $out.=",opt.substring(1));\n";
         $out.="        } else {\n";
         if (PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK == 'True') {
           //  Add the product to the next selectable list item and identify its out-of-stock status as controlled by the admin panel.  
-          $out.="          frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length]=new Option(";
+          $out.="          frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length]=new Option(htmlEnDeCode.htmlDecode(";
           if (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'None') {
             $out.="txt" . $attributes[$nextattr]['oid'] . "[opt]";
           } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Left') {
@@ -460,7 +522,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
           } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Right') {
             $out.="txt" . $attributes[$nextattr]['oid'] . "[opt] + '" . PWA_OUT_OF_STOCK . "'";
           }
-          $out.=",opt);\n";
+          $out.="),opt.substring(1));\n";
 		  if ((STOCK_ALLOW_CHECKOUT == 'false' && ($curattr == sizeof($attributes) - 2)) || PRODINFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK == 'True') {
             $out.="          frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length-1].disabled = true;\n";
 		  }
@@ -472,7 +534,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
         $out.="      } else {\n";
         if (PRODINFO_ATTRIBUTE_SHOW_OUT_OF_STOCK == 'True') {
           //  Add the product to the next selectable list item and identify its out-of-stock status as controlled by the admin panel.  
-          $out.="        frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length]=new Option(";
+          $out.="        frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length]=new Option(htmlEnDeCode.htmlDecode(";
           if (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'None') {
             $out.="txt" . $attributes[$nextattr]['oid'] . "[opt]";
           } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Left') {
@@ -480,19 +542,20 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
           } elseif (PRODINFO_ATTRIBUTE_MARK_OUT_OF_STOCK == 'Right') {
             $out.="txt" . $attributes[$nextattr]['oid'] . "[opt] + '" . PWA_OUT_OF_STOCK . "'";
           }
-          $out.=",opt);\n";
-		  if ((STOCK_ALLOW_CHECKOUT == 'false' && ($curattr == sizeof($attributes) - 2)) || PRODINFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK == 'True') {
+          $out.="),opt.substring(1));\n";
+          if ((STOCK_ALLOW_CHECKOUT == 'false' && ($curattr == sizeof($attributes) - 2)) || PRODINFO_ATTRIBUTE_NO_ADD_OUT_OF_STOCK == 'True') {
             $out.="        frm['id[" . $attributes[$nextattr]['oid'] . "]'].options[frm['id[" . $attributes[$nextattr]['oid'] . "]'].length-1].disabled = true;\n";
-		  }
+          }
           if ($this->out_of_stock_msgline == 'True') {
             $out.="        stkmsg(frm);\n";
           }
           if (PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK != 'False') {
             $out.="        if (displayshown != true) {\n";
             $out.="          alert('" . TEXT_JAVA_ALL_SELECT_OUT . "');\n";
+//        $out.="          stkmsg(frm);\n";
             $out.="          displayshown=true;\n";
             $out.="        }\n";
-		  }
+          }
         }
         $out.="      }\n";
         $out.="    }\n";
@@ -501,6 +564,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
           $out.="      stkmsg(frm);\n";
         }
         $out.="    if (!chkstk(frm)" . ( PRODINFO_ATTRIBUTE_POPUP_OUT_OF_STOCK == 'False' ? " && false" : "" ) . ") {\n";
+//          $out.="      stkmsg(frm);\n";
         $out.="      alert('" . TEXT_JAVA_ONE_SELECT_OUT . "');\n";
         $out.="    } \n"; 
       }
@@ -513,8 +577,9 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       if ($attributes[$o]['default'] != '') {
         $out.="  document.cart_quantity['id[" . $attributes[$o]['oid'] . "]'].value=" . $attributes[$o]['default'] . ";\n";
         $out.="  i" . $attributes[$o]['oid'] . "(document.cart_quantity);\n";
-      } else
+      } else {
         break;
+      }
     }
     if (($o == sizeof($attributes) - 1) && ($attributes[$o]['default'] != '')) {
       $out.="  document.cart_quantity['id[" . $attributes[$o]['oid'] . "]'].value=" . $attributes[$o]['default'] . ";\n";
@@ -569,7 +634,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       // Check if the option is defined/has stock.
       $out.="if (typeof stk3";
       for ($k = 0; $k <= $j; $k++) {
-        $out.="[frm['id[" . $attributes[$k]['oid'] . "]'].value]";
+        $out.="[" . "'_'+"  . "frm['id[" . $attributes[$k]['oid'] . "]'].value]";
       }
       $out.=" == \"undefined\") {\n";
       $out.="    " . str_repeat("  ", $j + 1);
@@ -582,6 +647,46 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
         $out.="return true;\n";
       }
     }
+/*	  $out.="if (frm['id[".$attributes[0]['oid']."]'] == 0) {\n";
+      for ($i=0; $i<sizeof($attributes); $i++) {
+        $out.="    " . str_repeat("  ",$i);
+//Starts the checks of stock quantity.
+//        $out.='if (stk3';
+
+
+        $out.='if (stk3';
+        for ($j=0; $j<=$i; $j++) {
+          $out.="[frm['id[".$attributes[$j]['oid']."]'].value]";
+        }
+        $out.=") {\n";
+        $out.="     " . str_repeat("  ",sizeof($attributes)) . "if(frm['id[".$attributes[$j-1]['oid']."]'].value != 0" . /*" && frm['id[".$attributes[sizeof($attributes)-1]['oid']."]'].value != 0" .*//* ") {\n";
+		$out.="     " . str_repeat("  ",sizeof($attributes)+1) . "instk=true;\n";
+		$out.="     " . str_repeat("  ",sizeof($attributes)) . "}\n";
+      }
+//      $out.="    " . str_repeat("  ",sizeof($attributes)) . "instk=true;\n";
+      for ($i=sizeof($attributes)-1; $i>0; $i--) {
+        $out.="    " . str_repeat("  ",$i) . "}\n";
+      }
+      $out.="    }\n";
+      $out.="}\n";
+        for ($j=sizeof($attributes)-1; $j>=0; $j--) {
+          $out.="    " . str_repeat("  ",0);
+          $out.='if (';
+          $out.="frm['id[".$attributes[$j]['oid']."]'].value == 0 && !instk";
+		  for ($i=$j-1; $i>=0; $i--) {
+		    $out.=" && frm['id[".$attributes[$i]['oid']."]'].value != 0";
+			//$out.=" && chkstk()";
+		  }
+		  $out.=") {\n";
+          $out.="    " . str_repeat("  ",1);
+		  $out.="return true;\n";
+          $out.="    " . str_repeat("  ",0);
+          $out.="}\n";
+		}*/
+/*	  $out.="    if (" . ( instk = false && true ? "" : "") . ") {\n";
+	  $out.="      \n";
+	  $out.="    }\n";*/
+//      $out.="    return instk;\n";
     $out.="  }\n";
 
     if ($this->out_of_stock_msgline == 'True') {
@@ -604,7 +709,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
     $out.="//--></script>\n";
     $out.="\n";
     if (SBA_ZC_DEFAULT !== 'true') {
-      $out.="</td></tr>\n<br />"; // Removed extra: </td></tr>
+      $out.="</td></tr>\n"; // Removed extra: </td></tr>
     }
 
     return $out;
@@ -618,33 +723,32 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
     validation and messaging.
 
     Parameters:
-
-    $combinations        array   Array of combinations to build the Javascript array for.
-    Array must be of the form returned by _build_attributes_combinations
-    Usually this array only contains in-stock combinations.
-
+  
+      $combinations        array   Array of combinations to build the Javascript array for.
+                                   Array must be of the form returned by _build_attributes_combinations
+                                   Usually this array only contains in-stock combinations.
+  
     Returns:
-
-    string:                 Javacript array definition.  Excludes the "var xxx=" and terminating ";".  Form is:
-    {optval1:{optval2:{optval3:1,optval3:1}, optval2:{optval3:1}}, optval1:{optval2:{optval3:1}}}
-    For example if there are 3 options and the instock value combinations are:
-    opt1   opt2   opt3
-    1      5      4
-    1      5      8
-    1     10      4
-    3      5      8
-    The string returned would be
-    {1:{5:{4:1,8:1}, 10:{4:1}}, 3:{5:{8:1}}}
-
-   */
-
+  
+      string:                 Javacript array definition.  Excludes the "var xxx=" and terminating ";".  Form is:
+                              {optval1:{optval2:{optval3:1,optval3:1}, optval2:{optval3:1}}, optval1:{optval2:{optval3:1}}}
+                              For example if there are 3 options and the instock value combinations are:
+                                opt1   opt2   opt3
+                                  1      5      4
+                                  1      5      8
+                                  1     10      4
+                                  3      5      8
+                              The string returned would be
+                                {1:{5:{4:1,8:1}, 10:{4:1}}, 3:{5:{8:1}}}
+  
+*/
   function _draw_js_stock_array($combinations) {
     if (!((isset($combinations)) && (is_array($combinations)) && (sizeof($combinations) > 0))) {
       return '{}';
     }
     $out = '';
     foreach ($combinations[0]['comb'] as $oid => $ovid) {
-      $out.='{' . $ovid . ':';
+      $out.='{' . '"_' . zen_output_string_protected($ovid) . '"' . ':';
       $ovids[] = $ovid;
       $opts[] = $oid;
     }
@@ -669,10 +773,10 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       $out.=str_repeat('}', sizeof($opts) - 1 - $i) . ',';
       if ($i < sizeof($opts) - 1) {
         for ($j = $i; $j < sizeof($opts) - 1; $j++) {
-          $out.=$comb[$opts[$j]] . ':{';
+          $out.= '"_' . zen_output_string_protected($comb[$opts[$j]]) . '"' . ':{';
         }
       }
-      $out.=$comb[$opts[sizeof($opts) - 1]] . ':';
+      $out.='"_' . zen_output_string_protected($comb[$opts[sizeof($opts) - 1]]) . '"' . ':';
       if (STOCK_SHOW_ATTRIB_LEVEL_STOCK == 'true') {
         $idvals = array();
         foreach ($comb as $ids => $idvalsadd) {
@@ -692,20 +796,20 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
     return $out;
   }
 
-  /*
+/*
     Method: _SetConfigurationProperties
-
+  
     Set local configuration properties
-
+  
     Parameters:
-
-    $prefix      sting     Prefix for the osCommerce DB constants
-
+  
+      $prefix      sting     Prefix for the osCommerce DB constants
+  
     Returns:
-
-    nothing
-
-   */
+  
+      nothing
+  
+*/
   /*  function _SetConfigurationProperties($prefix) {
 
     // These properties are not used directly by this class
@@ -784,7 +888,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
   
 */
     function _draw_attributes_end() {
-      return '           </div>';
+      return ''; //'           </div>';
     }
 
 /*
