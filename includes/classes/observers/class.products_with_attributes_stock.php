@@ -219,8 +219,7 @@ class products_with_attributes_stock extends base {
         $originalpricedisplaytext = ATTRIBUTES_PRICE_DELIMITER_PREFIX . $products_options->fields['price_prefix'] . $currencies->display_price(abs(zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false')), zen_get_tax_rate($product_info->fields['products_tax_class_id'])) . ATTRIBUTES_PRICE_DELIMITER_SUFFIX;
       }
     }
-    // END "Stock by Attributes" SBA
-    // START "Stock by Attributes" SBa
+
     $products_options_display_price .= $originalpricedisplaytext . $PWA_STOCK_QTY;
     // END "Stock by Attributes" SBA
      
@@ -230,8 +229,12 @@ class products_with_attributes_stock extends base {
     * NOTIFY_ATTRIBUTES_MODULE_ATTRIB_SELECTED
     */
   function updateNotifyAttributesModuleAttribSelected(&$callingClass, $notifier, $paramsArray){
-    global $product_options, $selected_attribute, $moveSelectedAttribute, $disablebackorder;
+    global $products_options, $selected_attribute, $moveSelectedAttribute, $disablebackorder;
     
+    if (!$this->_isSBA) {
+      return;
+    }
+
     //move default selected attribute if attribute is out of stock and check out is not allowed
     if ($moveSelectedAttribute == true && (STOCK_ALLOW_CHECKOUT == 'false' && $products_options->fields['pasqty'] > 0)) {
       $selected_attribute = true;
