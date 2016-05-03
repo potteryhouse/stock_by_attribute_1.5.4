@@ -259,7 +259,7 @@ class pad_sba_sequenced_dropdowns extends pad_multiple_dropdowns {
       $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
       if ($options_comment[$o] != '' and $options_comment_position[$o] == '0') {
         $out.='<tr><td class="attributesComments">' . /* '<h3 class="attributesComments">' . */ $options_comment[$o] . '</td></tr>' /* . '</h3>' */;
-        $out2.='<h3 class="attributesComments">' . $options_comment[0] . '</h3>';
+        $out2.='<h3 class="attributesComments">' . $options_comment[$o] . '</h3>';
       } // END h3_option_comment
       if ($attributes[$o]['otype'] == PRODUCTS_OPTIONS_TYPE_READONLY) {
         // Need to load all readonly option values for this option name that are 
